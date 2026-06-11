@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
   jobTitle: { type: String },
   resumeUrl: { type: String },
   resumeText: { type: String }, // Extracted text for AI
+  resumeJson: { type: Object, default: null }, // Structured JSON for PDF generation
   plan: { type: String, enum: ["free", "pro"], default: "free" },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   completedOnboarding: { type: Boolean, default: true }, // true = existing users unaffected

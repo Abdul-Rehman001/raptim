@@ -37,8 +37,7 @@ export async function POST(req: Request) {
 
     // Update User profile
     await dbConnect();
-    // @ts-ignore
-    const user = await User.findById(session.user.id);
+    const user = await User.findById(session.user?.id as string);
     if (user) {
        user.resumeUrl = uploadResult.secure_url;
        // We would ideally process text extraction here or via a webhook

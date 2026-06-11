@@ -1,17 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
   Sparkles, Brain, ShieldAlert, Mail, Activity, 
-  Search, TrendingUp, BarChart2, AlertTriangle, 
-  CheckCircle2, ChevronRight, ArrowRight, RefreshCw,
+  Search, TrendingUp, AlertTriangle, 
+  CheckCircle2, ChevronRight, RefreshCw,
   Copy, Zap, Target, FileText, MinusCircle
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { pdf } from "@react-pdf/renderer";
+import { PDFTemplate } from "@/components/resume/PDFTemplate";
+import { ResumeTailorModal } from "@/components/resume/ResumeTailorModal";
 
 interface AICoachClientProps {
   user: any;
@@ -55,7 +59,7 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
       {/* Premium Header */}
       <div className="mb-10">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-3">
-          <div className="w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shadow-lg shadow-primary/20">
+          <div className="w-12 h-12 shrink-0 rounded-2xl bg-linear-to-br from-primary to-primary-hover flex items-center justify-center shadow-lg shadow-primary/20">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -127,7 +131,7 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
         </div>
         <h2 className="text-xl font-extrabold text-text-primary mb-3">No Job Analyses Yet</h2>
         <p className="text-sm text-text-secondary max-w-sm mb-8 leading-relaxed">
-          Start by adding a job and clicking "Analyze with AI" in the job details page. Your match scores and tips will appear here.
+          Start by adding a job and clicking &quot;Analyze with AI&quot; in the job details page. Your match scores and tips will appear here.
         </p>
         <Link href="/jobs" className="bg-primary hover:bg-primary-hover text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/20">
           Go analyze a job
@@ -177,7 +181,7 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
                   </p>
                 </div>
                 <div className={`p-2 rounded-lg transition-colors ${expandedId === job._id.toString() ? "bg-primary text-white" : "bg-bg-surface-elevated text-text-tertiary group-hover:text-primary"}`}>
-                  <ChevronRight className={`w-4 h-4 sm:w-5 h-5 transition-transform duration-300 ${expandedId === job._id.toString() ? "rotate-90" : ""}`} />
+                  <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${expandedId === job._id.toString() ? "rotate-90" : ""}`} />
                 </div>
               </div>
             </button>
@@ -195,10 +199,10 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
                     <div className="space-y-5">
                       <div>
                         <h4 className="flex items-center gap-2 text-xs font-bold text-emerald-500 uppercase tracking-widest mb-3">
-                          <CheckCircle2 className="w-4 h-4" /> Why you're a match
+                          <CheckCircle2 className="w-4 h-4" /> Why you&apos;re a match
                         </h4>
                         <p className="text-sm text-text-secondary leading-relaxed bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-xl italic">
-                          "{job.whatsStrong}"
+                          &quot;{job.whatsStrong}&quot;
                         </p>
                       </div>
                       <div>
@@ -206,7 +210,7 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
                           <AlertTriangle className="w-4 h-4" /> Area to address
                         </h4>
                         <p className="text-sm text-text-secondary leading-relaxed bg-amber-500/5 border border-amber-500/10 p-4 rounded-xl italic">
-                          "{job.biggestGap}"
+                          &quot;{job.biggestGap}&quot;
                         </p>
                       </div>
                     </div>
@@ -227,6 +231,7 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
                           Generate Outreach
                         </Link>
                       </div>
+                      <TailorResumeButton job={job} />
                     </div>
                   </div>
                 </motion.div>
@@ -235,6 +240,59 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function TailorResumeButton({ job }: { job: any }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const history = job.resumeHistory || [];
+
+  return (
+    <div className="flex flex-col gap-3 mt-4">
+      <button
+        onClick={() => setModalOpen(true)}
+        className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground font-bold px-6 py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 group"
+      >
+        <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        {history.length > 0 ? "Open Tailoring Studio" : "Auto-Tailor Resume (Studio)"}
+      </button>
+
+      {/* Mini ROI Timeline */}
+      {history.length > 1 && (
+        <div className="bg-bg-surface-hover rounded-xl p-3 border border-border-subtle mt-1 text-xs">
+          <p className="font-bold text-text-secondary mb-2 flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-emerald-500" /> Resume Improvement History
+          </p>
+          <div className="space-y-2">
+            {history.map((entry: any, i: number) => (
+              <div key={i} className="flex items-center justify-between text-text-tertiary">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+                  <span className="font-semibold">{entry.version}</span>
+                </div>
+                <span className="font-bold text-text-primary">{entry.analysis?.matchScore}% Match</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Always show the link to the detailed history page */}
+      <Link 
+        href={`/jobs/${job._id}/history`}
+        className="mt-1 block text-center w-full bg-bg-surface border border-border-default hover:bg-bg-base text-text-secondary py-2 rounded-xl font-bold transition-colors shadow-sm"
+      >
+        View Detailed Timeline
+      </Link>
+
+      {modalOpen && (
+        <ResumeTailorModal 
+          job={job} 
+          open={modalOpen} 
+          onClose={() => setModalOpen(false)} 
+        />
+      )}
     </div>
   );
 }
@@ -418,7 +476,7 @@ function ResumeHealthTab({ user }: { user: any }) {
             <textarea 
                value={bulletText}
                onChange={(e) => setBulletText(e.target.value)}
-               placeholder="Paste a weak bullet point (e.g., 'Helped build a website used by many people')"
+               placeholder="Paste a weak bullet point (e.g., &apos;Helped build a website used by many people&apos;)"
                className="w-full h-32 p-4 text-sm bg-bg-surface-elevated border border-border-default rounded-2xl text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 resize-none transition-all"
             />
             <button 
@@ -500,7 +558,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], sele
       {/* Sidebar - Job Picker */}
       <div className="lg:col-span-4 space-y-4">
         <h4 className="text-xs font-bold text-text-tertiary uppercase tracking-widest pl-1 mb-2">Select a Job</h4>
-        <div className="space-y-2 max-h-[600px] overflow-y-auto no-scrollbar pb-10">
+        <div className="space-y-2 max-h-150 overflow-y-auto no-scrollbar pb-10">
           {jobs.map(job => (
             <button
               key={job._id.toString()}
@@ -687,7 +745,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob
       {/* Job Picker */}
       <div className="lg:col-span-4 space-y-4">
         <h4 className="text-xs font-bold text-text-tertiary uppercase tracking-widest pl-1 mb-2">Context for Outreach</h4>
-        <div className="space-y-2 max-h-[600px] overflow-y-auto no-scrollbar pb-10">
+        <div className="space-y-2 max-h-150 overflow-y-auto no-scrollbar pb-10">
           {jobs.map(job => (
             <button
               key={job._id.toString()}
@@ -760,7 +818,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob
                 animate={{ opacity: 1, scale: 1 }}
                 className="space-y-6"
                >
-                  <div className="bg-bg-surface-elevated border border-border-subtle p-8 rounded-3xl relative group shadow-inner min-h-[300px]">
+                  <div className="bg-bg-surface-elevated border border-border-subtle p-8 rounded-3xl relative group shadow-inner min-h-75">
                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={copyEmail} className="p-2 bg-white dark:bg-bg-surface border border-border-default rounded-xl shadow-sm text-text-secondary hover:text-primary transition-colors">
                            <Copy className="w-4 h-4" />

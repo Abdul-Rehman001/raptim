@@ -72,16 +72,22 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ resumeText: parseData.text }),
           });
+          // Fire & forget structurize (generates JSON for PDF export)
+          fetch("/api/resume/structurize", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: parseData.text }),
+          }).catch(err => console.error("Structurize error:", err));
+
           setResumeText(parseData.text);
           setStatus("done");
           setStatusMsg("Uploaded & AI text extracted");
           toast.success("Resume uploaded & text extracted!");
           router.refresh();
         } else {
-          // Upload succeeded but parse failed — still mark as done
           setStatus("done");
-          setStatusMsg("Uploaded (paste resume text manually for AI)");
-          toast("Resume uploaded. Paste your resume text below for AI features.", { icon: "ℹ️", duration: 5000 });
+          setStatusMsg("Uploaded (paste resume text manually)");
+          toast("Resume uploaded. Paste your resume text below for AI.", { icon: "ℹ️", duration: 5000 });
         }
       } catch {
         setStatus("done");

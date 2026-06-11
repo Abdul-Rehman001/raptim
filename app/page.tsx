@@ -1,7 +1,7 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Sparkles, LayoutDashboard, FileSearch,
@@ -13,8 +13,8 @@ import {
 ───────────────────────────────────────────── */
 const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div className={`
-    backdrop-blur-xl bg-white/[0.03]
-    border border-white/[0.06]
+    backdrop-blur-xl bg-white/3
+    border border-white/6
     rounded-2xl shadow-sm
     ${className}
   `}>
@@ -41,10 +41,10 @@ const JobCard = ({
     transition={{ delay, duration: 0.5 }}
     className="
       group relative backdrop-blur-xl
-      bg-white/[0.04]
-      border border-white/[0.06]
+      bg-white/4
+      border border-white/6
       rounded-xl p-3 shadow-sm
-      hover:bg-white/[0.06]
+      hover:bg-white/6
       hover:border-purple-400/30 hover:-translate-y-0.5
       transition-all duration-200 cursor-grab
     "
@@ -70,16 +70,6 @@ const JobCard = ({
    MAIN PAGE
 ───────────────────────────────────────────── */
 export default function Home() {
-  useEffect(() => {
-    const html = document.documentElement;
-    const prev = html.className; // save whatever next-themes had set
-    html.classList.add("dark");
-    html.classList.remove("light");
-    return () => {
-      // Restore the user's previous theme when leaving the landing page
-      html.className = prev;
-    };
-  }, []);
 
   return (
     <div className="dark">
@@ -88,16 +78,16 @@ export default function Home() {
         {/* ── GRADIENT MESH BACKGROUND ── */}
         <div className="fixed inset-0 pointer-events-none z-0">
           {/* Primary purple orb */}
-          <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full
+          <div className="absolute -top-40 -left-40 w-175 h-175 rounded-full
             bg-purple-600/25 blur-[120px] animate-[drift_14s_ease-in-out_infinite_alternate]" />
           {/* Secondary violet orb */}
-          <div className="absolute top-1/4 -right-20 w-[500px] h-[500px] rounded-full
+          <div className="absolute top-1/4 -right-20 w-125 h-125 rounded-full
             bg-violet-500/15 blur-[100px] animate-[drift_18s_ease-in-out_4s_infinite_alternate-reverse]" />
           {/* Accent pink-indigo orb */}
-          <div className="absolute bottom-1/3 left-1/3 w-[400px] h-[400px] rounded-full
+          <div className="absolute bottom-1/3 left-1/3 w-100 h-100 rounded-full
             bg-indigo-500/10 blur-[90px] animate-[drift_16s_ease-in-out_8s_infinite_alternate]" />
           {/* Bottom right soft pink */}
-          <div className="absolute -bottom-20 right-0 w-[350px] h-[350px] rounded-full
+          <div className="absolute -bottom-20 right-0 w-87.5 h-87.5 rounded-full
             bg-fuchsia-600/10 blur-[80px] animate-[drift_20s_ease-in-out_2s_infinite_alternate-reverse]" />
 
           {/* Fine grid overlay */}
@@ -114,13 +104,13 @@ export default function Home() {
 
         {/* ── NAV ── */}
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between
-          px-6 lg:px-10 h-[60px]
+          px-6 lg:px-10 h-15
           backdrop-blur-2xl bg-black/20
           border-b border-border-subtle">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600
+            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-violet-600
               flex items-center justify-center shadow-lg shadow-purple-500/30
               group-hover:shadow-purple-500/50 transition-shadow">
               <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
@@ -133,7 +123,7 @@ export default function Home() {
             {["Features", "Pricing", "Blog"].map(l => (
               <Link key={l} href="#"
                 className="px-4 py-1.5 text-sm text-white/50 hover:text-white
-                rounded-lg hover:bg-white/[0.06] transition-all duration-150 font-medium">
+                rounded-lg hover:bg-white/6 transition-all duration-150 font-medium">
                 {l}
               </Link>
             ))}
@@ -148,7 +138,7 @@ export default function Home() {
             </Link>
             <Link href="/signup"
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold
-              bg-gradient-to-r from-purple-600 to-violet-600 text-white
+              bg-linear-to-r from-purple-600 to-violet-600 text-white
               shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40
               hover:-translate-y-px transition-all duration-200">
               Get started
@@ -171,7 +161,7 @@ export default function Home() {
               className="flex justify-center mb-8"
             >
               <div className="inline-flex items-center gap-2 px-4 py-1.5
-                backdrop-blur-xl bg-white/[0.06] border border-purple-400/20
+                backdrop-blur-xl bg-white/6 border border-purple-400/20
                 rounded-full text-xs font-semibold text-purple-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_6px_#a78bfa] animate-pulse" />
                 AI-powered job tracker — free to start
@@ -188,18 +178,18 @@ export default function Home() {
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.1 }}
-                  className="text-[clamp(44px,7vw,88px)] font-bold leading-[1.05] md:leading-[1.0] tracking-[-0.04em] text-white mb-6"
+                  className="text-[clamp(44px,7vw,88px)] font-bold leading-[1.05] md:leading-none tracking-[-0.04em] text-white mb-6"
                 >
                   Your job search,{" "}
                   <br />
                   <span className="relative">
-                    <span className="bg-gradient-to-r from-purple-300 via-violet-300 to-fuchsia-300
+                    <span className="bg-linear-to-r from-purple-300 via-violet-300 to-fuchsia-300
                       bg-clip-text text-transparent">
                       finally organized.
                     </span>
                     {/* underline glow */}
                     <span className="absolute -bottom-1 left-0 right-0 h-px
-                      bg-gradient-to-r from-purple-500/0 via-purple-400/60 to-purple-500/0" />
+                      bg-linear-to-r from-purple-500/0 via-purple-400/60 to-purple-500/0" />
                   </span>
                 </motion.h1>
 
@@ -224,7 +214,7 @@ export default function Home() {
                   <Link href="/signup"
                     className="group flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
                     text-sm font-semibold text-white
-                    bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700
+                    bg-linear-to-r from-purple-600 via-violet-600 to-purple-700
                     shadow-[0_0_30px_rgba(124,58,237,0.4)]
                     hover:shadow-[0_0_40px_rgba(124,58,237,0.6)]
                     hover:-translate-y-0.5 transition-all duration-200">
@@ -234,8 +224,8 @@ export default function Home() {
                   <Link href="#demo"
                     className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
                     text-sm font-semibold text-text-secondary
-                    backdrop-blur-xl bg-white/[0.02] border border-border-subtle
-                    hover:bg-white/[0.06] hover:text-text-primary hover:border-border-default
+                    backdrop-blur-xl bg-white/2 border border-border-subtle
+                    hover:bg-white/6 hover:text-text-primary hover:border-border-default
                     transition-all duration-200">
                     Watch demo
                   </Link>
@@ -293,7 +283,7 @@ export default function Home() {
                       initial={{ width: 0 }}
                       animate={{ width: "91%" }}
                       transition={{ delay: 1, duration: 1.2, ease: "easeOut" }}
-                      className="h-full rounded-full bg-gradient-to-r from-purple-500 to-emerald-400"
+                      className="h-full rounded-full bg-linear-to-r from-purple-500 to-emerald-400"
                     />
                   </div>
                   <div className="flex gap-2 mt-3 flex-wrap">
@@ -316,7 +306,7 @@ export default function Home() {
                     { label: "Applications", value: "47", delta: "+8 this week", color: "text-purple-400" },
                     { label: "Response rate", value: "24%", delta: "↑ above avg", color: "text-emerald-400" },
                   ].map(s => (
-                    <GlassCard key={s.label} className="p-3.5 bg-white/[0.03] border-white/[0.06]">
+                    <GlassCard key={s.label} className="p-3.5 bg-white/3 border-white/6">
                       <p className="text-[10px] text-text-tertiary font-medium mb-1.5">{s.label}</p>
                       <p className={`text-2xl font-bold ${s.color} tracking-tight`}>{s.value}</p>
                       <p className="text-[10px] text-text-tertiary/60 mt-1">{s.delta}</p>
@@ -326,7 +316,7 @@ export default function Home() {
 
                 {/* Streak */}
                 <GlassCard className="p-3.5 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20
+                  <div className="w-9 h-9 rounded-xl bg-linear-to-br from-orange-500/20 to-amber-500/20
                     border border-orange-500/20 flex items-center justify-center text-lg shrink-0">
                     🔥
                   </div>
@@ -361,7 +351,7 @@ export default function Home() {
             >
               {/* Glow behind mockup */}
               <div className="absolute inset-x-20 -top-8 h-16
-                bg-gradient-to-r from-purple-600/20 via-violet-500/30 to-purple-600/20
+                bg-linear-to-r from-purple-600/20 via-violet-500/30 to-purple-600/20
                 blur-2xl rounded-full" />
 
               {/* Browser frame */}
@@ -370,19 +360,19 @@ export default function Home() {
                 backdrop-blur-sm bg-[#0D0A18]">
 
                 {/* Browser bar */}
-                <div className="flex items-center gap-3 px-5 py-3.5 border-b border-white/[0.06]
+                <div className="flex items-center gap-3 px-5 py-3.5 border-b border-white/6
                   bg-[#110D1E]/80">
                   <div className="flex gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
                     <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
                   </div>
-                  <div className="flex-1 max-w-xs mx-auto h-6 rounded-lg bg-white/[0.04]
-                    border border-white/[0.06] flex items-center justify-center
+                  <div className="flex-1 max-w-xs mx-auto h-6 rounded-lg bg-white/4
+                    border border-white/6 flex items-center justify-center
                     text-[11px] text-white/30 font-mono tracking-tight">
                     app.applyiq.com/dashboard
                   </div>
-                  <div className="w-16 h-5 rounded bg-white/[0.03]" />
+                  <div className="w-16 h-5 rounded bg-white/3" />
                 </div>
 
                 {/* Dashboard content */}
@@ -392,7 +382,7 @@ export default function Home() {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-5 h-5 rounded-md bg-gradient-to-br from-purple-500 to-violet-600
+                        <div className="w-5 h-5 rounded-md bg-linear-to-br from-purple-500 to-violet-600
                           flex items-center justify-center">
                           <Zap className="w-3 h-3 text-white" strokeWidth={2.5} />
                         </div>
@@ -402,7 +392,7 @@ export default function Home() {
                     </div>
                     <div className="flex items-center gap-2">
                       <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs
-                        font-semibold text-white bg-gradient-to-r from-purple-600 to-violet-600
+                        font-semibold text-white bg-linear-to-r from-purple-600 to-violet-600
                         shadow-md shadow-purple-500/20">
                         <span>+</span> Add Job
                       </button>
@@ -422,8 +412,8 @@ export default function Home() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 + i * 0.1 }}
-                        className={`p-3 md:p-3.5 rounded-xl border border-white/[0.06]
-                          bg-white/[0.02] backdrop-blur-sm`}
+                        className={`p-3 md:p-3.5 rounded-xl border border-white/6
+                          bg-white/2 backdrop-blur-sm`}
                       >
                         <div className="text-base md:text-lg mb-1 md:mb-1.5">{s.icon}</div>
                         <div className="text-white/90 font-bold text-lg md:text-xl leading-none mb-1">{s.value}</div>
@@ -473,7 +463,7 @@ export default function Home() {
                       },
                     ].map((col, ci) => (
                       <div key={col.label} className={`rounded-xl p-2 md:p-2.5 border ${col.borderColor}
-                        bg-white/[0.02] flex flex-col gap-2 ${ci >= 2 ? "hidden sm:flex" : "flex"} ${ci >= 3 ? "sm:hidden md:flex" : ""}`}>
+                        bg-white/2 flex flex-col gap-2 ${ci >= 2 ? "hidden sm:flex" : "flex"} ${ci >= 3 ? "sm:hidden md:flex" : ""}`}>
                         <div className="flex items-center justify-between px-0.5">
                           <span className={`text-[10px] font-bold ${col.color}`}>{col.label}</span>
                           <span className="text-[9px] text-white/20 font-semibold
@@ -526,7 +516,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="md:col-span-2 relative rounded-2xl overflow-hidden border border-border-subtle
-                  bg-gradient-to-br from-purple-900/20 via-[#0D0A18] to-violet-900/10
+                  bg-linear-to-br from-purple-900/20 via-[#0D0A18] to-violet-900/10
                   p-7 group hover:border-purple-500/20 transition-all duration-300"
               >
                 <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full
@@ -563,7 +553,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="rounded-2xl border border-border-subtle
-                  bg-gradient-to-br from-[#0D0A18] to-blue-900/10
+                  bg-linear-to-br from-[#0D0A18] to-blue-900/10
                   p-7 group hover:border-blue-500/20 transition-all duration-300"
               >
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20
@@ -584,7 +574,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="rounded-2xl border border-border-subtle
-                  bg-gradient-to-br from-[#0D0A18] to-emerald-900/10
+                  bg-linear-to-br from-[#0D0A18] to-emerald-900/10
                   p-7 group hover:border-emerald-500/20 transition-all duration-300"
               >
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20
@@ -604,7 +594,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="md:col-span-2 rounded-2xl border border-border-subtle
-                  bg-gradient-to-br from-[#0D0A18] via-fuchsia-900/10 to-[#0D0A18]
+                  bg-linear-to-br from-[#0D0A18] via-fuchsia-900/10 to-[#0D0A18]
                   p-7 group hover:border-fuchsia-500/20 transition-all duration-300
                   flex flex-col md:flex-row gap-6 items-start"
               >
@@ -662,7 +652,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="relative rounded-3xl overflow-hidden
                 border border-border-subtle
-                bg-gradient-to-br from-purple-900/40 via-[#0D0A18] to-violet-900/30
+                bg-linear-to-br from-purple-900/40 via-[#0D0A18] to-violet-900/30
                 p-12 text-center"
             >
               {/* Background orbs inside CTA */}
@@ -682,7 +672,7 @@ export default function Home() {
                 <Link href="/signup"
                   className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl
                   text-base font-semibold text-white
-                  bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700
+                  bg-linear-to-r from-purple-600 via-violet-600 to-purple-700
                   shadow-[0_0_40px_rgba(124,58,237,0.5)]
                   hover:shadow-[0_0_60px_rgba(124,58,237,0.7)]
                   hover:-translate-y-0.5 transition-all duration-200">
@@ -698,7 +688,7 @@ export default function Home() {
         <footer className="relative z-10 px-6 lg:px-16 py-10 border-t border-border-subtle">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-purple-500 to-violet-600
+              <div className="w-6 h-6 rounded-md bg-linear-to-br from-purple-500 to-violet-600
                 flex items-center justify-center">
                 <Zap className="w-3 h-3 text-white" strokeWidth={2.5} />
               </div>

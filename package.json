@@ -12,6 +12,7 @@
     "@google/genai": "^1.0.0",
     "@hello-pangea/dnd": "^18.0.1",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@react-pdf/renderer": "^4.5.1",
     "axios": "^1.13.5",
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",

@@ -40,6 +40,19 @@ aiCoachTips:     { type: [String], default: [] },
 aiAnalyzedAt:    { type: Date, default: null },
 redFlagAnalysis: { type: Object, default: null },
 coldEmail:       { type: String, default: "" },
+  // Resume Tailoring & Versioning
+  tailoredResume: { type: mongoose.Schema.Types.Mixed, default: null },
+  resumeHistory: [{
+    version: { type: String, required: true }, // e.g. "Original" or "Tailored_v1"
+    createdAt: { type: Date, default: Date.now },
+    resumeJson: { type: mongoose.Schema.Types.Mixed },
+    analysis: {
+      matchScore: Number,
+      whatsStrong: String,
+      biggestGap: String,
+      improvementTips: [String]
+    }
+  }],
 }, { timestamps: true });
 
 // Prevent overwrite on hot reload
