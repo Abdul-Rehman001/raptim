@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Sparkles, LayoutDashboard, FileSearch,
-  TrendingUp, CheckCircle, Zap, Star, ChevronRight
+  TrendingUp, CheckCircle, Zap, ChevronRight
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────

@@ -32,6 +32,7 @@ export function SignupForm() {
       
       toast.success("Account created successfully! Please sign in.");
       router.push("/login");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
     } finally {
