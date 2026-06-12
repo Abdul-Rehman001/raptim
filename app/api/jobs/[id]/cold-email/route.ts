@@ -19,7 +19,7 @@ export async function POST(
 
     await dbConnect();
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const [job, user] = await Promise.all([
       Job.findOne({ _id: id, userId }),
       User.findById(userId).select("resumeText")
@@ -69,7 +69,7 @@ Return ONLY the email text. No subject line. No JSON. Just the message body.`;
 
     return NextResponse.json({ coldEmail: job.coldEmail });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Cold Email API Error:", error);
     return NextResponse.json({ error: "Generation failed. Try again." }, { status: 500 });
   }

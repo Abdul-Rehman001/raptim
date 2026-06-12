@@ -11,7 +11,7 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     await dbConnect();
 
     const user = await User.findById(userId);
@@ -87,7 +87,7 @@ Return ONLY valid JSON, no markdown, no explanation:
 
     return NextResponse.json(atsDetails);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("ATS Score API Error:", error);
     return NextResponse.json({ error: "Analysis failed. Try again." }, { status: 500 });
   }

@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
+import { Outfit, Satisfy } from 'next/font/google';
+
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
+const satisfy = Satisfy({ weight: '400', subsets: ['latin'], variable: '--font-satisfy' });
 
 export const metadata: Metadata = {
   title: "ApplyIQ - AI Job Tracker",
@@ -16,9 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Satisfy&display=swap" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
             --font-outfit: 'Outfit', sans-serif;
@@ -29,7 +30,7 @@ export default function RootLayout({
           }
         `}} />
       </head>
-      <body className="antialiased bg-bg-base text-text-primary min-h-screen">
+      <body className={`antialiased bg-bg-base text-text-primary min-h-screen ${outfit.variable} ${satisfy.variable}`}>
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"

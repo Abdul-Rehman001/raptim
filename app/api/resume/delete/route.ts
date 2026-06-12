@@ -21,7 +21,6 @@ export async function DELETE(req: Request) {
     }
 
     await dbConnect();
-    // @ts-ignore
     await User.findByIdAndUpdate(session.user.id, {
       $unset: { resumeUrl: "", resumeText: "" },
     });

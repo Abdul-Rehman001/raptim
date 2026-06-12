@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
@@ -10,10 +11,9 @@ export async function GET() {
   }
 
   await dbConnect();
-  // @ts-ignore
   const userId = session.user.id;
 
-  if (!userId || !require("mongoose").Types.ObjectId.isValid(userId)) {
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json([]);
   }
 
@@ -33,7 +33,6 @@ export async function POST(req: Request) {
   }
 
   await dbConnect();
-  // @ts-ignore
   const userId = session.user.id;
   
   try {

@@ -3,11 +3,12 @@
 import { Droppable } from "@hello-pangea/dnd";
 import { JobCard } from "./JobCard";
 import { cn } from "@/lib/utils";
+import { IJob } from "@/types";
 
 interface BoardColumnProps {
   id: string;
   title: string;
-  jobs: any[];
+  jobs: IJob[];
 }
 
 const getColumnColor = (id: string) => {
@@ -23,7 +24,7 @@ const getColumnColor = (id: string) => {
 
 export function BoardColumn({ id, title, jobs }: BoardColumnProps) {
   return (
-    <div className="flex flex-col h-full min-w-[280px] w-[320px] bg-bg-surface rounded-2xl border border-border-subtle shrink-0 shadow-sm p-4">
+    <div className="flex flex-col h-full min-w-70 w-[320px] bg-bg-surface rounded-2xl border border-border-subtle shrink-0 shadow-sm p-4">
       <div className="flex items-center justify-between mb-4 px-1">
         <h3 className="text-sm font-extrabold text-text-primary uppercase tracking-widest flex items-center gap-2">
           <span className={cn("w-1.5 h-1.5 rounded-full", getColumnColor(id))}></span>
@@ -37,7 +38,7 @@ export function BoardColumn({ id, title, jobs }: BoardColumnProps) {
         </button>
       </div>
       
-      <div className="flex-1 overflow-y-auto min-h-[150px] scrollbar-hide">
+      <div className="flex-1 overflow-y-auto min-h-37.5 scrollbar-hide">
         <Droppable droppableId={id}>
           {(provided, snapshot) => (
             <div

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Zap, X } from "lucide-react";
-import Link from "next/link";
+
 
 const DISMISS_KEY = "applyiq_resume_banner_dismissed";
 
@@ -11,7 +11,7 @@ export function ResumeBanner() {
 
   useEffect(() => {
     const dismissed = localStorage.getItem(DISMISS_KEY);
-    if (!dismissed) setVisible(true);
+    if (!dismissed) { const timer = setTimeout(() => setVisible(true), 0); return () => clearTimeout(timer); }
   }, []);
 
   const dismiss = () => {

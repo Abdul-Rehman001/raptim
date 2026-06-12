@@ -25,7 +25,7 @@ export default async function AICoachPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const { jobs, user } = await getData((session.user as any).id);
+  const { jobs, user } = await getData(session.user.id);
 
   return <AICoachClient user={user} jobs={jobs} />;
 }

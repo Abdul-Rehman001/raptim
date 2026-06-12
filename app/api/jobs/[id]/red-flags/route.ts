@@ -18,7 +18,7 @@ export async function POST(
 
     await dbConnect();
 
-    const job = await Job.findOne({ _id: id, userId: (session.user as any).id });
+    const job = await Job.findOne({ _id: id, userId: session.user.id });
     if (!job) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
@@ -79,7 +79,7 @@ Return ONLY valid JSON:
 
     return NextResponse.json(analysis);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Red Flag API Error:", error);
     return NextResponse.json({ error: "Analysis failed. Try again." }, { status: 500 });
   }

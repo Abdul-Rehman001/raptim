@@ -26,7 +26,6 @@ export default async function JobDetailPage(props: { params: Promise<{ id: strin
     redirect("/login");
   }
 
-  // @ts-ignore
   const { job, hasResume } = await getJobAndUser(params.id, session.user.id);
 
   if (!job) {

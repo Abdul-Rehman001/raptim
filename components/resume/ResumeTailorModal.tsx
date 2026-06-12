@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-hot-toast";
-import { X, Save, FileDown, Loader2, LayoutTemplate, RefreshCw } from "lucide-react";
+import { X, FileDown, Loader2, LayoutTemplate, RefreshCw } from "lucide-react";
 import { PDFTemplate } from "./PDFTemplate";
 import { pdf } from "@react-pdf/renderer";
 
@@ -14,9 +15,10 @@ const PDFViewer = dynamic(
 );
 
 import { useRouter } from "next/navigation";
+import { IJob } from "@/types";
 
 interface ResumeTailorModalProps {
-  job: any;
+  job: IJob;
   open: boolean;
   onClose: () => void;
 }
@@ -24,11 +26,11 @@ interface ResumeTailorModalProps {
 export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [resumeData, setResumeData] = useState<any>(null);
+  const [resumeData, setResumeData] = useState<any | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [activeTemplate, setActiveTemplate] = useState("classic");
 
-  const tailorResume = async (isMounted = true) => {
+  const tailorResume = useCallback(async (isMounted = true) => {
     setLoading(true);
     try {
       const res = await fetch(`/api/jobs/${job._id}/tailor`, { method: "POST" });
@@ -39,13 +41,13 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
         setHistory(data.history || []);
         router.refresh(); // Refresh the page behind the scenes so the timeline button appears
       }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to tailor resume");
+    } catch (err: unknown) {
+      toast.error((err as Error).message || "Failed to tailor resume");
       if (isMounted && !resumeData) onClose();
     } finally {
       if (isMounted) setLoading(false);
     }
-  };
+  }, [job, onClose, resumeData, router]);
 
   // Fetch tailoring data on open
   useEffect(() => {
@@ -63,7 +65,7 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
     }
 
     return () => { isMounted = false; };
-  }, [open, job]);
+  }, [open, job, tailorResume]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -90,7 +92,7 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
       link.click();
       URL.revokeObjectURL(url);
       toast.success("Resume downloaded!", { id: toastId });
-    } catch (err) {
+    } catch {
       toast.error("Failed to download PDF", { id: toastId });
     }
   };
@@ -102,18 +104,18 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-100 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       <div className="relative z-10 w-[95vw] h-[95vh] bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-bg-surface shrink-0">
-          <div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between px-4 md:px-6 py-4 border-b border-border-subtle bg-bg-surface shrink-0 gap-4 relative">
+          <div className="pr-10 md:pr-0">
             <h2 className="text-xl font-extrabold text-text-primary">Resume Tailoring Studio</h2>
             <p className="text-sm text-text-secondary mt-0.5">Tailored for {job.title} at {job.company}</p>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-4">
             {!loading && history.length > 1 && (
               <div className="hidden sm:flex items-center gap-2 bg-emerald-500/10 text-emerald-600 px-4 py-2 rounded-xl text-sm font-extrabold border border-emerald-500/20 mr-4 shadow-sm">
                 <span>Original Match: {history[0].analysis?.matchScore || job.matchScore}%</span>
@@ -127,19 +129,19 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
               <>
                 <button
                   onClick={() => tailorResume()}
-                  className="bg-bg-surface border border-border-default hover:bg-bg-surface-hover text-text-primary font-bold text-sm px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2"
+                  className="flex-1 md:flex-none justify-center bg-bg-surface border border-border-default hover:bg-bg-surface-hover text-text-primary font-bold text-sm px-3 md:px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 whitespace-nowrap"
                 >
-                  <RefreshCw className="w-4 h-4" /> Re-Tailor with AI
+                  <RefreshCw className="w-4 h-4 shrink-0" /> Re-Tailor
                 </button>
                 <button
                   onClick={handleDownload}
-                  className="bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-md flex items-center gap-2"
+                  className="flex-1 md:flex-none justify-center bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm px-3 md:px-6 py-2.5 rounded-xl transition-all shadow-md flex items-center gap-2 whitespace-nowrap"
                 >
-                  <FileDown className="w-4 h-4" /> Download PDF
+                  <FileDown className="w-4 h-4 shrink-0" /> Download
                 </button>
               </>
             )}
-            <button onClick={onClose} className="p-2 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
+            <button onClick={onClose} className="absolute top-3 right-3 md:static md:top-auto md:right-auto p-2 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
               <X className="h-6 w-6" />
             </button>
           </div>
@@ -148,7 +150,7 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
         {/* Body Split View */}
         <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
           {/* Left Panel: Editor */}
-          <div className="w-full lg:w-1/3 lg:min-w-[400px] border-b lg:border-b-0 lg:border-r border-border-subtle bg-bg-surface-hover/50 flex flex-col overflow-hidden max-h-[50vh] lg:max-h-full">
+          <div className="w-full lg:w-1/3 lg:min-w-100 border-b lg:border-b-0 lg:border-r border-border-subtle bg-bg-surface-hover/50 flex flex-col overflow-hidden max-h-[50vh] lg:max-h-full">
             {loading ? (
               <div className="flex-1 flex flex-col items-center justify-center text-text-secondary">
                 <Loader2 className="w-10 h-10 animate-spin text-primary mb-4" />
@@ -204,7 +206,7 @@ export function ResumeTailorModal({ job, open, onClose }: ResumeTailorModalProps
                         />
                         <button 
                           onClick={() => {
-                            const newLinks = resumeData.basics.links.filter((_: any, i: number) => i !== idx);
+                            const newLinks = resumeData.basics.links.filter((_: unknown, i: number) => i !== idx);
                             setResumeData({...resumeData, basics: {...resumeData.basics, links: newLinks}});
                           }}
                           className="px-3 py-2 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20 transition-colors font-bold"

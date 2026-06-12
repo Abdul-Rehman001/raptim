@@ -13,7 +13,6 @@ export async function PUT(req: Request) {
     const body = await req.json();
     await dbConnect();
     
-    // @ts-ignore
     const updatedUser = await User.findByIdAndUpdate(
       session.user.id,
       { $set: body },

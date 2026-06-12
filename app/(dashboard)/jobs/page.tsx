@@ -16,7 +16,7 @@ async function getJobsAndUser(userId: string) {
      Job.find({ userId }).sort({ createdAt: -1 }),
      User.findById(userId).select("resumeText").lean()
   ]);
-  return { jobs: JSON.parse(JSON.stringify(jobs)), userResumeText: (user as any)?.resumeText || "" };
+  return { jobs: JSON.parse(JSON.stringify(jobs)), userResumeText: (user as any /* eslint-disable-line @typescript-eslint/no-explicit-any */)?.resumeText || "" };
 }
 
 export default async function JobsPage() {
@@ -25,7 +25,6 @@ export default async function JobsPage() {
     redirect("/login");
   }
 
-  // @ts-ignore
   const { jobs, userResumeText } = await getJobsAndUser(session.user.id);
 
   return (

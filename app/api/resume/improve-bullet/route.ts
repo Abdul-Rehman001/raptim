@@ -57,7 +57,7 @@ Return ONLY valid JSON:
     const result = JSON.parse(cleanJson);
     return NextResponse.json(result);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Improve Bullet API Error:", error);
     return NextResponse.json({ error: "Failed to improve bullet. Try again." }, { status: 500 });
   }

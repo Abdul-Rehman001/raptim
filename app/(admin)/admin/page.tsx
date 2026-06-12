@@ -1,4 +1,3 @@
-import { auth } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { Job } from "@/models/Job";
@@ -6,7 +5,6 @@ import {
   Users, 
   Briefcase, 
   Sparkles, 
-  TrendingUp, 
   ShieldCheck,
   Globe,
   ArrowUpRight
@@ -37,7 +35,6 @@ async function getAdminStats() {
 }
 
 export default async function AdminDashboard() {
-  const session = await auth();
   const stats = await getAdminStats();
 
   return (
@@ -55,7 +52,7 @@ export default async function AdminDashboard() {
               Platform <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Intelligence</span>
             </h1>
             <p className="text-white/50 mt-4 text-base md:text-lg max-w-xl font-medium">
-              Real-time oversight of ApplyIQ's growth, engagement, and AI performance across your entire user base.
+              Real-time oversight of ApplyIQ&apos;s growth, engagement, and AI performance across your entire user base.
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -93,7 +90,7 @@ export default async function AdminDashboard() {
             </button>
           </div>
           <div className="space-y-4">
-            {stats.recentUsers.map((user: any) => (
+            {stats.recentUsers.map((user: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => (
               <div key={user._id.toString()} className="flex items-center justify-between p-4 rounded-2xl bg-bg-surface-elevated/50 border border-border-subtle transition-all hover:bg-bg-surface-elevated">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary/20">
@@ -118,7 +115,7 @@ export default async function AdminDashboard() {
         <div className="bg-bg-surface border border-border-subtle rounded-[2rem] p-8 shadow-sm flex flex-col justify-between">
           <h3 className="text-xl font-black text-text-primary tracking-tight mb-8">Global Pipeline Status</h3>
           <div className="grid grid-cols-2 gap-4">
-             {stats.statusCounts.map((s: any) => (
+             {stats.statusCounts.map((s: { _id: string, count: number }) => (
                <div key={s._id} className="p-5 rounded-2xl bg-bg-surface-elevated/30 border border-border-subtle flex flex-col items-center text-center">
                   <span className="text-[10px] font-black text-text-tertiary uppercase tracking-widest mb-1">{s._id}</span>
                   <span className="text-2xl font-black text-text-primary">{s.count}</span>

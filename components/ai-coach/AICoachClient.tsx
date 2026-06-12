@@ -13,13 +13,12 @@ import {
 import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { pdf } from "@react-pdf/renderer";
-import { PDFTemplate } from "@/components/resume/PDFTemplate";
 import { ResumeTailorModal } from "@/components/resume/ResumeTailorModal";
+import { IUser, IJob } from "@/types";
 
 interface AICoachClientProps {
-  user: any;
-  jobs: any[];
+  user: IUser;
+  jobs: IJob[];
 }
 
 export function AICoachClient({ user, jobs }: AICoachClientProps) {
@@ -30,7 +29,7 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
   const activeTab = searchParams.get("tab") || "analyses";
   const selectedJobId = searchParams.get("jobId");
   
-  const [selectedJob, setSelectedJob] = useState<any>(
+  const [selectedJob, setSelectedJob] = useState<IJob>(
     jobs.find(j => j._id.toString() === selectedJobId) || jobs[0]
   );
 
@@ -44,7 +43,7 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
     const params = new URLSearchParams(searchParams);
     params.set("jobId", id);
     router.push(`/ai-coach?${params.toString()}`);
-    setSelectedJob(jobs.find(j => j._id.toString() === id));
+    setSelectedJob((jobs.find(j => j._id.toString() === id) as IJob) || jobs[0]);
   };
 
   const tabs = [
@@ -115,7 +114,7 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
 
 // --- TAB COMPONENTS ---
 
-function JobAnalysesTab({ jobs }: { jobs: any[] }) {
+function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   
   const analyzedJobs = jobs.filter(j => j.matchScore !== null);
@@ -170,13 +169,13 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
               className="w-full text-left p-5 flex items-center justify-between gap-4"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-0.5">{job.company}</p>
+                <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-0.5">{job.company }</p>
                 <h3 className="text-base font-extrabold text-text-primary truncate">{job.title}</h3>
               </div>
               <div className="flex items-center gap-3 sm:gap-6 shrink-0">
                 <div className="flex flex-col items-end">
                   <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest leading-none mb-1">Match</p>
-                  <p className={`text-sm sm:text-lg font-black ${job.matchScore >= 80 ? "text-emerald-500" : job.matchScore >= 60 ? "text-amber-500" : "text-red-400"}`}>
+                  <p className={`text-sm sm:text-lg font-black ${(job.matchScore ?? 0) >= 80 ? "text-emerald-500" : (job.matchScore ?? 0) >= 60 ? "text-amber-500" : "text-red-400"}`}>
                     {job.matchScore || 0}%
                   </p>
                 </div>
@@ -244,7 +243,7 @@ function JobAnalysesTab({ jobs }: { jobs: any[] }) {
   );
 }
 
-function TailorResumeButton({ job }: { job: any }) {
+function TailorResumeButton({ job }: { job: IJob }) {
   const [modalOpen, setModalOpen] = useState(false);
   const history = job.resumeHistory || [];
 
@@ -476,7 +475,7 @@ function ResumeHealthTab({ user }: { user: any }) {
             <textarea 
                value={bulletText}
                onChange={(e) => setBulletText(e.target.value)}
-               placeholder="Paste a weak bullet point (e.g., &apos;Helped build a website used by many people&apos;)"
+               placeholder="Paste a weak bullet point (e.g., &apos;Helped build a website used by many  people&apos;)"
                className="w-full h-32 p-4 text-sm bg-bg-surface-elevated border border-border-default rounded-2xl text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 resize-none transition-all"
             />
             <button 
@@ -529,7 +528,7 @@ function ResumeHealthTab({ user }: { user: any }) {
   );
 }
 
-function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob: any, setJobId: (id: string) => void }) {
+function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJob: any, setJobId: (id: string) => void }) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<any>(selectedJob?.redFlagAnalysis || null);
 
@@ -570,7 +569,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], sele
               }`}
             >
               <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${selectedJob?._id.toString() === job._id.toString() ? "text-primary" : "text-text-tertiary"}`}>
-                {job.company}
+                {job.company }
               </p>
               <h5 className="text-sm font-extrabold text-text-primary truncate">{job.title}</h5>
             </button>
@@ -590,7 +589,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], sele
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-8 border-b border-border-subtle">
               <div>
                 <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Evaluating Opportunity</p>
-                <h3 className="text-2xl font-black text-text-primary">{selectedJob.company}</h3>
+                <h3 className="text-2xl font-black text-text-primary">{selectedJob.company }</h3>
                 <p className="text-sm text-text-secondary font-medium">{selectedJob.title}</p>
               </div>
               <div className="bg-bg-surface-elevated p-2 rounded-2xl border border-border-subtle w-full sm:w-auto">
@@ -643,10 +642,10 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], sele
                   <div className="space-y-4">
                     <h5 className="text-xs font-bold text-red-500 uppercase tracking-widest px-1">Red Flags & Concerns</h5>
                     <div className="space-y-3">
-                      {analysis.redFlags.length === 0 ? (
+                      {(analysis.redFlags || []).length === 0 ? (
                         <div className="text-xs text-text-tertiary p-4 rounded-2xl bg-emerald-500/5 italic">No red flags identified.</div>
                       ) : (
-                        analysis.redFlags.map((flag: any, i: number) => (
+                        (analysis.redFlags || []).map((flag: any, i: number) => (
                            <div key={i} className="bg-red-500/5 border border-red-500/10 p-4 rounded-2xl">
                               <div className="flex items-center justify-between mb-2">
                                  <p className="text-xs font-black text-red-600 uppercase">Concern {i+1}</p>
@@ -664,7 +663,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], sele
                   <div className="space-y-4">
                     <h5 className="text-xs font-bold text-emerald-500 uppercase tracking-widest px-1">Green Flags & Upsides</h5>
                     <div className="space-y-3">
-                      {analysis.greenFlags.map((flag: any, i: number) => (
+                      {(analysis.greenFlags || []).map((flag: any, i: number) => (
                         <div key={i} className="bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-2xl">
                            <div className="flex items-center gap-2 mb-2">
                               <div className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -711,7 +710,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: any[], sele
   );
 }
 
-function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob: any, setJobId: (id: string) => void }) {
+function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJob: any, setJobId: (id: string) => void }) {
   const [generating, setGenerating] = useState(false);
   const [email, setEmail] = useState<string>(selectedJob?.coldEmail || "");
 
@@ -758,7 +757,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob
             >
               <div className="flex items-center justify-between mb-1">
                  <p className={`text-[10px] font-bold uppercase tracking-widest ${selectedJob?._id.toString() === job._id.toString() ? "text-primary" : "text-text-tertiary"}`}>
-                  {job.company}
+                  {job.company }
                 </p>
                 {job.coldEmail && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Email generated" />}
               </div>
@@ -800,7 +799,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob
                   <Zap className="w-12 h-12 text-primary mb-6 opacity-30 shadow-primary/20 shadow-xl" />
                   <h4 className="text-xl font-black text-text-primary mb-3">Skip the line with AI outreach</h4>
                   <p className="text-sm text-text-secondary max-w-sm mb-10 leading-relaxed font-medium">
-                    We'll draft a concise, human-toned message tailored specifically to <span className="text-primary font-bold">{selectedJob.company}</span> using your strongest matching skills.
+                    We'll draft a concise, human-toned message tailored specifically to <span className="text-primary font-bold">{selectedJob.company }</span> using your strongest matching skills.
                   </p>
                   <button 
                     onClick={generateEmail}
@@ -847,7 +846,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: any[], selectedJob
                         </div>
                         <div className="flex gap-3 items-center">
                            <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500"><CheckCircle2 className="w-3 h-3" /></div>
-                           <p className="text-xs text-text-secondary font-medium italic">"Includes soft references to specific company challenges."</p>
+                           <p className="text-xs text-text-secondary font-medium italic">"Includes soft references to specific company  challenges."</p>
                         </div>
                      </div>
                   </div>

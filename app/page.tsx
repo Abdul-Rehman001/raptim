@@ -231,33 +231,7 @@ export default function Home() {
                   </Link>
                 </motion.div>
 
-                {/* Social proof row */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="flex items-center gap-4"
-                >
-                  <div className="flex -space-x-2">
-                    {["#a78bfa","#818cf8","#60a5fa","#34d399","#f472b6"].map((c,i) => (
-                      <div key={i} className="w-7 h-7 rounded-full border-2 border-bg-base
-                        flex items-center justify-center text-[9px] font-bold text-white"
-                        style={{ background: c }}>
-                        {String.fromCharCode(65+i)}
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-0.5 mb-0.5">
-                      {[...Array(5)].map((_,i) => (
-                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                    <p className="text-xs text-text-tertiary">
-                      Loved by <span className="text-text-secondary font-semibold">2,400+</span> job seekers
-                    </p>
-                  </div>
-                </motion.div>
+
               </div>
 
               {/* Right: floating stats panel */}
@@ -528,7 +502,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-2">AI Career Coach</h3>
                   <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
-                    Paste any job description. Grok AI scores your resume, identifies gaps,
+                    Paste any job description. ApplyIQ AI scores your resume, identifies gaps,
                     drafts your cover letter, and preps you for interviews — in seconds.
                   </p>
                   <div className="mt-6 space-y-2">

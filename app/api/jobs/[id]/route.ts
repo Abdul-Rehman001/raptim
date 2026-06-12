@@ -9,7 +9,6 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await dbConnect();
-  // @ts-ignore
   const userId = session.user.id;
   const job = await Job.findOne({ _id: params.id, userId });
   
@@ -23,13 +22,12 @@ export async function PUT(req: Request, props: { params: Promise<{ id: string }>
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await dbConnect();
-  // @ts-ignore
   const userId = session.user.id;
   
   let body;
   try {
       body = await req.json();
-  } catch (e) {
+  } catch {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
@@ -49,7 +47,6 @@ export async function DELETE(req: Request, props: { params: Promise<{ id: string
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await dbConnect();
-  // @ts-ignore
   const userId = session.user.id;
 
   const job = await Job.findOneAndDelete({ _id: params.id, userId });

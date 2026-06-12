@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -7,7 +8,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Briefcase, BarChart2, Settings, LogOut, Zap,
-  ChevronsLeft, ChevronsRight, X, Sun, Moon, Sparkles, Bell, ShieldCheck
+  ChevronsLeft, ChevronsRight, X, Sun, Moon, Sparkles, ShieldCheck
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -32,7 +33,7 @@ export function Sidebar({
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => { const timer = setTimeout(() => setMounted(true), 0); return () => clearTimeout(timer); }, []);
   const isDark = resolvedTheme === "dark";
 
   const navigation = [
@@ -70,7 +71,7 @@ export function Sidebar({
       {/* Logo & Collapse */}
       <div className={cn("flex items-center mb-8", collapsed ? "px-4 flex-col gap-4 justify-center" : "px-6 justify-between")}>
         <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-purple-800 flex items-center justify-center shadow-[0_0_15px_rgba(166,137,250,0.4)] shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary to-purple-800 flex items-center justify-center shadow-[0_0_15px_rgba(166,137,250,0.4)] shrink-0">
               <Zap className="h-4 w-4 text-white" strokeWidth={3} />
             </div>
             {!collapsed && (
@@ -102,7 +103,7 @@ export function Sidebar({
               )}
             >
               <item.icon className={cn(
-                "h-[18px] w-[18px] shrink-0 transition-colors duration-200",
+                "h-4.5 w-4.5 shrink-0 transition-colors duration-200",
                 isActive ? "text-primary" : "text-text-tertiary group-hover:text-text-secondary"
               )} />
               {!collapsed && <span className="flex-1">{item.name}</span>}
@@ -123,11 +124,11 @@ export function Sidebar({
           )}
         >
           {!mounted ? (
-            <span className="h-[18px] w-[18px] shrink-0" />
+            <span className="h-4.5 w-4.5 shrink-0" />
           ) : isDark ? (
-            <Sun className="h-[18px] w-[18px] shrink-0" />
+            <Sun className="h-4.5 w-4.5 shrink-0" />
           ) : (
-            <Moon className="h-[18px] w-[18px] shrink-0" />
+            <Moon className="h-4.5 w-4.5 shrink-0" />
           )}
           {!collapsed && mounted && <span>{isDark ? "Light Mode" : "Dark Mode"}</span>}
           {!collapsed && !mounted && <span>Theme</span>}
@@ -139,7 +140,7 @@ export function Sidebar({
         {collapsed ? (
           <div className="flex flex-col items-center gap-3">
             {user?.image ? (
-              <img src={user.image} alt={user.name || "User"} className="h-9 w-9 rounded-full object-cover border border-border-default" />
+              <Image width={24} height={24} unoptimized src={user.image} alt={user.name || "User"} className="h-9 w-9 rounded-full object-cover border border-border-default" />
             ) : (
               <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
                 <span className="text-sm font-bold text-primary">{user?.name?.charAt(0) || "U"}</span>
@@ -153,7 +154,7 @@ export function Sidebar({
           <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface-elevated border border-border-subtle">
             <div className="flex items-center gap-3 overflow-hidden">
               {user?.image ? (
-                <img src={user.image} alt={user.name || "User"} className="h-9 w-9 rounded-full object-cover shrink-0 border border-border-default" />
+                <Image width={24} height={24} unoptimized src={user.image} alt={user.name || "User"} className="h-9 w-9 rounded-full object-cover shrink-0 border border-border-default" />
               ) : (
                 <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0">
                   <span className="text-sm font-bold text-primary">{user?.name?.charAt(0) || "U"}</span>
@@ -193,7 +194,7 @@ export function Sidebar({
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden lg:flex fixed top-0 left-0 h-screen bg-sidebar border-r border-border-subtle flex-col py-6 z-50 transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-64"
+        collapsed ? "w-18" : "w-64"
       )}>
         {sidebarContent}
       </aside>

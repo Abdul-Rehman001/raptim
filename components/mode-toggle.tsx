@@ -9,7 +9,7 @@ export function ModeToggle() {
   const [mounted, setMounted] = useState(false)
 
   // Only render theme-specific UI after mount to avoid SSR hydration mismatch
-  useEffect(() => setMounted(true), [])
+  useEffect(() => { const timer = setTimeout(() => setMounted(true), 0); return () => clearTimeout(timer); }, [])
 
   const isDark = resolvedTheme === "dark"
 

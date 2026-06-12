@@ -7,6 +7,7 @@ import { Save, X, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 
 interface EditJobModalProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   job: any;
   open: boolean;
   onClose: () => void;
@@ -69,10 +70,10 @@ export function EditJobModal({ job, open, onClose }: EditJobModalProps) {
   const inputClass = "w-full bg-bg-surface-elevated border border-border-default rounded-xl px-4 py-3 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-100 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-[580px] mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div className="relative z-10 w-full max-w-145 mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border-subtle sticky top-0 bg-bg-surface z-10">
           <div>
             <h2 className="text-lg font-extrabold text-text-primary">Edit Job</h2>

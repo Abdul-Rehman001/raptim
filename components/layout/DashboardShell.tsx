@@ -53,7 +53,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
       </div>
 
       {/* Main Content */}
-      <main className={cn("transition-all duration-300", collapsed ? "lg:pl-[72px]" : "lg:pl-64")}>
+      <main className={cn("transition-all duration-300", collapsed ? "lg:pl-18" : "lg:pl-64")}>
         <div className="px-4 py-6 sm:px-6 md:px-10 md:py-8 lg:px-12">
           {children}
         </div>

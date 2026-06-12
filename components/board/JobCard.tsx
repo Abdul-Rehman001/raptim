@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { Draggable } from "@hello-pangea/dnd";
@@ -7,6 +7,7 @@ import { format, differenceInDays } from "date-fns";
 import { Paperclip, Calendar } from "lucide-react";
 
 interface JobCardProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   job: any;
   index: number;
   columnId: string;
@@ -59,7 +60,7 @@ export function JobCard({ job, index, columnId }: JobCardProps) {
               snapshot.isDragging ? "shadow-xl ring-1 ring-primary/40 shadow-primary/10 bg-bg-surface -rotate-2 scale-105 z-50 backdrop-blur-xl" : ""
             )}>
               {/* Status indicator top border */}
-              <div className={cn("absolute top-0 left-0 right-0 h-1 bg-gradient-to-r opacity-50", getLineGradient(columnId))}></div>
+              <div className={cn("absolute top-0 left-0 right-0 h-1 bg-linear-to-r opacity-50", getLineGradient(columnId))}></div>
               {/* Stale indicator dot — shows if no update in 14+ days */}
               {differenceInDays(new Date(), new Date(job.updatedAt)) >= 14 && (
                 <div

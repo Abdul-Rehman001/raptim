@@ -1,12 +1,13 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback, useEffect } from "react";
-import dynamic from "next/dynamic";
+
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { BoardColumn } from "./BoardColumn";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { IJob } from "@/types";
 import { useAppStore } from "@/lib/store";
 import { Target, Frown, PartyPopper } from "lucide-react";
 
@@ -24,8 +25,8 @@ const COLUMNS = [
   { id: "rejected", title: "Rejected" },
 ];
 
-export function Board({ initialJobs }: { initialJobs: any[] }) {
-  const [jobs, setJobs] = useState(initialJobs);
+export function Board({ initialJobs }: { initialJobs: IJob[] }) {
+  const [jobs, setJobs] = useState<IJob[]>(initialJobs);
   const router = useRouter();
   const refreshKey = useAppStore((s) => s.refreshKey);
 

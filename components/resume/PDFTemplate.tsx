@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font, Link } from '@react-pdf/renderer';
 
@@ -175,14 +176,13 @@ const styles = StyleSheet.create({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PDFTemplate = ({ data }: { data: any }) => {
   const basics = data.basics || {};
   const skills = data.skills || {};
-  const work = data.work || [];
-  const projects = data.projects || [];
-  const education = data.education || [];
-  const certifications = data.certifications || [];
+  const work = (data.work || []) as any[];
+  const projects = (data.projects || []) as any[];
+  const education = (data.education || []) as any[];
+  const certifications = (data.certifications || []) as any[];
 
   return (
     <Document>

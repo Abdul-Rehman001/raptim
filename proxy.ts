@@ -1,16 +1,15 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+
 
 const { auth } = NextAuth(authConfig);
 
-// @ts-ignore — NextAuth v5 beta type mismatch with NextRequest
-export default auth((req: any) => {
+export default auth((req: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
   const { nextUrl } = req;
   const session = req.auth;
   const isLoggedIn = !!session?.user;
-  const completedOnboarding = (session?.user as any)?.completedOnboarding ?? true;
+  const completedOnboarding = session?.user?.completedOnboarding ?? true;
 
   const isOnOnboarding = nextUrl.pathname.startsWith("/onboarding");
   const isOnAuth =

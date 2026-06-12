@@ -1,11 +1,13 @@
 "use client";
+import Image from "next/image";
 
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Save, Loader2, User as UserIcon } from "lucide-react";
+import { IUser } from "@/types";
 
 interface ProfileFormProps {
-  user: any;
+  user: IUser;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
@@ -59,10 +61,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
             {/* Avatar Section */}
             <div className="relative group shrink-0">
                {user?.image ? (
-                 <img src={user.image} alt={user.name} className="w-24 h-24 rounded-full object-cover border-2 border-primary/50 shadow-[0_0_20px_rgba(166,137,250,0.2)]" />
+                 <Image width={40} height={40} unoptimized src={(user.image || "")} alt={user.name || ""} className="w-24 h-24 rounded-full object-cover border-2 border-primary/50 shadow-[0_0_20px_rgba(166,137,250,0.2)]" />
                ) : (
                  <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/50 shadow-[0_0_20px_rgba(166,137,250,0.2)]">
-                   <span className="text-3xl font-bold text-primary">{getInitials(user?.name)}</span>
+                   <span className="text-3xl font-bold text-primary">{getInitials(user?.name || "")}</span>
                  </div>
                )}
             </div>

@@ -4,7 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import { Job } from "@/models/Job";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import Link from "next/link";
-import { ArrowLeft, TrendingUp, CheckCircle2, AlertTriangle, Lightbulb, ExternalLink } from "lucide-react";
+import { ArrowLeft, TrendingUp, CheckCircle2, AlertTriangle, Lightbulb } from "lucide-react";
 
 async function getJobHistory(id: string, userId: string) {
   await dbConnect();
@@ -36,7 +36,7 @@ export default async function ResumeHistoryPage(props: { params: Promise<{ id: s
         ]}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-text-primary">Resume Tailoring History</h1>
           <p className="text-sm text-text-secondary mt-1">Track how your resume improved for {job.title} at {job.company}</p>
@@ -60,6 +60,7 @@ export default async function ResumeHistoryPage(props: { params: Promise<{ id: s
         </div>
       ) : (
         <div className="relative border-l-2 border-border-default ml-4 md:ml-8 space-y-12 pb-12">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {history.map((entry: any, index: number) => {
             const isOriginal = index === 0;
             const score = entry.analysis?.matchScore || 0;
@@ -69,15 +70,15 @@ export default async function ResumeHistoryPage(props: { params: Promise<{ id: s
             const diff = prevScore !== null ? score - prevScore : 0;
 
             return (
-              <div key={index} className="relative pl-8 md:pl-12">
+              <div key={index} className="relative pl-6 sm:pl-8 md:pl-12">
                 {/* Timeline Dot */}
-                <div className={`absolute -left-[11px] top-6 w-5 h-5 rounded-full border-4 border-bg-base ${isOriginal ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+                <div className={`absolute -left-2.75 top-6 w-5 h-5 rounded-full border-4 border-bg-base ${isOriginal ? 'bg-amber-500' : 'bg-emerald-500'}`} />
                 
                 <div className="bg-bg-surface border border-border-subtle rounded-2xl shadow-sm overflow-hidden">
                   {/* Header */}
                   <div className="px-6 py-5 border-b border-border-subtle bg-bg-surface-hover/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-lg font-extrabold text-text-primary flex items-center gap-3">
+                      <h3 className="text-lg font-extrabold text-text-primary flex flex-wrap items-center gap-2 sm:gap-3">
                         {entry.version}
                         {isOriginal && <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 text-[10px] uppercase tracking-widest border border-amber-500/20">Baseline</span>}
                         {!isOriginal && <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 text-[10px] uppercase tracking-widest border border-emerald-500/20">Tailored</span>}
@@ -87,7 +88,7 @@ export default async function ResumeHistoryPage(props: { params: Promise<{ id: s
                       </p>
                     </div>
                     
-                    <div className="flex flex-col items-end">
+                    <div className="flex flex-col items-start sm:items-end mt-2 sm:mt-0 pt-3 sm:pt-0 border-t border-border-subtle sm:border-0">
                       <div className="flex items-center gap-3">
                         <span className="text-sm font-bold text-text-secondary">Match Score:</span>
                         <span className={`text-2xl font-black ${score >= 75 ? 'text-emerald-500' : score >= 50 ? 'text-amber-500' : 'text-red-500'}`}>

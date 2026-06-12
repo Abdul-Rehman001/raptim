@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Plus, X, ChevronDown, ChevronUp, Sparkles, Loader2, DollarSign, Globe, Linkedin, Briefcase } from "lucide-react";
+import { Plus, X, ChevronDown, ChevronUp, Sparkles, Loader2, Globe, Linkedin, } from "lucide-react";
 import Link from "next/link";
 import { useAppStore } from "@/lib/store";
 
@@ -19,7 +19,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
   const effectiveResumeText = storeResumeText || userResumeText;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [analyzing, setAnalyzing] = useState(false);
+
   const [showOptional, setShowOptional] = useState(false);
   const [formData, setFormData] = useState({
     title: "", company: "", jobDescription: "",
@@ -54,6 +54,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let job: any;
     try {
       const res = await fetch("/api/jobs", {
@@ -84,8 +85,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
     if (hasResume && hasJD) {
         // Fire auto-analysis in background
         toast("Job added! Running AI analysis...", { icon: "✨" });
-        setAnalyzing(true);
-        fetch(`/api/jobs/${job._id}/analyze`, { method: "POST" })
+        fetch(`/api/jobs/${job?._id}/analyze`, { method: "POST" })
           .then((r) => r.json())
           .then((data) => {
             if (data.job?.matchScore !== null && data.job?.matchScore !== undefined) {
@@ -96,7 +96,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
             }
           })
           .catch(() => toast.error("Job added! Analysis failed — try manually."))
-          .finally(() => setAnalyzing(false));
+          ;
       } else if (!hasResume) {
         toast(
           (t) => (
@@ -122,10 +122,10 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
       <div onClick={() => setOpen(true)}>{children}</div>
 
       {open && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+        <div className="fixed inset-0 z-100 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
-          <div className="relative z-10 w-full max-w-[580px] mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative z-10 w-full max-w-145 mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-7 py-5 border-b border-border-subtle sticky top-0 bg-bg-surface z-10">
               <div>
                 <h2 className="text-lg font-extrabold text-text-primary">Add New Job</h2>
@@ -150,7 +150,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
 
               {/* Job Description — key for AI */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-text-tertiary flex items-center gap-1.5">
+                <label className="text-xs font-bold text-text-tertiary items-center gap-1.5 flex">
                   Job Description
                   {effectiveResumeText.length > 50 && (
                     <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full flex items-center gap-1">

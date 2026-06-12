@@ -2,9 +2,7 @@ import { auth } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import { Job } from "@/models/Job";
 import mongoose from "mongoose";
-
-export const revalidate = 30;
-
+import { IJob } from "@/types";
 import { 
   Play, 
   Calendar,
@@ -13,17 +11,19 @@ import {
   ChevronRight
 } from "lucide-react";
 
+export const revalidate = 30;
+
 async function getAnalyticsData(userId: string) {
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) return null;
   await dbConnect();
-  
+
   const jobs = await Job.find({ userId }).lean();
   const total = jobs.length;
 
-  const appliedJobs = jobs.filter((j: any) => j.status !== "saved");
-  const responses = jobs.filter((j: any) => ["interview", "offer", "rejected"].includes(j.status));
-  const interviews = jobs.filter((j: any) => ["interview", "offer"].includes(j.status)); 
-  const offers = jobs.filter((j: any) => j.status === "offer");
+  const appliedJobs = jobs.filter((j: IJob) => j.status !== "saved");
+  const responses = jobs.filter((j: IJob) => ["interview", "offer", "rejected"].includes(j.status));
+  const interviews = jobs.filter((j: IJob) => ["interview", "offer"].includes(j.status)); 
+  const offers = jobs.filter((j: IJob) => j.status === "offer");
 
   const responseRate = appliedJobs.length > 0 ? ((responses.length / appliedJobs.length) * 100).toFixed(1) : "0.0";
   const offerRate = appliedJobs.length > 0 ? ((offers.length / appliedJobs.length) * 100).toFixed(1) : "0.0";
@@ -31,7 +31,7 @@ async function getAnalyticsData(userId: string) {
   let totalTimeToInterview = 0;
   let interviewCountWithDates = 0;
   
-  interviews.forEach((j: any) => {
+  interviews.forEach((j: IJob) => {
      if (j.appliedDate && j.updatedAt) {
         const diffTime = Math.abs(new Date(j.updatedAt).getTime() - new Date(j.appliedDate).getTime());
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -51,8 +51,8 @@ async function getAnalyticsData(userId: string) {
 
   const now = new Date();
   const weeks = [0, 0, 0, 0];
-  jobs.forEach((j: any) => {
-    const diffTime = Math.abs(now.getTime() - new Date((j as any).createdAt).getTime());
+  jobs.forEach((j: IJob) => {
+    const diffTime = Math.abs(now.getTime() - new Date((j as any /* eslint-disable-line @typescript-eslint/no-explicit-any */).createdAt).getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays <= 7) weeks[3]++;
     else if (diffDays <= 14) weeks[2]++;
@@ -62,8 +62,8 @@ async function getAnalyticsData(userId: string) {
   const maxWeek = Math.max(...weeks, 1);
   const weeklyHeights = weeks.map(w => Math.round((w / maxWeek) * 100)); 
 
-  const remote = jobs.filter((j: any) => j.location && j.location.toLowerCase().includes('remote')).length;
-  const onSite = jobs.filter((j: any) => j.location && !j.location.toLowerCase().includes('remote')).length;
+  const remote = jobs.filter((j: IJob) => j.location && j.location.toLowerCase().includes('remote')).length;
+  const onSite = jobs.filter((j: IJob) => j.location && !j.location.toLowerCase().includes('remote')).length;
   const unspecified = total - remote - onSite;
   
   const remotePct = total > 0 ? Math.round((remote / total) * 100) : 0;
@@ -82,7 +82,7 @@ async function getAnalyticsData(userId: string) {
 
 export default async function AnalyticsPage() {
   const session = await auth();
-  const data = await getAnalyticsData((session?.user as any)?.id || "");
+  const data = await getAnalyticsData(session?.user?.id || "");
   const monthName = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
 
   return (
@@ -156,7 +156,7 @@ export default async function AnalyticsPage() {
             {/* Overlay layers mimicking funnel segments */}
             <div className={`absolute top-2 left-0 h-14 bg-primary border-r border-[#1a142e] flex items-center px-4 z-20 transition-all rounded-l-xl ${data?.applied === 0 ? 'hidden' : ''}`} style={{width: data?.appliedWidth}}>
                <span className="text-xs font-bold text-text-primary drop-shadow-md relative z-10 overflow-hidden whitespace-nowrap">{data?.applied} Applied</span>
-               <div className="absolute right-[-10px] top-0 bottom-0 w-8 bg-gradient-to-r from-primary to-transparent z-0 opacity-50 skew-x-12" />
+               <div className="absolute -right-2.5 top-0 bottom-0 w-8 bg-linear-to-r from-primary to-transparent z-0 opacity-50 skew-x-12" />
             </div>
             
             <div className={`absolute top-2 left-0 h-14 bg-purple-400 border-r border-[#1a142e] flex items-center px-4 z-30 transition-all rounded-l-xl ${data?.interview === 0 ? 'hidden' : ''}`} style={{width: data?.interviewWidth}}>
@@ -168,26 +168,22 @@ export default async function AnalyticsPage() {
                <span className="text-xs font-bold text-[#13101d] relative z-10 overflow-hidden whitespace-nowrap">{data?.offer} Offers</span>
             </div>
             
-            {/* Desktop funnel metrics */}
-            <div className="hidden sm:flex justify-between mt-3 text-[10px] font-bold text-text-tertiary px-1 uppercase tracking-wider relative h-10">
-               <span className="shrink-0">100% Total</span>
-               <span className="absolute transform -translate-x-1/2" style={{left: data?.appliedWidth}}>{data?.cvRate}% CV Rate</span>
-               <span className="absolute transform -translate-x-1/2" style={{left: data?.interviewWidth}}>{data?.intRate}% Int. Rate</span>
-               <span className="shrink-0">{data?.successRate}% Success</span>
-            </div>
-
-            {/* Mobile funnel metrics - Stacked for readability */}
-            <div className="flex sm:hidden flex-wrap gap-x-4 gap-y-2 mt-4 text-[10px] font-bold text-text-tertiary uppercase tracking-wider p-2 bg-bg-surface-elevated rounded-lg border border-border-subtle">
-               <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+            {/* Funnel metrics - Responsive flex layout to prevent overlapping */}
+            <div className="flex flex-wrap gap-x-6 gap-y-3 mt-5 text-[10px] font-bold text-text-tertiary uppercase tracking-wider p-3 bg-bg-surface-elevated sm:bg-transparent sm:p-0 sm:border-0 rounded-lg border border-border-subtle sm:justify-between items-center sm:pt-2">
+               <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary/40" />
+                  <span>100% Total</span>
+               </div>
+               <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
                   <span>{data?.cvRate}% CV Rate</span>
                </div>
-               <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+               <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-purple-400" />
                   <span>{data?.intRate}% Int. Rate</span>
                </div>
-               <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
+               <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-white" />
                   <span>{data?.successRate}% Success</span>
                </div>
             </div>

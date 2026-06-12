@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { cn } from "@/lib/utils";
 import dbConnect from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { ResumeTextEditor } from "@/components/resume/ResumeTextEditor";
@@ -11,8 +10,6 @@ import { ProfileForm } from "@/components/settings/ProfileForm";
 export const revalidate = 30;
 
 import {
-  Settings as SettingsIcon,
-  CreditCard,
   Bell,
   CloudUpload
 } from "lucide-react";
@@ -30,7 +27,6 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  // @ts-ignore
   const user = await getUser(session.user.id);
 
   return (
@@ -38,86 +34,75 @@ export default async function SettingsPage() {
       <div>
         <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">Account Settings</h1>
         <p className="text-text-secondary mt-1 font-medium">
-          Manage your personal information, resume data, and subscription details.
+          Manage your profile, preferences, and resume data.
         </p>
       </div>
 
-      {/* Resume banner — shows if no resume, dismissible via localStorage */}
-      {(!user?.resumeText || user.resumeText.length < 50) && <ResumeBanner />}
+      {!user?.resumeText && <ResumeBanner />}
 
-      <div className="space-y-12">
-        {/* Profile Information */}
-        <ProfileForm user={user} />
-        <section>
-          <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-4">
-            <CloudUpload className="w-4 h-4 text-primary" />
-            Resume & AI Context
-          </h2>
-          <div className="space-y-6">
-             <div className="border border-border-default border-dashed bg-bg-surface p-8 rounded-2xl flex flex-col items-center justify-center text-center hover:bg-bg-surface-elevated transition-colors">
-                <CloudUpload className="w-8 h-8 text-primary mb-4" />
-                <h3 className="text-sm font-bold text-text-primary mb-1">Upload your latest Resume</h3>
-                <p className="text-xs text-text-tertiary mb-6">PDF, DOCX up to 10MB</p>
-                <div className="w-full max-w-sm">
-                   <ResumeUpload initialUrl={user?.resumeUrl} />
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1 space-y-6">
+          <div className="bg-bg-surface border border-border-subtle p-6 rounded-3xl shadow-sm">
+            <h3 className="text-lg font-extrabold text-text-primary mb-4 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <Bell className="w-4 h-4" />
+              </span>
+              Personal Info
+            </h3>
+            <ProfileForm user={user} />
+          </div>
+
+          <div className="bg-bg-surface border border-border-subtle p-6 rounded-3xl shadow-sm opacity-50 relative overflow-hidden group">
+             <div className="absolute inset-0 bg-bg-surface-elevated/50 z-10 flex items-center justify-center backdrop-blur-[1px]">
+               <span className="px-3 py-1.5 rounded-lg bg-bg-surface border border-border-default text-xs font-bold text-text-primary shadow-lg">Coming Soon</span>
              </div>
-
-             <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl">
-                <div className="mb-4">
-                   <h3 className="text-sm font-bold text-white">AI Personal Pitch</h3>
-                   <p className="text-xs text-text-secondary mt-1">This context helps our AI tailor your cover letters and match formatting.</p>
+             <div className="blur-[2px]">
+              <h3 className="text-lg font-extrabold text-text-primary mb-4 flex items-center gap-2">
+                Preferences
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-text-secondary">Email Notifications</span>
+                  <div className="w-10 h-5 bg-border-default rounded-full" />
                 </div>
-                <div className="min-h-[150px]">
-                   <ResumeTextEditor initialText={user?.resumeText} />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-text-secondary">Weekly Report</span>
+                  <div className="w-10 h-5 bg-border-default rounded-full" />
                 </div>
+              </div>
              </div>
           </div>
-        </section>
+        </div>
 
-        {/* Notifications */}
-        <section>
-          <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-4">
-            <Bell className="w-4 h-4 text-primary" />
-            Notifications
-          </h2>
-          <div className="bg-bg-surface border border-border-subtle rounded-2xl overflow-hidden">
-             
-             <div className="flex items-center justify-between p-6 border-b border-border-subtle">
-                <div>
-                   <h3 className="text-sm font-bold text-white">Application Updates</h3>
-                   <p className="text-xs text-text-secondary mt-0.5">Get notified when a company views your application.</p>
-                </div>
-                <div className="w-11 h-6 bg-primary rounded-full relative cursor-pointer">
-                   <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
-                </div>
-             </div>
-
-             <div className="flex items-center justify-between p-6 border-b border-border-subtle">
-                <div>
-                   <h3 className="text-sm font-bold text-white">New Job Matches</h3>
-                   <p className="text-xs text-text-secondary mt-0.5">Weekly digest of roles that fit your profile.</p>
-                </div>
-                <div className="w-11 h-6 bg-primary rounded-full relative cursor-pointer">
-                   <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
-                </div>
-             </div>
-
-             <div className="flex items-center justify-between p-6">
-                <div>
-                   <h3 className="text-sm font-bold text-white">AI Strategy Tips</h3>
-                   <p className="text-xs text-text-secondary mt-0.5">Tips on how to improve your AI-generated cover letters.</p>
-                </div>
-                <div className="w-11 h-6 bg-border-strong rounded-full relative cursor-pointer">
-                   <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full"></div>
-                </div>
-             </div>
-             
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-bg-surface border border-border-subtle p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col h-[calc(100vh-16rem)] min-h-[600px]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-xl font-extrabold text-text-primary flex items-center gap-2">
+                  <span className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                    <CloudUpload className="w-5 h-5" />
+                  </span>
+                  Resume Database
+                </h2>
+                <p className="text-sm text-text-secondary mt-1 ml-12">
+                  Upload your PDF or paste your resume text directly. This data is used by the AI to analyze job fit.
+                </p>
+              </div>
+              <ResumeUpload />
+            </div>
+            
+            <div className="flex-1 bg-bg-surface-elevated/30 rounded-2xl border border-border-default overflow-hidden flex flex-col">
+              <div className="px-4 py-3 border-b border-border-default flex justify-between items-center bg-bg-surface">
+                <span className="text-xs font-bold text-text-tertiary uppercase tracking-wider">Raw Text Representation</span>
+                <span className="text-[10px] font-medium text-text-tertiary bg-bg-surface-elevated px-2 py-1 rounded-md">Auto-saved</span>
+              </div>
+              <div className="flex-1 p-4 relative">
+                 <ResumeTextEditor initialText={user?.resumeText || ""} />
+              </div>
+            </div>
           </div>
-        </section>
-
+        </div>
       </div>
     </div>
   );
 }
-

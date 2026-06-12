@@ -158,7 +158,7 @@ export default function OnboardingPage() {
     return (
       <div>
         <ProgressBar step={1} />
-        <h1 className="text-2xl font-extrabold text-text-primary mb-2">First, let's upload your resume</h1>
+        <h1 className="text-2xl font-extrabold text-text-primary mb-2">First, let&apos;s upload your resume</h1>
         <p className="text-sm text-text-secondary mb-8">This lets our AI score every job against your actual skills.</p>
 
         {/* Drag-drop zone */}
@@ -229,14 +229,14 @@ export default function OnboardingPage() {
         {!resumeSkipped ? (
           <div className="text-center">
             <button onClick={() => { setResumeSkipped(true); }} className="text-xs text-text-tertiary hover:text-text-secondary transition-colors">
-              Skip for now — I'll add it later
+              Skip for now — I&apos;ll add it later
             </button>
           </div>
         ) : (
           <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
             <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
             <p className="text-xs text-amber-600 dark:text-amber-400">
-              AI analysis won't work without your resume. You can add it later in Settings.
+              AI analysis won&apos;t work without your resume. You can add it later in Settings.
             </p>
           </div>
         )}
@@ -253,8 +253,8 @@ export default function OnboardingPage() {
         <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-text-tertiary hover:text-text-secondary transition-colors mb-6">
           <ChevronLeft className="w-3.5 h-3.5" /> Back
         </button>
-        <h1 className="text-2xl font-extrabold text-text-primary mb-2">Now add a job you're applying to</h1>
-        <p className="text-sm text-text-secondary mb-8">Paste the job description and we'll analyze your fit instantly.</p>
+        <h1 className="text-2xl font-extrabold text-text-primary mb-2">Now add a job you&apos;re applying to</h1>
+        <p className="text-sm text-text-secondary mb-8">Paste the job description and we&apos;ll analyze your fit instantly.</p>
 
         <form onSubmit={handleJobSubmit} className="space-y-4">
           <div>
@@ -307,7 +307,7 @@ export default function OnboardingPage() {
             onClick={async () => { await markComplete(); router.push("/dashboard"); }}
             className="text-xs text-text-tertiary hover:text-text-secondary transition-colors"
           >
-            Skip — I'll add jobs later
+            Skip — I&apos;ll add jobs later
           </button>
         </div>
       </div>
@@ -329,7 +329,7 @@ export default function OnboardingPage() {
       {analysis ? (
         <>
           <h1 className="text-2xl font-extrabold text-text-primary mb-2">Your first analysis is ready!</h1>
-          <p className="text-sm text-text-secondary mb-8">Here's how you match up for this role.</p>
+          <p className="text-sm text-text-secondary mb-8">Here&apos;s how you match up for this role.</p>
 
           {/* Match score ring */}
           <div className="flex justify-center mb-6">
@@ -355,7 +355,7 @@ export default function OnboardingPage() {
           <div className="space-y-3 mb-8 text-left">
             <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
               <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1 flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" /> What's Strong
+                <Check className="w-3.5 h-3.5" /> What&apos;s Strong
               </p>
               <p className="text-sm text-text-secondary leading-relaxed">{analysis.whatsStrong}</p>
             </div>
@@ -369,7 +369,7 @@ export default function OnboardingPage() {
         </>
       ) : (
         <>
-          <h1 className="text-2xl font-extrabold text-text-primary mb-2">You're all set! 🎉</h1>
+          <h1 className="text-2xl font-extrabold text-text-primary mb-2">You&apos;re all set! 🎉</h1>
           <p className="text-sm text-text-secondary mb-8">
             Add your resume in Settings to unlock AI job analysis and match scoring.
           </p>

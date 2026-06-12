@@ -5,22 +5,21 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { 
-  Bot, Sparkles, Building2, MapPin, DollarSign, ArrowLeft, 
-  CheckCircle2, AlertTriangle, ShieldAlert, Target, Zap, 
-  FileText, Copy, RefreshCw, ExternalLink, ChevronDown, ChevronUp, Calendar, Mail
+  Bot, Sparkles, Building2, MapPin, DollarSign, CheckCircle2, AlertTriangle, ShieldAlert, Target, FileText, Copy, RefreshCw, ExternalLink, ChevronDown, ChevronUp, Mail
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { formatDistanceToNow, isPast } from "date-fns";
+import { IJob } from "@/types";
 
 interface JobDetailProps {
-  job: any;
+  job: IJob;
   hasResume?: boolean;
 }
 
 export function JobDetailClient({ job, hasResume }: JobDetailProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as any) || "overview";
+  const initialTab = (searchParams.get("tab") as string) || "overview";
   const [analyzing, setAnalyzing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(job.jobDescription || "");
@@ -47,7 +46,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
       if (!res.ok) throw new Error("Update failed");
       toast.success("Notes saved!");
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Failed to save notes");
     } finally {
       setSavingNotes(false);
@@ -68,7 +67,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
       toast.success("Description updated!");
       setIsEditing(false);
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Failed to update description");
     } finally {
       setSaving(false);
@@ -86,7 +85,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
 
       toast.success("Job analyzed successfully!");
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Failed to analyze job");
     } finally {
       setAnalyzing(false);
@@ -108,6 +107,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
       setCoverLetter(data.coverLetter);
       toast.success(forceRegenerate ? "Cover letter regenerated!" : "Cover letter generated!");
       router.refresh();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Failed to generate cover letter");
     } finally {
@@ -225,7 +225,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                   
                   {isEditing ? (
                      <textarea
-                        className="w-full h-[400px] p-4 text-sm bg-bg-surface-elevated border border-border-default rounded-xl text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 resize-none"
+                        className="w-full h-100 p-4 text-sm bg-bg-surface-elevated border border-border-default rounded-xl text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 resize-none"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Paste the job description here to enable AI analysis..."
@@ -242,7 +242,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                         </div>
                         
                         {job.jobDescription && !isDescriptionExpanded && (
-                           <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-bg-surface to-transparent pointer-events-none rounded-b-2xl" />
+                           <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-bg-surface to-transparent pointer-events-none rounded-b-2xl" />
                         )}
                         
                         {job.jobDescription && job.jobDescription.length > 500 && (
@@ -269,7 +269,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                    <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6">
                        <h2 className="text-lg font-extrabold text-text-primary mb-4">Notes & Links</h2>
                        <textarea
-                           className="w-full bg-bg-surface-elevated border border-border-default rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 min-h-[200px] resize-none"
+                           className="w-full bg-bg-surface-elevated border border-border-default rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 min-h-50 resize-none"
                            placeholder="Add interview notes, important links, or recruiter contacts..."
                            value={notes}
                            onChange={(e) => setNotes(e.target.value)}
@@ -439,7 +439,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                               </div>
                            </div>
                            
-                           <div className="bg-bg-surface-elevated border border-border-subtle p-4 rounded-xl max-h-[300px] overflow-y-auto scrollbar-hide text-xs text-text-secondary leading-relaxed whitespace-pre-wrap">
+                           <div className="bg-bg-surface-elevated border border-border-subtle p-4 rounded-xl max-h-75 overflow-y-auto scrollbar-hide text-xs text-text-secondary leading-relaxed whitespace-pre-wrap">
                               {coverLetter}
                            </div>
                         </div>

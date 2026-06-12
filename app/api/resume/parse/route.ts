@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+// @ts-expect-error Type mismatch workaround
+import pdfParse from "pdf-parse";
 
 // Force Node.js runtime
 export const runtime = "nodejs";
@@ -28,8 +30,7 @@ export async function POST(req: Request) {
 
     // pdf-parse v1.1.1 uses pdfjs-dist v2.x which runs natively in Node.js
     // — no canvas, no DOMMatrix, no workers needed.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse = require("pdf-parse");
+    
     const data = await pdfParse(buffer);
 
     const text: string = (data.text ?? "").trim();

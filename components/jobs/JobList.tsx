@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Job } from "@/models/Job";
+
 import { format } from "date-fns";
-import { MoreHorizontal, Edit2, Trash2, ExternalLink, MapPin, DollarSign, Building2, AlertTriangle, Loader2 } from "lucide-react";
+import { Edit2, Trash2, MapPin, DollarSign, Building2, AlertTriangle, Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
 import Link from "next/link";
 import { EditJobModal } from "./EditJobModal";
+import { IJob } from "@/types";
 
 interface JobListProps {
-  initialJobs: any[];
+  initialJobs: IJob[];
 }
 
 export function JobList({ initialJobs }: JobListProps) {
@@ -20,7 +21,7 @@ export function JobList({ initialJobs }: JobListProps) {
   const [filter, setFilter] = useState("all");
   const [jobToDelete, setJobToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [editingJob, setEditingJob] = useState<any | null>(null);
+  const [editingJob, setEditingJob] = useState<IJob | null>(null);
 
   const filteredJobs = initialJobs.filter((job) => {
     if (filter === "all") return true;
@@ -38,7 +39,7 @@ export function JobList({ initialJobs }: JobListProps) {
       triggerRefresh();
       router.refresh();
       setJobToDelete(null);
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete job");
     } finally {
       setIsDeleting(false);
@@ -94,7 +95,7 @@ export function JobList({ initialJobs }: JobListProps) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[800px]">
+        <table className="w-full text-left border-collapse min-w-200">
           <thead>
             <tr className="border-b border-border-subtle text-xs font-bold text-text-tertiary uppercase tracking-wider">
               <th className="py-4 font-bold">Company & Title</th>
@@ -149,7 +150,7 @@ export function JobList({ initialJobs }: JobListProps) {
                   </td>
                   <td className="py-4">
                     <p className="text-xs font-medium text-text-secondary">
-                      {format(new Date(job.createdAt), "MMM d, yyyy")}
+                      {job.createdAt ? format(new Date(job.createdAt), "MMM d, yyyy") : "N/A"}
                     </p>
                   </td>
                   <td className="py-4 pr-4">
@@ -187,7 +188,7 @@ export function JobList({ initialJobs }: JobListProps) {
 
       {/* Delete Confirmation Modal */}
       {jobToDelete && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+        <div className="fixed inset-0 z-100 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => !isDeleting && setJobToDelete(null)} />
           <div className="relative z-10 w-full max-w-sm mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl p-6 text-center">
             <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 mx-auto flex items-center justify-center mb-4">
@@ -208,7 +209,7 @@ export function JobList({ initialJobs }: JobListProps) {
               <button 
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="flex-[2] bg-red-500 hover:bg-red-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-[0_0_20px_rgba(239,68,68,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-2 bg-red-500 hover:bg-red-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-[0_0_20px_rgba(239,68,68,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isDeleting ? <><Loader2 className="w-4 h-4 animate-spin" /> Deleting...</> : "Yes, Delete Job"}
               </button>

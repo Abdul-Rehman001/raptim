@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
@@ -8,10 +9,9 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await dbConnect();
-  // @ts-ignore
   const userId = session.user.id;
 
-  if (!userId || !require("mongoose").Types.ObjectId.isValid(userId)) {
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({
         totalApplications: 0,
         interviews: 0,
