@@ -56,7 +56,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
         Profile Information
       </h2>
       <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl shadow-sm">
-         <div className="flex flex-col md:flex-row gap-8 items-start">
+         <div className="flex flex-col gap-6 items-center sm:items-start">
             
             {/* Avatar Section */}
             <div className="relative group shrink-0">
@@ -70,7 +70,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </div>
             
             {/* Form Section */}
-            <form onSubmit={handleSubmit} className="flex-1 w-full grid md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="flex-1 w-full flex flex-col gap-4">
                <div className="space-y-2">
                   <label className="text-xs font-bold text-text-tertiary">Full Name</label>
                   <input 
@@ -113,7 +113,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   />
                </div>
                
-               <div className="md:col-span-2 flex justify-end pt-2">
+               <div className="flex justify-end pt-2 mt-2">
                   <button
                     type="submit"
                     disabled={loading}

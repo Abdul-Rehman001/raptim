@@ -75,8 +75,8 @@ export default async function SettingsPage() {
         </div>
 
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-bg-surface border border-border-subtle p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col h-[calc(100vh-16rem)] min-h-[600px]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="bg-bg-surface border border-border-subtle p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col h-full min-h-[600px]">
+            <div className="flex flex-col gap-6 mb-6">
               <div>
                 <h2 className="text-xl font-extrabold text-text-primary flex items-center gap-2">
                   <span className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
@@ -88,15 +88,17 @@ export default async function SettingsPage() {
                   Upload your PDF or paste your resume text directly. This data is used by the AI to analyze job fit.
                 </p>
               </div>
-              <ResumeUpload />
+              <div className="w-full">
+                <ResumeUpload />
+              </div>
             </div>
             
-            <div className="flex-1 bg-bg-surface-elevated/30 rounded-2xl border border-border-default overflow-hidden flex flex-col">
+            <div className="flex-1 bg-bg-surface-elevated/30 rounded-2xl border border-border-default flex flex-col">
               <div className="px-4 py-3 border-b border-border-default flex justify-between items-center bg-bg-surface">
                 <span className="text-xs font-bold text-text-tertiary uppercase tracking-wider">Raw Text Representation</span>
                 <span className="text-[10px] font-medium text-text-tertiary bg-bg-surface-elevated px-2 py-1 rounded-md">Auto-saved</span>
               </div>
-              <div className="flex-1 p-4 relative">
+              <div className="flex-1 p-4 flex flex-col relative">
                  <ResumeTextEditor initialText={user?.resumeText || ""} />
               </div>
             </div>

@@ -59,8 +59,8 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col h-full space-y-4">
+      <div className="flex items-center justify-between shrink-0">
          <div>
             <label className="text-sm font-semibold text-text-primary">Resume Text (for AI Coaching)</label>
             <p className="text-xs text-text-tertiary">
@@ -77,10 +77,10 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
          )}
       </div>
 
-      <div className="relative">
+      <div className="flex-1 w-full">
          {isEditing ? (
             <textarea
-              className="w-full h-80 p-5 text-sm bg-bg-surface-elevated border border-primary rounded-xl text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none shadow-[0_0_15px_rgba(166,137,250,0.1)]"
+              className="w-full min-h-[400px] h-full p-5 text-sm bg-bg-surface-elevated border border-primary rounded-xl text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none shadow-[0_0_15px_rgba(166,137,250,0.1)]"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Paste your resume experience, skills, and about section here..."
@@ -88,7 +88,7 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
             />
          ) : (
             <div 
-               className="w-full h-64 p-5 text-sm bg-bg-base border border-border-subtle rounded-xl text-text-secondary overflow-y-auto cursor-text hover:border-border-default transition-colors"
+               className="w-full min-h-[400px] h-full p-5 text-sm bg-bg-base border border-border-subtle rounded-xl text-text-secondary overflow-y-auto cursor-text hover:border-border-default transition-colors"
                onClick={() => setIsEditing(true)}
                title="Click to edit"
             >

@@ -1,0 +1,42 @@
+# docker-compose.dev.yml
+# For local development with hot reload
+# Run with: docker-compose -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: applyiq-app-dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/applyiq
+      - NODE_ENV=development
+    volumes:
+      - .:/app                      # mount source code for hot reload
+      - /app/node_modules           # exclude node_modules from mount
+      - /app/.next                  # exclude .next from mount
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:7
+    container_name: applyiq-mongo-dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data_dev:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data_dev:

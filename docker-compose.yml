@@ -1,0 +1,60 @@
+# docker-compose.yml
+# Defines your complete local development stack
+# Run with: docker-compose up
+
+version: '3.8'
+
+services:
+
+  # ── Your Next.js Application ──────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: applyiq-app
+    ports:
+      - "3000:3000"       # HOST:CONTAINER
+    env_file:
+      - .env.local        # inject all your env vars
+    environment:
+      # Override MongoDB to use local container instead of Atlas
+      - MONGODB_URI=mongodb://mongo:27017/applyiq
+    depends_on:
+      mongo:
+        condition: service_healthy   # wait for mongo to be ready
+    restart: unless-stopped
+
+  # ── Local MongoDB ──────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: applyiq-mongo
+    ports:
+      - "27017:27017"     # expose so you can connect with MongoDB Compass
+    volumes:
+      - mongo_data:/data/db   # persist data between restarts
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # ── Mongo Express (optional DB UI) ────────────────────
+  # Remove this service if you don't want it
+  mongo-express:
+    image: mongo-express:latest
+    container_name: applyiq-mongo-ui
+    ports:
+      - "8081:8081"       # visit http://localhost:8081 for DB UI
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH=false
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+# ── Named volumes (persist data between docker-compose down/up) ──
+volumes:
+  mongo_data:
+    driver: local

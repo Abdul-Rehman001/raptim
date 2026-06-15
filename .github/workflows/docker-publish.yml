@@ -1,0 +1,54 @@
+name: Build and Publish Docker Image
+
+# This workflow triggers ONLY when code is pushed to the main branch.
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    name: Build and Push to GHCR
+    runs-on: ubuntu-latest
+    
+    # We need to give GitHub Actions permission to write to our Container Registry
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Step 1: Clone the repository into the runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Authenticate to GitHub Container Registry (GHCR)
+      # We use GITHUB_TOKEN so we don't need to create manual passwords!
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3: Automatically generate tags for the image (like 'latest' and a unique SHA commit hash)
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha
+
+      # Step 4: Actually build the Dockerfile and push it to GHCR
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
