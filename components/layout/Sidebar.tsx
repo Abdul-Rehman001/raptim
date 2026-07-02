@@ -71,7 +71,7 @@ export function Sidebar({
       {/* Logo & Collapse */}
       <div className={cn("flex items-center mb-8", collapsed ? "px-4 flex-col gap-4 justify-center" : "px-6 justify-between")}>
         <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary to-purple-800 flex items-center justify-center shadow-[0_0_15px_rgba(166,137,250,0.4)] shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-linear-to-br from-primary to-purple-800 flex items-center justify-center shrink-0">
               <Zap className="h-4 w-4 text-white" strokeWidth={3} />
             </div>
             {!collapsed && (
@@ -95,10 +95,10 @@ export function Sidebar({
               onClick={onMobileClose}
               title={collapsed ? item.name : undefined}
               className={cn(
-                "group flex items-center gap-3 rounded-xl text-sm font-semibold transition-all duration-200",
+                "group flex items-center gap-3 rounded-lg text-sm font-semibold transition-all duration-200",
                 collapsed ? "px-3 py-3 justify-center" : "px-3 py-2.5",
                 isActive
-                  ? "text-primary bg-primary/10 border border-primary/20 shadow-[0_0_12px_rgba(166,137,250,0.1)]"
+                  ? "text-primary bg-primary/10 border border-primary/20"
                   : "text-text-secondary border border-transparent hover:text-text-primary hover:bg-sidebar-hover"
               )}
             >
@@ -119,7 +119,7 @@ export function Sidebar({
           onClick={() => setTheme(isDark ? "light" : "dark")}
           title={collapsed ? (isDark ? "Switch to Light" : "Switch to Dark") : undefined}
           className={cn(
-            "flex items-center gap-3 rounded-xl text-sm font-semibold transition-all duration-200 text-text-secondary hover:text-text-primary hover:bg-sidebar-hover",
+            "flex items-center gap-3 rounded-lg text-sm font-semibold transition-all duration-200 text-text-secondary hover:text-text-primary hover:bg-sidebar-hover",
             collapsed ? "px-3 py-3 justify-center" : "px-3 py-2.5 w-full"
           )}
         >
@@ -151,7 +151,7 @@ export function Sidebar({
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface-elevated border border-border-subtle">
+          <div className="flex items-center justify-between p-3 rounded-lg bg-bg-surface-elevated border border-border-subtle">
             <div className="flex items-center gap-3 overflow-hidden">
               {user?.image ? (
                 <Image width={24} height={24} unoptimized src={user.image} alt={user.name || "User"} className="h-9 w-9 rounded-full object-cover shrink-0 border border-border-default" />

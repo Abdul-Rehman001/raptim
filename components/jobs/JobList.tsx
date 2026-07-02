@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { format } from "date-fns";
-import { Edit2, Trash2, MapPin, DollarSign, Building2, AlertTriangle, Loader2 } from "lucide-react";
+import { Edit2, Trash2, MapPin, Banknote, Building2, AlertTriangle, Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
@@ -67,10 +67,10 @@ export function JobList({ initialJobs }: JobListProps) {
   };
 
   return (
-    <div className="space-y-6 mt-12 bg-bg-surface border border-border-subtle rounded-2xl p-6 shadow-sm relative overflow-hidden">
+    <div className="space-y-6 mt-12 bg-bg-surface border border-border-subtle rounded-lg p-6 shadow-sm relative overflow-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-subtle pb-6">
         <div>
-          <h2 className="text-xl font-extrabold text-text-primary">All Applications List</h2>
+          <h2 className="text-xl font-semibold text-text-primary">All Applications List</h2>
           <p className="text-sm text-text-secondary mt-1">Manage, filter, and edit your specific jobs.</p>
         </div>
       </div>
@@ -80,9 +80,9 @@ export function JobList({ initialJobs }: JobListProps) {
           <button
             key={t.id}
             onClick={() => setFilter(t.id)}
-            className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-colors border ${
+            className={`px-4 py-2 rounded-md text-sm font-semibold whitespace-nowrap transition-colors border ${
               filter === t.id 
-                ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20" 
+                ? "bg-primary text-primary-foreground border-primary shadow-sm" 
                 : "bg-bg-surface-elevated text-text-secondary border-border-default hover:text-text-primary hover:border-border-subtle"
             }`}
           >
@@ -97,12 +97,12 @@ export function JobList({ initialJobs }: JobListProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-200">
           <thead>
-            <tr className="border-b border-border-subtle text-xs font-bold text-text-tertiary uppercase tracking-wider">
-              <th className="py-4 font-bold">Company & Title</th>
-              <th className="py-4 font-bold">Status</th>
-              <th className="py-4 font-bold">Location & Salary</th>
-              <th className="py-4 font-bold">Added On</th>
-              <th className="py-4 font-bold text-right pr-4">Actions</th>
+            <tr className="border-b border-border-subtle text-xs font-semibold text-text-tertiary uppercase tracking-wider">
+              <th className="py-4 font-semibold">Company & Title</th>
+              <th className="py-4 font-semibold">Status</th>
+              <th className="py-4 font-semibold">Location & Salary</th>
+              <th className="py-4 font-semibold">Added On</th>
+              <th className="py-4 font-semibold text-right pr-4">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-subtle">
@@ -118,18 +118,18 @@ export function JobList({ initialJobs }: JobListProps) {
                   <td className="py-4">
                     <Link href={`/jobs/${job._id}`} className="block">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-bg-surface-elevated border border-border-default flex items-center justify-center shrink-0 overflow-hidden">
+                        <div className="w-10 h-10 rounded-md bg-bg-surface-elevated border border-border-default flex items-center justify-center shrink-0 overflow-hidden">
                            <Building2 className="w-5 h-5 text-text-tertiary" />
                         </div>
                         <div>
-                          <p className="text-sm font-extrabold text-text-primary group-hover:text-primary transition-colors">{job.title}</p>
+                          <p className="text-sm font-semibold text-text-primary group-hover:text-primary transition-colors">{job.title}</p>
                           <p className="text-xs font-medium text-text-secondary mt-0.5">{job.company}</p>
                         </div>
                       </div>
                     </Link>
                   </td>
                   <td className="py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${getStatusBadge(job.status)} uppercase tracking-wide`}>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${getStatusBadge(job.status)} uppercase tracking-wide`}>
                       {job.status}
                     </span>
                   </td>
@@ -142,7 +142,7 @@ export function JobList({ initialJobs }: JobListProps) {
                       ) : <span className="text-xs text-text-tertiary italic">No location</span>}
                       {(job.salaryMin || job.salaryMax) && (
                         <span className="flex items-center gap-1.5 text-xs text-emerald-500 font-medium">
-                          <DollarSign className="w-3.5 h-3.5" /> 
+                          <Banknote className="w-3.5 h-3.5" /> 
                           {job.salaryMin}{job.salaryMax ? ` - ${job.salaryMax}` : '+'}
                         </span>
                       )}
@@ -190,11 +190,11 @@ export function JobList({ initialJobs }: JobListProps) {
       {jobToDelete && (
         <div className="fixed inset-0 z-100 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => !isDeleting && setJobToDelete(null)} />
-          <div className="relative z-10 w-full max-w-sm mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl p-6 text-center">
+          <div className="relative z-10 w-full max-w-sm mx-4 bg-bg-surface border border-border-subtle rounded-lg shadow-2xl p-6 text-center">
             <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 mx-auto flex items-center justify-center mb-4">
               <AlertTriangle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-extrabold text-text-primary mb-2">Delete Job Application?</h3>
+            <h3 className="text-lg font-semibold text-text-primary mb-2">Delete Job Application?</h3>
             <p className="text-sm text-text-secondary mb-6">
               This action cannot be undone. All data, including AI analysis and notes, will be permanently removed.
             </p>
@@ -202,14 +202,14 @@ export function JobList({ initialJobs }: JobListProps) {
               <button 
                 onClick={() => setJobToDelete(null)}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-border-default text-text-secondary font-bold text-sm hover:text-text-primary hover:bg-bg-surface-hover transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 rounded-md border border-border-default text-text-secondary font-semibold text-sm hover:text-text-primary hover:bg-bg-surface-hover transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button 
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="flex-2 bg-red-500 hover:bg-red-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-[0_0_20px_rgba(239,68,68,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-2 bg-red-500 hover:bg-red-600 text-white font-semibold text-sm px-4 py-2.5 rounded-md transition-colors shadow-[0_0_20px_rgba(239,68,68,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isDeleting ? <><Loader2 className="w-4 h-4 animate-spin" /> Deleting...</> : "Yes, Delete Job"}
               </button>

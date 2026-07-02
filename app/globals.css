@@ -7,13 +7,13 @@
    is handled by CSS custom properties below.
 ────────────────────────────────────────────── */
 @theme {
-  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 
   /* These reference the runtime CSS custom properties
      so bg-bg-base / text-text-primary etc all work */
-  --color-primary: var(--tw-primary);
-  --color-primary-hover: var(--tw-primary-hover);
-  --color-primary-foreground: var(--tw-primary-fg);
+  --color-primary: var(--brand-primary);
+  --color-primary-hover: var(--brand-primary-hover);
+  --color-primary-foreground: var(--brand-primary-fg);
 
   --color-bg-base: var(--tw-bg-base);
   --color-bg-surface: var(--tw-bg-surface);
@@ -54,41 +54,41 @@
 ────────────────────────────────────────────── */
 :root {
   color-scheme: light;
-  --tw-primary: #7c5ce0;
-  --tw-primary-hover: #6a48d0;
-  --tw-primary-fg: #ffffff;
+  --brand-primary: #09090b; /* Pure black for primary in light mode */
+  --brand-primary-hover: #27272a;
+  --brand-primary-fg: #ffffff;
 
-  --tw-bg-base: #f5f3f9;
+  --tw-bg-base: #fafafa;
   --tw-bg-surface: #ffffff;
-  --tw-bg-elevated: #f0edf6;
-  --tw-bg-hover: #e8e4f2;
-  --tw-bg-subtle: #faf9fc;
+  --tw-bg-elevated: #f4f4f5;
+  --tw-bg-hover: #e4e4e7;
+  --tw-bg-subtle: #f4f4f5;
   --tw-sidebar: #ffffff;
-  --tw-sidebar-hover: #f0edf6;
+  --tw-sidebar-hover: #f4f4f5;
 
-  --tw-text-primary: #1a1625;
-  --tw-text-secondary: #6e6883;
-  --tw-text-tertiary: #9e98ae;
+  --tw-text-primary: #09090b;
+  --tw-text-secondary: #52525b;
+  --tw-text-tertiary: #71717a;
 
-  --tw-border-subtle: #e8e4f0;
-  --tw-border-default: #d4d0e0;
-  --tw-border-strong: #b8b2ca;
+  --tw-border-subtle: #e4e4e7;
+  --tw-border-default: #d4d4d8;
+  --tw-border-strong: #a1a1aa;
 
-  --tw-st-saved-bg: #eef1ff;
-  --tw-st-saved-text: #4a63c8;
-  --tw-st-saved-border: #c8d0f0;
-  --tw-st-applied-bg: #fff4eb;
-  --tw-st-applied-text: #c06820;
-  --tw-st-applied-border: #f0d0a8;
-  --tw-st-interview-bg: #e8faf0;
-  --tw-st-interview-text: #1a8050;
-  --tw-st-interview-border: #a8e0c0;
-  --tw-st-offer-bg: #f0e8ff;
-  --tw-st-offer-text: #7c5ce0;
-  --tw-st-offer-border: #c8b8f0;
-  --tw-st-rejected-bg: #fff0f0;
-  --tw-st-rejected-text: #d04040;
-  --tw-st-rejected-border: #f0b8b8;
+  --tw-st-saved-bg: #f4f4f5;
+  --tw-st-saved-text: #52525b;
+  --tw-st-saved-border: #e4e4e7;
+  --tw-st-applied-bg: #fff7ed;
+  --tw-st-applied-text: #c2410c;
+  --tw-st-applied-border: #ffedd5;
+  --tw-st-interview-bg: #f0fdf4;
+  --tw-st-interview-text: #15803d;
+  --tw-st-interview-border: #dcfce7;
+  --tw-st-offer-bg: #f3e8ff;
+  --tw-st-offer-text: #7e22ce;
+  --tw-st-offer-border: #d8b4fe;
+  --tw-st-rejected-bg: #fef2f2;
+  --tw-st-rejected-text: #b91c1c;
+  --tw-st-rejected-border: #fee2e2;
 }
 
 /* ──────────────────────────────────────────────
@@ -97,41 +97,41 @@
 ────────────────────────────────────────────── */
 .dark {
   color-scheme: dark;
-  --tw-primary: #a689fa;
-  --tw-primary-hover: #bda6ff;
-  --tw-primary-fg: #0b0914;
+  --brand-primary: #ffffff; /* Pure white for primary buttons in dark mode */
+  --brand-primary-hover: #e4e4e7;
+  --brand-primary-fg: #000000;
 
-  --tw-bg-base: #0b0914;
-  --tw-bg-surface: #13101d;
-  --tw-bg-elevated: #161324;
-  --tw-bg-hover: #221c38;
-  --tw-bg-subtle: #0f0c1a;
-  --tw-sidebar: #0e0b1a;
-  --tw-sidebar-hover: #1a1530;
+  --tw-bg-base: #0a0a0a; /* Very dark gray, not pitch black */
+  --tw-bg-surface: #121212; /* Slightly lighter for cards */
+  --tw-bg-elevated: #1c1c1c;
+  --tw-bg-hover: #262626;
+  --tw-bg-subtle: #121212;
+  --tw-sidebar: #121212; /* Distinct from base */
+  --tw-sidebar-hover: #1c1c1c;
 
-  --tw-text-primary: #f8f7fa;
-  --tw-text-secondary: #9f9baa;
-  --tw-text-tertiary: #6B6085;
+  --tw-text-primary: #fafafa;
+  --tw-text-secondary: #a1a1aa;
+  --tw-text-tertiary: #71717a;
 
-  --tw-border-subtle: #1e1a2e;
-  --tw-border-default: #2a2540;
-  --tw-border-strong: #3a3258;
+  --tw-border-subtle: #27272a;
+  --tw-border-default: #3f3f46;
+  --tw-border-strong: #52525b;
 
-  --tw-st-saved-bg: #1a1f3d;
-  --tw-st-saved-text: #7895f7;
-  --tw-st-saved-border: #2a3060;
-  --tw-st-applied-bg: #2d1a0e;
-  --tw-st-applied-text: #fb923c;
-  --tw-st-applied-border: #4a2810;
-  --tw-st-interview-bg: #0d2a18;
-  --tw-st-interview-text: #4ade80;
-  --tw-st-interview-border: #154d2a;
-  --tw-st-offer-bg: #1e1030;
-  --tw-st-offer-text: #a689fa;
-  --tw-st-offer-border: #3b1d58;
-  --tw-st-rejected-bg: #2a0e16;
-  --tw-st-rejected-text: #f87171;
-  --tw-st-rejected-border: #4a1525;
+  --tw-st-saved-bg: #18181b;
+  --tw-st-saved-text: #a1a1aa;
+  --tw-st-saved-border: #27272a;
+  --tw-st-applied-bg: #431407;
+  --tw-st-applied-text: #fdba74;
+  --tw-st-applied-border: #7c2d12;
+  --tw-st-interview-bg: #052e16;
+  --tw-st-interview-text: #86efac;
+  --tw-st-interview-border: #14532d;
+  --tw-st-offer-bg: #2e1065;
+  --tw-st-offer-text: #c084fc;
+  --tw-st-offer-border: #581c87;
+  --tw-st-rejected-bg: #450a0a;
+  --tw-st-rejected-text: #fca5a5;
+  --tw-st-rejected-border: #7f1d1d;
 }
 
 /* ──────────────────────────────────────────────

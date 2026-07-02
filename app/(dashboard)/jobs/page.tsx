@@ -31,11 +31,11 @@ export default async function JobsPage() {
     <div className="h-full flex flex-col space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-           <h1 className="text-2xl font-extrabold text-text-primary tracking-tight">My Applications</h1>
+           <h1 className="text-2xl font-semibold text-text-primary tracking-tight">My Applications</h1>
            <p className="text-sm text-text-secondary mt-1">Manage and track your job search pipeline.</p>
         </div>
         <AddJobModal userResumeText={userResumeText}>
-             <button className="flex items-center justify-center gap-2 h-10 px-6 w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm rounded-xl transition-all shadow-md shadow-primary/20">
+             <button className="flex items-center justify-center gap-2 h-10 px-6 w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm rounded-md transition-all shadow-sm">
               <Plus className="h-4 w-4" strokeWidth={2.5} />
               Add Application
              </button>

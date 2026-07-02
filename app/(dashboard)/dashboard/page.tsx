@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import mongoose from "mongoose";
 import Link from "next/link";
+import { Greeting } from "@/components/dashboard/Greeting";
 
 // Cache auth() result for the duration of this server request
 // so layout + page don't each make a separate auth call
@@ -152,10 +153,10 @@ export default async function DashboardPage() {
   const stats = await getDashboardData(userId);
 
   const statConfig = [
-    { label: "Total Applied", value: stats.totalApplications, icon: Send, color: "primary", delta: "All time" },
-    { label: "Response Rate", value: `${stats.responseRate}%`, icon: MessageSquare, color: "purple", delta: "Avg" },
-    { label: "Interviews", value: stats.interviews, icon: CalendarDays, color: "warning", delta: "Active" },
-    { label: "Daily Streak", value: stats.dailyStreak, icon: Flame, color: "orange", delta: "Days" },
+    { label: "Total Applied", value: stats.totalApplications, icon: Send, delta: "All time" },
+    { label: "Response Rate", value: `${stats.responseRate}%`, icon: MessageSquare, delta: "Avg" },
+    { label: "Interviews", value: stats.interviews, icon: CalendarDays, delta: "Active" },
+    { label: "Daily Streak", value: stats.dailyStreak, icon: Flame, delta: "Days" },
   ];
 
   return (
@@ -163,19 +164,19 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-text-primary tracking-tight flex items-center gap-2">
-            Good morning, {session?.user?.name?.split(" ")[0] || "User"}
+          <h1 className="text-2xl font-semibold text-text-primary tracking-tight flex items-center gap-2">
+            <Greeting name={session?.user?.name?.split(" ")[0] || "User"} />
           </h1>
           <p className="text-text-secondary mt-1 font-medium">
             You have {stats.interviews} interviews scheduled for this week.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="h-10 w-10 rounded-xl bg-bg-surface-elevated border border-border-subtle flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors">
+          <button className="h-10 w-10 rounded-md bg-bg-surface-elevated border border-border-subtle flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors">
             <Bell className="h-4 w-4" />
           </button>
           <AddJobModal userResumeText={stats.userResumeText}>
-            <button className="h-10 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground font-bold px-5 text-sm transition-all shadow-md shadow-primary/20 flex items-center gap-2">
+            <button className="h-10 rounded-md bg-primary hover:bg-primary-hover text-primary-foreground font-semibold px-5 text-sm transition-all shadow-sm flex items-center gap-2">
               <Plus className="h-4 w-4" strokeWidth={3} /> Add New Job
             </button>
           </AddJobModal>
@@ -184,11 +185,11 @@ export default async function DashboardPage() {
 
       {/* Setup Checklist — only shown if any item incomplete */}
       {stats.setupItems.length > 0 && (
-        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-sm relative overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-2xl" />
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-5 shadow-sm relative overflow-hidden">
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg" />
           <div className="flex items-center justify-between mb-3 pl-2">
-            <h2 className="text-sm font-extrabold text-text-primary">Get started</h2>
-            <span className="text-xs font-bold text-text-tertiary">
+            <h2 className="text-sm font-semibold text-text-primary">Get started</h2>
+            <span className="text-xs font-semibold text-text-tertiary">
               {3 - stats.setupItems.length} of 3 complete
             </span>
           </div>
@@ -214,22 +215,16 @@ export default async function DashboardPage() {
       {/* Main Stat Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statConfig.map((stat) => (
-          <div key={stat.label} className="bg-bg-surface border border-border-subtle p-6 rounded-2xl shadow-sm relative overflow-hidden group hover:border-border-default transition-all duration-300">
+          <div key={stat.label} className="bg-bg-surface border border-border-subtle p-6 rounded-lg shadow-sm relative overflow-hidden group hover:border-border-default transition-all duration-300">
             <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-8">
-                <div className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center border",
-                  stat.color === "primary" && "bg-blue-500/10 border-blue-500/20 text-blue-400",
-                  stat.color === "purple" && "bg-primary/10 border-primary/20 text-primary",
-                  stat.color === "warning" && "bg-amber-500/10 border-amber-500/20 text-amber-400",
-                  stat.color === "orange" && "bg-orange-500/10 border-orange-500/20 text-orange-400"
-                )}>
+                <div className="w-10 h-10 rounded-md flex items-center justify-center border bg-bg-surface-elevated border-border-subtle text-text-secondary">
                   <stat.icon className="h-5 w-5" strokeWidth={2.5} />
                 </div>
                 <div className={cn(
                   "flex items-center gap-0.5 text-[11px] font-bold px-2 py-1 rounded-full",
-                  "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                  "bg-bg-surface-elevated text-text-secondary border border-border-subtle"
                 )}>
                   {stat.delta}
                 </div>
@@ -249,7 +244,7 @@ export default async function DashboardPage() {
       {/* Today's Focus */}
       {stats.focusItems.length > 0 ? (
         <div>
-          <h2 className="text-lg font-extrabold text-text-primary tracking-tight mb-4">Today&apos;s Focus</h2>
+          <h2 className="text-lg font-semibold text-text-primary tracking-tight mb-4">Today&apos;s Focus</h2>
           <div className="space-y-3">
             {stats.focusItems.map((item, i) => {
               const Icon = item.type === "interview" ? CalendarCheck
@@ -262,14 +257,14 @@ export default async function DashboardPage() {
                 : item.type === "followup" ? "text-amber-500 bg-amber-500/10"
                 : "text-orange-500 bg-orange-500/10";
               return (
-                <div key={i} className="bg-bg-surface border border-border-subtle rounded-2xl p-4 flex items-center gap-4 shadow-sm hover:border-border-default transition-colors">
-                  <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center border shrink-0", iconClass)}>
+                <div key={i} className="bg-bg-surface border border-border-subtle rounded-lg p-4 flex items-center gap-4 shadow-sm hover:border-border-default transition-colors">
+                  <div className={cn("w-9 h-9 rounded-md flex items-center justify-center border shrink-0", iconClass)}>
                     <Icon className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-text-tertiary font-medium truncate">{item.job.company}</p>
-                    <p className="text-sm font-bold text-text-primary truncate">{item.job.title}</p>
-                    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", badgeClass)}>{item.label}</span>
+                    <p className="text-sm font-semibold text-text-primary truncate">{item.job.title}</p>
+                    <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full", badgeClass)}>{item.label}</span>
                   </div>
                   <Link
                     href={item.href}
@@ -285,7 +280,7 @@ export default async function DashboardPage() {
       ) : (
         /* Only show "on top of everything" if user has some jobs and focus is empty */
         stats.setupItems.length === 0 && (
-          <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
             <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
             <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">You&apos;re on top of everything!</p>
           </div>
@@ -297,47 +292,45 @@ export default async function DashboardPage() {
         {/* Pipeline Preview */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-text-primary tracking-tight">Applications Pipeline</h2>
-            <Link href="/jobs" className="text-xs font-bold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors">
+            <h2 className="text-lg font-semibold text-text-primary tracking-tight">Applications Pipeline</h2>
+            <Link href="/jobs" className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors">
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
             <div className="flex flex-col gap-3">
               {[
-                { label: "Saved", value: stats.pipeline?.saved || 0, icon: Circle, color: "text-text-tertiary", border: "border-border-default hover:border-text-tertiary/50", iconBg: "bg-bg-surface-elevated border-border-default", glow: "group-hover:bg-white/5", desc: "Waiting to apply" },
-                { label: "Applied", value: stats.pipeline?.applied || 0, icon: Send, color: "text-primary", border: "border-primary/20 hover:border-primary/50", iconBg: "bg-primary/10 border-primary/20", glow: "group-hover:bg-primary/5", desc: "Awaiting response" },
-                { label: "Interview", value: stats.pipeline?.interview || 0, icon: CalendarDays, color: "text-warning", border: "border-amber-500/20 hover:border-amber-500/50", iconBg: "bg-amber-500/10 border-amber-500/20", glow: "group-hover:bg-amber-500/5", desc: "Active conversations" },
-                { label: "Offer", value: stats.pipeline?.offer || 0, icon: Zap, color: "text-emerald-500", border: "border-emerald-500/20 hover:border-emerald-500/50", iconBg: "bg-emerald-500/10 border-emerald-500/20", glow: "group-hover:bg-emerald-500/5", desc: "Successfully secured" },
-                { label: "Rejected", value: stats.pipeline?.rejected || 0, icon: AlertTriangle, color: "text-red-500", border: "border-red-500/20 hover:border-red-500/50", iconBg: "bg-red-500/10 border-red-500/20", glow: "group-hover:bg-red-500/5", desc: "Not moving forward" },
+                { label: "Saved", value: stats.pipeline?.saved || 0, icon: Circle, desc: "Waiting to apply" },
+                { label: "Applied", value: stats.pipeline?.applied || 0, icon: Send, desc: "Awaiting response" },
+                { label: "Interview", value: stats.pipeline?.interview || 0, icon: CalendarDays, desc: "Active conversations" },
+                { label: "Offer", value: stats.pipeline?.offer || 0, icon: Zap, desc: "Successfully secured" },
+                { label: "Rejected", value: stats.pipeline?.rejected || 0, icon: AlertTriangle, desc: "Not moving forward" },
               ].map((item) => (
                 <Link key={item.label} href="/jobs" className={cn(
-                  "block group relative overflow-hidden bg-bg-surface rounded-2xl p-4 transition-all duration-300",
-                  "border border-border-subtle hover:-translate-y-px shadow-sm",
-                  item.border.split(' ')[1] // Apply hover border
+                  "block group relative overflow-hidden bg-bg-surface rounded-lg p-4 transition-all duration-300",
+                  "border border-border-subtle hover:border-border-default hover:-translate-y-px shadow-sm"
                 )}>
                   {/* Subtle background glow on hover */}
                   <div className={cn(
-                    "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none",
-                    item.glow
+                    "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-bg-surface-elevated/50"
                   )} />
                   
                   <div className="relative z-10 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className={cn(
-                        "w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 duration-300 shrink-0",
-                        item.iconBg, "border"
+                        "w-12 h-12 rounded-md flex items-center justify-center transition-transform group-hover:scale-105 duration-300 shrink-0",
+                        "bg-bg-surface-elevated border border-border-subtle text-text-secondary"
                       )}>
-                        <item.icon className={cn("h-5 w-5", item.color)} strokeWidth={2.5} />
+                        <item.icon className={cn("h-5 w-5")} strokeWidth={2.5} />
                       </div>
                       <div>
-                        <p className="text-sm sm:text-base font-extrabold text-text-primary mb-0.5">{item.label}</p>
+                        <p className="text-sm sm:text-base font-semibold text-text-primary mb-0.5">{item.label}</p>
                         <p className="text-xs font-medium text-text-tertiary">{item.desc}</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className={cn("text-2xl font-bold tracking-tight", item.color)}>{item.value}</p>
+                        <p className={cn("text-2xl font-bold tracking-tight text-text-primary")}>{item.value}</p>
                       </div>
                       <div className="w-8 flex justify-end">
                         <ArrowRight className="w-4 h-4 text-text-tertiary opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
@@ -352,19 +345,19 @@ export default async function DashboardPage() {
         {/* Recent Activity */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-extrabold text-text-primary tracking-tight">Recent Activity</h2>
+            <h2 className="text-lg font-semibold text-text-primary tracking-tight">Recent Activity</h2>
             <button className="text-text-secondary hover:text-text-primary transition-colors">
               <MoreHorizontal className="h-5 w-5" />
             </button>
           </div>
-          <div className="rounded-2xl border border-border-subtle bg-bg-surface p-4 flex flex-col min-h-70">
+          <div className="rounded-lg border border-border-subtle bg-bg-surface p-4 flex flex-col min-h-70">
             {stats.recentlyApplied.length > 0 ? (
               <div className="space-y-4 flex-1">
                 {stats.recentlyApplied.map((job: BaseJob) => (
                   <div key={job._id.toString()} className="flex gap-4">
                     <div className="mt-1 relative">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center z-10 relative">
-                        <Send className="w-3.5 h-3.5 text-primary" />
+                      <div className="w-8 h-8 rounded-full bg-bg-surface-elevated border border-border-subtle flex items-center justify-center z-10 relative">
+                        <Send className="w-3.5 h-3.5 text-text-secondary" />
                       </div>
                       <div className="absolute top-8 -bottom-4 left-1/2 w-px bg-border-subtle transform -translate-x-1/2" />
                     </div>

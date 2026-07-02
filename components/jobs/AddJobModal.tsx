@@ -21,6 +21,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
   const [loading, setLoading] = useState(false);
 
   const [showOptional, setShowOptional] = useState(false);
+  const [isFetchingUrl, setIsFetchingUrl] = useState(false);
   const [formData, setFormData] = useState({
     title: "", company: "", jobDescription: "",
     jobUrl: "", location: "", salaryMin: "", salaryMax: "", salaryCurrency: "USD", platform: ""
@@ -50,6 +51,45 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  const fetchJobDetails = async () => {
+    if (!formData.jobUrl) return;
+    setIsFetchingUrl(true);
+    const toastId = toast.loading("Scraping job details...");
+    try {
+      const res = await fetch("/api/jobs/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: formData.jobUrl })
+      });
+      if (!res.ok) {
+        if (res.status === 403) throw new Error("BLOCKED");
+        throw new Error("Failed to fetch");
+      }
+      const data = await res.json();
+      
+      setFormData(prev => ({
+        ...prev,
+        title: data.title || prev.title,
+        company: data.company || prev.company,
+        jobDescription: data.jobDescription || prev.jobDescription,
+        location: data.location || prev.location,
+        salaryMin: data.salaryMin || prev.salaryMin,
+        salaryMax: data.salaryMax || prev.salaryMax,
+        salaryCurrency: data.salaryCurrency || prev.salaryCurrency,
+      }));
+      setShowOptional(true);
+      toast.success("Job details extracted!", { id: toastId });
+    } catch (err) {
+      if (err instanceof Error && err.message === "BLOCKED") {
+        toast.error("This site blocks automated fetching (Cloudflare). Please copy & paste the description manually.", { id: toastId, duration: 5000 });
+      } else {
+        toast.error("Failed to extract details. Some sites block automated fetching.", { id: toastId });
+      }
+    } finally {
+      setIsFetchingUrl(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,8 +128,9 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
         fetch(`/api/jobs/${job?._id}/analyze`, { method: "POST" })
           .then((r) => r.json())
           .then((data) => {
-            if (data.job?.matchScore !== null && data.job?.matchScore !== undefined) {
-              toast.success(`Analysis complete — ${data.job.matchScore}% match!`);
+            if (data.matchScore !== null && data.matchScore !== undefined) {
+              toast.success(`Analysis complete — ${data.matchScore}% match!`);
+              triggerRefresh();
               router.refresh();
             } else {
               toast.error("Job added! Analysis failed — try manually.");
@@ -102,7 +143,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
           (t) => (
             <span className="flex items-center gap-2">
               Job added! Add your resume to enable AI analysis.
-              <Link href="/settings" onClick={() => toast.dismiss(t.id)} className="font-bold underline text-primary">
+              <Link href="/settings" onClick={() => toast.dismiss(t.id)} className="font-semibold underline text-primary">
                 Go to Settings
               </Link>
             </span>
@@ -115,7 +156,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
       setLoading(false);
   };
 
-  const inputClass = "w-full bg-bg-surface-elevated border border-border-default rounded-xl px-4 py-3 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
+  const inputClass = "w-full bg-bg-surface-elevated border border-border-default rounded-lg px-4 py-3 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
 
   return (
     <>
@@ -125,10 +166,10 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
         <div className="fixed inset-0 z-100 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
-          <div className="relative z-10 w-full max-w-145 mx-4 bg-bg-surface border border-border-subtle rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative z-10 w-full max-w-4xl mx-4 bg-bg-surface border border-border-subtle rounded-md shadow-2xl max-h-[95vh] overflow-y-auto">
             <div className="flex items-center justify-between px-7 py-5 border-b border-border-subtle sticky top-0 bg-bg-surface z-10">
               <div>
-                <h2 className="text-lg font-extrabold text-text-primary">Add New Job</h2>
+                <h2 className="text-lg font-semibold text-text-primary">Add New Job</h2>
                 <p className="text-xs text-text-secondary mt-0.5">Track a new application in your pipeline</p>
               </div>
               <button onClick={() => setOpen(false)} className="p-1.5 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
@@ -137,23 +178,49 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
             </div>
 
             <form onSubmit={handleSubmit} className="px-7 py-6 space-y-5">
+              
+              {/* Job URL with Auto-Fetch */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-text-tertiary">Job URL (Auto-fill)</label>
+                <div className="flex gap-2">
+                  <input 
+                    className={inputClass} 
+                    placeholder="https://... (Paste link to auto-fetch details)" 
+                    value={formData.jobUrl} 
+                    onChange={(e) => {
+                      const url = e.target.value;
+                      const detected = detectPlatform(url);
+                      setFormData({ ...formData, jobUrl: url, platform: detected || formData.platform });
+                    }} 
+                  />
+                  <button 
+                    type="button" 
+                    onClick={fetchJobDetails} 
+                    disabled={isFetchingUrl || !formData.jobUrl}
+                    className="bg-primary/10 text-primary px-5 rounded-lg font-semibold text-sm hover:bg-primary/20 transition-colors flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
+                  >
+                    {isFetchingUrl ? <><Loader2 className="w-4 h-4 animate-spin" /> Fetching...</> : <><Sparkles className="w-4 h-4" /> Autofill</>}
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-text-tertiary">Job Title *</label>
+                  <label className="block text-xs font-semibold text-text-tertiary">Job Title *</label>
                   <input required className={inputClass} placeholder="e.g. Senior Frontend Engineer" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-text-tertiary">Company *</label>
+                  <label className="block text-xs font-semibold text-text-tertiary">Company *</label>
                   <input required className={inputClass} placeholder="e.g. Google, Stripe" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} />
                 </div>
               </div>
 
               {/* Job Description — key for AI */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-text-tertiary items-center gap-1.5 flex">
+                <label className="text-xs font-semibold text-text-tertiary items-center gap-1.5 flex">
                   Job Description
                   {effectiveResumeText.length > 50 && (
-                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="text-[10px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full flex items-center gap-1">
                       <Sparkles className="w-2.5 h-2.5" /> AI ready
                     </span>
                   )}
@@ -177,29 +244,16 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
               <button
                 type="button"
                 onClick={() => setShowOptional(!showOptional)}
-                className="flex items-center gap-1.5 text-xs font-bold text-text-tertiary hover:text-text-secondary transition-colors"
+                className="flex items-center gap-1.5 text-xs font-semibold text-text-tertiary hover:text-text-secondary transition-colors"
               >
                 {showOptional ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                 {showOptional ? "Hide" : "Add"} location, salary & URL
               </button>
 
               {showOptional && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 border border-border-subtle rounded-xl p-4 bg-bg-surface">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 border border-border-subtle rounded-lg p-4 bg-bg-surface">
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-text-tertiary">Job URL</label>
-                    <input 
-                      className={inputClass} 
-                      placeholder="https://..." 
-                      value={formData.jobUrl} 
-                      onChange={(e) => {
-                        const url = e.target.value;
-                        const detected = detectPlatform(url);
-                        setFormData({ ...formData, jobUrl: url, platform: detected || formData.platform });
-                      }} 
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-text-tertiary">Platform</label>
+                    <label className="block text-xs font-semibold text-text-tertiary">Platform</label>
                     <div className="relative">
                       <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary">
                         {formData.platform.toLowerCase() === "linkedin" ? <Linkedin className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
@@ -208,22 +262,29 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-text-tertiary">Location</label>
+                    <label className="block text-xs font-semibold text-text-tertiary">Location</label>
                     <input className={inputClass} placeholder="e.g. Remote, NYC" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-text-tertiary">Currency</label>
-                    <select className={inputClass} value={formData.salaryCurrency} onChange={(e) => setFormData({ ...formData, salaryCurrency: e.target.value })}>
-                      <option value="USD">USD ($)</option>
-                      <option value="INR">INR (₹)</option>
-                    </select>
+                    <label className="block text-xs font-semibold text-text-tertiary">Currency</label>
+                    <div className="relative">
+                      <select 
+                        className={`${inputClass} appearance-none cursor-pointer pr-10`} 
+                        value={formData.salaryCurrency} 
+                        onChange={(e) => setFormData({ ...formData, salaryCurrency: e.target.value })}
+                      >
+                        <option value="USD">USD ($)</option>
+                        <option value="INR">INR (₹)</option>
+                      </select>
+                      <ChevronDown className="w-4 h-4 text-text-tertiary absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-text-tertiary">Salary Min</label>
+                    <label className="block text-xs font-semibold text-text-tertiary">Salary Min</label>
                     <input type="number" className={inputClass} placeholder="120000" value={formData.salaryMin} onChange={(e) => setFormData({ ...formData, salaryMin: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold text-text-tertiary">Salary Max</label>
+                    <label className="block text-xs font-semibold text-text-tertiary">Salary Max</label>
                     <input type="number" className={inputClass} placeholder="150000" value={formData.salaryMax} onChange={(e) => setFormData({ ...formData, salaryMax: e.target.value })} />
                   </div>
                 </div>
@@ -236,7 +297,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-md shadow-primary/20 flex items-center gap-2 disabled:opacity-50"
+                  className="bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm px-6 py-2.5 rounded-lg transition-all shadow-sm flex items-center gap-2 disabled:opacity-50"
                 >
                   {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Adding...</> : <><Plus className="w-4 h-4" strokeWidth={3} /> Add Job</>}
                 </button>

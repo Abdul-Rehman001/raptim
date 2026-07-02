@@ -39,7 +39,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     }
   };
 
-  const inputClass = "w-full bg-bg-surface-elevated border border-border-default rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all";
+  const inputClass = "w-full bg-bg-surface-elevated border border-border-default rounded-md px-4 py-3 text-sm text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all";
 
   // Initials fallback logic
   const getInitials = (name: string) => {
@@ -51,20 +51,20 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
   return (
     <section>
-      <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-4">
+      <h2 className="text-base font-semibold text-text-primary flex items-center gap-2 mb-4">
         <UserIcon className="w-4 h-4 text-primary" />
         Profile Information
       </h2>
-      <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl shadow-sm">
+      <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg shadow-sm">
          <div className="flex flex-col gap-6 items-center sm:items-start">
             
             {/* Avatar Section */}
             <div className="relative group shrink-0">
                {user?.image ? (
-                 <Image width={40} height={40} unoptimized src={(user.image || "")} alt={user.name || ""} className="w-24 h-24 rounded-full object-cover border-2 border-primary/50 shadow-[0_0_20px_rgba(166,137,250,0.2)]" />
+                 <Image width={40} height={40} unoptimized src={(user.image || "")} alt={user.name || ""} className="w-24 h-24 rounded-full object-cover border-2 border-primary/50 shadow-sm" />
                ) : (
-                 <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/50 shadow-[0_0_20px_rgba(166,137,250,0.2)]">
-                   <span className="text-3xl font-bold text-primary">{getInitials(user?.name || "")}</span>
+                 <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/50 shadow-sm">
+                   <span className="text-3xl font-semibold text-primary">{getInitials(user?.name || "")}</span>
                  </div>
                )}
             </div>
@@ -72,7 +72,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             {/* Form Section */}
             <form onSubmit={handleSubmit} className="flex-1 w-full flex flex-col gap-4">
                <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-tertiary">Full Name</label>
+                  <label className="text-xs font-semibold text-text-tertiary">Full Name</label>
                   <input 
                     type="text" 
                     required
@@ -83,17 +83,17 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   />
                </div>
                <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-tertiary">Email Address</label>
+                  <label className="text-xs font-semibold text-text-tertiary">Email Address</label>
                   <input 
                     type="email" 
                     value={user?.email || ""}
                     disabled
                     title="Email cannot be changed"
-                    className="w-full bg-bg-surface-elevated border border-border-default rounded-xl px-4 py-3 text-sm text-text-secondary opacity-70 cursor-not-allowed"
+                    className="w-full bg-bg-surface-elevated border border-border-default rounded-md px-4 py-3 text-sm text-text-secondary opacity-70 cursor-not-allowed"
                   />
                </div>
                <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-tertiary">Phone Number (Optional)</label>
+                  <label className="text-xs font-semibold text-text-tertiary">Phone Number (Optional)</label>
                   <input 
                     type="tel" 
                     value={formData.phone}
@@ -103,7 +103,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   />
                </div>
                <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-tertiary">Current Job Title / Role</label>
+                  <label className="text-xs font-semibold text-text-tertiary">Current Job Title / Role</label>
                   <input 
                     type="text" 
                     value={formData.jobTitle}
@@ -117,7 +117,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm rounded-xl transition-all shadow-md shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm rounded-md transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : <><Save className="w-4 h-4" /> Save Profile</>}
                   </button>

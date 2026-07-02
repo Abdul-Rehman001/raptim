@@ -100,12 +100,13 @@ helping candidates land jobs at top companies. Your analysis is honest, specific
 Analyze the match between the resume and job description below.
 
 STRICT RULES:
-- Only reference skills, tools, and experiences EXPLICITLY written in the resume
-- Never assume, infer, or hallucinate skills not present in the resume text
-- Be brutally honest — a low score with clear guidance is more valuable than false hope
-- All tips must be specific to THIS job and THIS resume, not generic career advice
-- Missing keywords must come directly from the job description text
-- Return ONLY valid JSON — no markdown, no backticks, no explanation outside the JSON
+- Only reference skills, tools, and experiences EXPLICITLY written in the resume.
+- SEMANTIC EQUIVALENCE: Recognize common acronyms and synonyms. For example, "MERN" implies MongoDB, Express, React, and Node.js. "B.Tech" or "B.S." implies a Bachelor's Degree. Do NOT penalize the candidate if they have the semantic equivalent of a requirement.
+- Never assume, infer, or hallucinate skills not present in the resume text (unless covered by standard semantic equivalence).
+- Be brutally honest — a low score with clear guidance is more valuable than false hope.
+- All tips must be specific to THIS job and THIS resume, not generic career advice.
+- Missing keywords must come directly from the job description text.
+- Return ONLY valid JSON — no markdown, no backticks, no explanation outside the JSON.
 
 RESUME:
 ${resumeText.slice(0, 3000)}
