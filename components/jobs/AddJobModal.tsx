@@ -80,8 +80,8 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
       }));
       setShowOptional(true);
       toast.success("Job details extracted!", { id: toastId });
-    } catch (err: any) {
-      if (err.message === "BLOCKED") {
+    } catch (err) {
+      if (err instanceof Error && err.message === "BLOCKED") {
         toast.error("This site blocks automated fetching (Cloudflare). Please copy & paste the description manually.", { id: toastId, duration: 5000 });
       } else {
         toast.error("Failed to extract details. Some sites block automated fetching.", { id: toastId });

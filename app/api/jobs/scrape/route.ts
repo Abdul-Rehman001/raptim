@@ -29,7 +29,6 @@ export async function POST(req: Request) {
     const html = await response.text();
 
     // Very basic extraction of the body text to reduce token count
-    let bodyText = "";
     
     // Attempt to extract body content
     const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
@@ -93,6 +92,7 @@ Expected JSON Format:
         parsed = JSON.parse(rawGrok.trim());
       }
     } catch (e) {
+      console.error("Parse error:", e);
       throw new Error(`Failed to parse AI response: ${rawGrok.substring(0, 50)}...`);
     }
 
