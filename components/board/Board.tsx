@@ -39,12 +39,12 @@ export function Board({ initialJobs }: { initialJobs: IJob[] }) {
       toast(
         (t) => (
           <span className="flex flex-col gap-1.5">
-            <span className="font-bold text-sm flex items-center gap-1.5"><Target className="w-4 h-4 text-emerald-500" /> Interview added!</span>
+            <span className="font-semibold text-sm flex items-center gap-1.5"><Target className="w-4 h-4 text-emerald-500" /> Interview added!</span>
             <span className="text-xs text-text-secondary">Want to prep with AI?</span>
             <Link
               href={`/jobs/${jobId}?tab=interview-prep`}
               onClick={() => toast.dismiss(t.id)}
-              className="text-xs font-bold text-purple-600 underline"
+              className="text-xs font-semibold text-purple-600 underline"
             >
               Prep Now →
             </Link>
@@ -56,12 +56,12 @@ export function Board({ initialJobs }: { initialJobs: IJob[] }) {
       toast(
         (t) => (
           <span className="flex flex-col gap-1.5">
-            <span className="font-bold text-sm flex items-center gap-1.5"><Frown className="w-4 h-4 text-amber-500" /> Sorry to hear that</span>
+            <span className="font-semibold text-sm flex items-center gap-1.5"><Frown className="w-4 h-4 text-amber-500" /> Sorry to hear that</span>
             <span className="text-xs text-text-secondary">Want to note what happened?</span>
             <Link
               href={`/jobs/${jobId}?tab=notes`}
               onClick={() => toast.dismiss(t.id)}
-              className="text-xs font-bold text-purple-600 underline"
+              className="text-xs font-semibold text-purple-600 underline"
             >
               Add Note →
             </Link>

@@ -42,10 +42,11 @@ export async function POST() {
 
 CRITICAL DIRECTIVES:
 1. ANTI-HALLUCINATION: Do NOT invent errors. If the resume is well-formatted, it is expected and perfectly fine to return empty arrays [] for formatIssues and missingSections. Do not flag things just to have something to flag.
-2. INDUSTRY AGNOSTIC: Recognize that different industries have different standard sections (e.g., "Projects" for Tech, "Publications" for Academia, "Campaigns" for Marketing). All are valid.
-3. FORMAT TOLERANCE: Bullet points (•, -, *, ·) and pipes (|) are perfectly standard and are NOT special characters. Do NOT flag them.
-4. TITLES & HEADERS: If a professional title (e.g., "Software Engineer", "Marketing Manager", "Financial Analyst") appears near the top, recognize it. It does NOT need a literal "Title:" label.
-5. PENALTIES: Only penalize for genuine ATS parsing threats: complex tables, missing contact info, giant walls of text without bullets, or missing core timelines in experience.
+2. SEMANTIC EQUIVALENCE: Recognize common acronyms and synonyms (e.g., MERN = MongoDB, Express, React, Node. B.Tech/B.S. = Bachelor's Degree). Do NOT penalize or claim something is missing if the semantic equivalent exists.
+3. INDUSTRY AGNOSTIC: Recognize that different industries have different standard sections (e.g., "Projects" for Tech, "Publications" for Academia, "Campaigns" for Marketing). All are valid.
+4. FORMAT TOLERANCE: Bullet points (•, -, *, ·) and pipes (|) are perfectly standard and are NOT special characters. Do NOT flag them.
+5. TITLES & HEADERS: If a professional title (e.g., "Software Engineer", "Marketing Manager", "Financial Analyst") appears near the top, recognize it. It does NOT need a literal "Title:" label.
+6. PENALTIES: Only penalize for genuine ATS parsing threats: complex tables, missing contact info, giant walls of text without bullets, or missing core timelines in experience.
 
 RESUME TEXT:
 ${user.resumeText}

@@ -133,7 +133,7 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
       {/* Drop zone / upload area */}
       <div
         className={`
-          relative flex flex-col items-center justify-center gap-4 rounded-2xl
+          relative flex flex-col items-center justify-center gap-4 rounded-lg
           border-2 border-dashed p-8 text-center transition-all duration-200
           ${isLoading
             ? "border-primary/50 bg-primary/5"
@@ -148,7 +148,7 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
       >
         {/* Status icon */}
         <div className={`
-          w-14 h-14 rounded-2xl flex items-center justify-center border transition-all
+          w-14 h-14 rounded-lg flex items-center justify-center border transition-all
           ${isLoading ? "bg-primary/10 border-primary/20 text-primary"
             : status === "done" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
             : status === "error" ? "bg-red-500/10 border-red-500/20 text-red-400"
@@ -202,7 +202,7 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
         {(status === "idle" || status === "error") && (
           <button
             type="button"
-            className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm rounded-xl transition-all shadow-md shadow-primary/20"
+            className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm rounded-md transition-all shadow-sm"
             onClick={(e) => { e.stopPropagation(); document.getElementById("resume-upload")?.click(); }}
           >
             Select File
@@ -221,7 +221,7 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
 
       {/* File actions bar — shown when a file is uploaded */}
       {status === "done" && resumeUrl && (
-        <div className="flex items-center gap-2 px-4 py-3 rounded-xl border border-border-subtle bg-bg-surface">
+        <div className="flex items-center gap-2 px-4 py-3 rounded-md border border-border-subtle bg-bg-surface">
           <FileText className="w-4 h-4 text-primary shrink-0" />
           <span className="text-xs text-text-secondary flex-1 truncate">
             {resumeUrl.split("/").pop() ?? "resume.pdf"}
@@ -230,7 +230,7 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
             href={resumeUrl}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-hover transition-colors shrink-0"
+            className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-hover transition-colors shrink-0"
             onClick={(e) => e.stopPropagation()}
           >
             <ExternalLink className="w-3.5 h-3.5" />
@@ -240,7 +240,7 @@ export function ResumeUpload({ initialUrl }: { initialUrl?: string }) {
           <button
             onClick={handleDelete}
             disabled={deleting}
-            className="flex items-center gap-1 text-xs font-bold text-red-400 hover:text-red-300 transition-colors disabled:opacity-50 shrink-0"
+            className="flex items-center gap-1 text-xs font-semibold text-red-400 hover:text-red-300 transition-colors disabled:opacity-50 shrink-0"
           >
             {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
             {deleting ? "Deleting..." : "Delete"}

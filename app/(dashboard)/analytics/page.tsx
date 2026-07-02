@@ -90,15 +90,15 @@ export default async function AnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">Analytics Overview</h1>
+          <h1 className="text-2xl font-semibold text-text-primary tracking-tight">Analytics Overview</h1>
           <p className="text-text-secondary mt-1 font-medium">Track your application performance and conversion funnel</p>
         </div>
-        <div className="flex items-center gap-3 bg-bg-surface border border-border-subtle rounded-xl p-1 shadow-sm">
-           <button className="p-1.5 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
+        <div className="flex items-center gap-3 bg-bg-surface border border-border-subtle rounded-lg p-1 shadow-sm">
+           <button className="p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
               <ChevronLeft className="w-5 h-5" />
            </button>
-           <span className="text-sm font-bold text-text-primary px-2">{monthName}</span>
-           <button className="p-1.5 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
+           <span className="text-sm font-semibold text-text-primary px-2">{monthName}</span>
+           <button className="p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-bg-surface-hover transition-colors">
               <ChevronRight className="w-5 h-5" />
            </button>
         </div>
@@ -106,45 +106,45 @@ export default async function AnalyticsPage() {
 
       {/* Top Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl shadow-sm relative overflow-hidden group hover:border-border-default transition-all">
+        <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg shadow-sm relative overflow-hidden group hover:border-border-default transition-all">
            <div className="flex justify-between items-start mb-6">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-400">
+              <div className="w-10 h-10 rounded-md bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-400">
                  <Play className="w-5 h-5 ml-1" />
               </div>
-              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">+2.5%</span>
+              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">+2.5%</span>
            </div>
            <p className="text-xs text-text-secondary font-medium tracking-wide mb-1">Response Rate</p>
-           <h3 className="text-3xl font-extrabold text-text-primary">{data?.responseRate || "0.0"}%</h3>
+           <h3 className="text-3xl font-semibold text-text-primary">{data?.responseRate || "0.0"}%</h3>
         </div>
 
-        <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl shadow-sm relative overflow-hidden group hover:border-border-default transition-all">
+        <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg shadow-sm relative overflow-hidden group hover:border-border-default transition-all">
            <div className="flex justify-between items-start mb-6">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 text-primary">
+              <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center border border-primary/20 text-primary">
                  <Calendar className="w-5 h-5" />
               </div>
-              <span className="text-xs font-bold text-text-secondary bg-bg-surface-elevated px-2 py-1 rounded-full">avg</span>
+              <span className="text-xs font-semibold text-text-secondary bg-bg-surface-elevated px-2 py-1 rounded-full">avg</span>
            </div>
            <p className="text-xs text-text-secondary font-medium tracking-wide mb-1">Time to Interview</p>
-           <h3 className="text-3xl font-extrabold text-text-primary">{data?.timeToInterview || 0} Days</h3>
+           <h3 className="text-3xl font-semibold text-text-primary">{data?.timeToInterview || 0} Days</h3>
         </div>
 
-        <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl shadow-sm relative overflow-hidden group hover:border-border-default transition-all">
+        <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg shadow-sm relative overflow-hidden group hover:border-border-default transition-all">
            <div className="flex justify-between items-start mb-6">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20 text-orange-400">
+              <div className="w-10 h-10 rounded-md bg-orange-500/10 flex items-center justify-center border border-orange-500/20 text-orange-400">
                  <Trophy className="w-5 h-5" />
               </div>
-              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">&gt;0%</span>
+              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">&gt;0%</span>
            </div>
            <p className="text-xs text-text-secondary font-medium tracking-wide mb-1">Offer Rate</p>
-           <h3 className="text-3xl font-extrabold text-text-primary">{data?.offerRate || "0.0"}%</h3>
+           <h3 className="text-3xl font-semibold text-text-primary">{data?.offerRate || "0.0"}%</h3>
         </div>
       </div>
 
       {/* Application Funnel */}
-      <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl">
+      <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg">
          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-base font-extrabold text-text-primary">Application Funnel</h3>
-            <span className="text-xs font-bold text-text-tertiary tracking-widest uppercase">Last 30 Days</span>
+            <h3 className="text-base font-semibold text-text-primary">Application Funnel</h3>
+            <span className="text-xs font-semibold text-text-tertiary tracking-widest uppercase">Last 30 Days</span>
          </div>
          
          <div className="relative pt-2 pb-6">
@@ -192,14 +192,14 @@ export default async function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Activity Heatmap */}
-        <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl flex flex-col justify-between">
-           <h3 className="text-base font-extrabold text-text-primary mb-6">Weekly Activity</h3>
+        <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg flex flex-col justify-between shadow-sm">
+           <h3 className="text-base font-semibold text-text-primary mb-6">Weekly Activity</h3>
            <div className="flex-1 flex flex-col justify-end">
               <div className="flex items-end gap-2 h-40 border-b border-border-subtle pb-2 w-full justify-between">
                  <div className="w-[15%] bg-primary/20 rounded-t-lg relative group cursor-pointer hover:bg-primary/40 transition-colors" style={{height: `${data?.weeklyHeights[0] || 5}%`}}></div>
                  <div className="w-[15%] bg-primary/40 rounded-t-lg relative group cursor-pointer hover:bg-primary/60 transition-colors" style={{height: `${data?.weeklyHeights[1] || 5}%`}}></div>
                  <div className="w-[15%] bg-primary/60 rounded-t-lg relative group cursor-pointer hover:bg-primary/80 transition-colors" style={{height: `${data?.weeklyHeights[2] || 5}%`}}></div>
-                 <div className="w-[15%] bg-primary rounded-t-lg relative group cursor-pointer shadow-[0_0_15px_rgba(166,137,250,0.3)]" style={{height: `${data?.weeklyHeights[3] || 5}%`}}></div>
+                 <div className="w-[15%] bg-primary rounded-t-lg relative group cursor-pointer" style={{height: `${data?.weeklyHeights[3] || 5}%`}}></div>
               </div>
               <div className="flex justify-between text-[10px] font-bold tracking-widest text-text-tertiary mt-2">
                  <span>W1</span><span>W2</span><span>W3</span><span>W4</span>
@@ -208,8 +208,8 @@ export default async function AnalyticsPage() {
         </div>
 
          {/* Job Locations */}
-         <div className="bg-bg-surface border border-border-subtle p-6 rounded-2xl">
-            <h3 className="text-base font-extrabold text-text-primary mb-6">Location Types</h3>
+         <div className="bg-bg-surface border border-border-subtle p-6 rounded-lg shadow-sm">
+            <h3 className="text-base font-semibold text-text-primary mb-6">Location Types</h3>
             <div className="space-y-6">
                <div>
                   <div className="flex justify-between text-xs font-bold text-text-primary mb-3">
@@ -217,7 +217,7 @@ export default async function AnalyticsPage() {
                      <span className="text-text-secondary">{data?.remotePct}%</span>
                   </div>
                   <div className="h-2.5 w-full bg-border-subtle rounded-full overflow-hidden">
-                     <div className="h-full bg-primary rounded-full relative shadow-[0_0_10px_rgba(166,137,250,0.5)]" style={{width: `${data?.remotePct}%`}}></div>
+                     <div className="h-full bg-primary rounded-full relative" style={{width: `${data?.remotePct}%`}}></div>
                   </div>
                </div>
                

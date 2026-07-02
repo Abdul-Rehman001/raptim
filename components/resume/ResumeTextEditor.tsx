@@ -70,7 +70,7 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
          {!isEditing && (
             <button
                onClick={() => setIsEditing(true)}
-               className="px-4 py-1.5 rounded-lg border border-border-default text-text-secondary text-xs font-bold hover:text-text-primary hover:bg-bg-surface-hover transition-colors"
+               className="px-4 py-1.5 rounded-lg border border-border-default text-text-secondary text-xs font-semibold hover:text-text-primary hover:bg-bg-surface-hover transition-colors"
             >
                Edit Text
             </button>
@@ -80,7 +80,7 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
       <div className="flex-1 w-full">
          {isEditing ? (
             <textarea
-              className="w-full min-h-[400px] h-full p-5 text-sm bg-bg-surface-elevated border border-primary rounded-xl text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none shadow-[0_0_15px_rgba(166,137,250,0.1)]"
+              className="w-full min-h-[400px] h-full p-5 text-sm bg-bg-surface-elevated border border-primary rounded-md text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none shadow-[0_0_15px_rgba(166,137,250,0.1)]"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Paste your resume experience, skills, and about section here..."
@@ -88,7 +88,7 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
             />
          ) : (
             <div 
-               className="w-full min-h-[400px] h-full p-5 text-sm bg-bg-base border border-border-subtle rounded-xl text-text-secondary overflow-y-auto cursor-text hover:border-border-default transition-colors"
+               className="w-full min-h-[400px] h-full p-5 text-sm bg-bg-base border border-border-subtle rounded-md text-text-secondary overflow-y-auto cursor-text hover:border-border-default transition-colors"
                onClick={() => setIsEditing(true)}
                title="Click to edit"
             >
@@ -106,7 +106,7 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
            <button
              onClick={handleSave}
              disabled={saving || saved}
-             className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-bold text-sm rounded-xl transition-all shadow-md shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+             className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm rounded-md transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
            >
              {saving ? (
                "Saving..."
@@ -120,7 +120,7 @@ export function ResumeTextEditor({ initialText }: ResumeTextEditorProps) {
            <button
              onClick={handleCancel}
              disabled={saving}
-             className="px-4 py-2.5 text-text-secondary font-bold text-sm hover:text-text-primary transition-colors"
+             className="px-4 py-2.5 text-text-secondary font-semibold text-sm hover:text-text-primary transition-colors"
            >
              Cancel
            </button>

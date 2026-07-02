@@ -58,17 +58,14 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
       {/* Premium Header */}
       <div className="mb-10">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-3">
-          <div className="w-12 h-12 shrink-0 rounded-2xl bg-linear-to-br from-primary to-primary-hover flex items-center justify-center shadow-lg shadow-primary/20">
-            <Sparkles className="w-6 h-6 text-white" />
-          </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight">AI Coach Toolkit</h1>
-            <p className="text-xs sm:text-sm text-text-secondary font-medium italic">Your personalized AI companion for the entire job search journey</p>
+            <h1 className="text-2xl font-semibold text-text-primary tracking-tight">AI Coach</h1>
+            <p className="text-sm text-text-secondary mt-1">Your personalized AI companion for the entire job search journey.</p>
           </div>
         </div>
         
         {/* Navigation Tabs */}
-        <div className="flex gap-2 p-1.5 bg-bg-surface border border-border-subtle rounded-2xl shadow-sm mt-8 overflow-x-auto no-scrollbar">
+        <div className="flex gap-2 p-1 bg-bg-surface border border-border-subtle rounded-lg shadow-sm mt-8 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -76,13 +73,13 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
               <button
                 key={tab.id}
                 onClick={() => setTab(tab.id)}
-                className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
                   isActive 
-                  ? "bg-primary text-white shadow-md shadow-primary/20" 
-                  : "text-text-secondary hover:text-text-primary hover:bg-bg-surface-hover"
+                  ? "bg-bg-elevated text-text-primary shadow-sm border border-border-subtle" 
+                  : "text-text-secondary hover:text-text-primary hover:bg-bg-hover"
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-text-tertiary"}`} />
+                <Icon className={`w-4 h-4 ${isActive ? "text-primary" : "text-text-tertiary"}`} />
                 {tab.label}
               </button>
             );
@@ -125,14 +122,14 @@ function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
   if (analyzedJobs.length === 0) {
     return (
       <div className="bg-bg-surface border border-border-subtle rounded-3xl p-12 text-center flex flex-col items-center">
-        <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+        <div className="w-20 h-20 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
           <Brain className="w-10 h-10 text-primary/40" />
         </div>
-        <h2 className="text-xl font-extrabold text-text-primary mb-3">No Job Analyses Yet</h2>
+        <h2 className="text-xl font-semibold text-text-primary mb-3">No Job Analyses Yet</h2>
         <p className="text-sm text-text-secondary max-w-sm mb-8 leading-relaxed">
           Start by adding a job and clicking &quot;Analyze with AI&quot; in the job details page. Your match scores and tips will appear here.
         </p>
-        <Link href="/jobs" className="bg-primary hover:bg-primary-hover text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/20">
+        <Link href="/jobs" className="bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-md transition-all shadow-lg shadow-primary/20">
           Go analyze a job
         </Link>
       </div>
@@ -143,38 +140,38 @@ function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
     <div className="space-y-6">
       {/* Stats Board */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 shadow-sm">
+        <div className="bg-bg-surface border border-border-subtle rounded-lg p-6 shadow-sm">
           <TrendingUp className="w-5 h-5 text-primary mb-4" />
-          <p className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-1">Average Match</p>
-          <h3 className="text-3xl font-extrabold text-text-primary">{avgScore}%</h3>
+          <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-1">Average Match</p>
+          <h3 className="text-3xl font-semibold text-text-primary">{avgScore}%</h3>
         </div>
-        <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 shadow-sm text-glow-card">
+        <div className="bg-bg-surface border border-border-subtle rounded-lg p-6 shadow-sm text-glow-card">
           <Sparkles className="w-5 h-5 text-amber-500 mb-4" />
-          <p className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-1">Top Match</p>
-          <h3 className="text-3xl font-extrabold text-text-primary">{Math.max(...analyzedJobs.map(j => j.matchScore || 0))}%</h3>
+          <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-1">Top Match</p>
+          <h3 className="text-3xl font-semibold text-text-primary">{Math.max(...analyzedJobs.map(j => j.matchScore || 0))}%</h3>
         </div>
-        <div className="bg-bg-surface border border-border-subtle rounded-2xl p-6 shadow-sm">
+        <div className="bg-bg-surface border border-border-subtle rounded-lg p-6 shadow-sm">
           <Brain className="w-5 h-5 text-emerald-500 mb-4" />
-          <p className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-1">Total Insights</p>
-          <h3 className="text-3xl font-extrabold text-text-primary">{analyzedJobs.length}</h3>
+          <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-1">Total Insights</p>
+          <h3 className="text-3xl font-semibold text-text-primary">{analyzedJobs.length}</h3>
         </div>
       </div>
 
       {/* Job Rows */}
       <div className="space-y-3">
         {analyzedJobs.map(job => (
-          <div key={job._id.toString()} className="bg-bg-surface border border-border-subtle rounded-2xl overflow-hidden transition-all hover:border-primary/40 group">
+          <div key={job._id.toString()} className="bg-bg-surface border border-border-subtle rounded-lg overflow-hidden transition-all hover:border-primary/40 group">
             <button 
               onClick={() => setExpandedId(expandedId === job._id.toString() ? null : job._id.toString())}
               className="w-full text-left p-5 flex items-center justify-between gap-4"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-0.5">{job.company }</p>
-                <h3 className="text-base font-extrabold text-text-primary truncate">{job.title}</h3>
+                <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest mb-0.5">{job.company }</p>
+                <h3 className="text-base font-semibold text-text-primary truncate">{job.title}</h3>
               </div>
               <div className="flex items-center gap-3 sm:gap-6 shrink-0">
                 <div className="flex flex-col items-end">
-                  <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest leading-none mb-1">Match</p>
+                  <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest leading-none mb-1">Match</p>
                   <p className={`text-sm sm:text-lg font-black ${(job.matchScore ?? 0) >= 80 ? "text-emerald-500" : (job.matchScore ?? 0) >= 60 ? "text-amber-500" : "text-red-400"}`}>
                     {job.matchScore || 0}%
                   </p>
@@ -197,36 +194,36 @@ function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
                   <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-5">
                       <div>
-                        <h4 className="flex items-center gap-2 text-xs font-bold text-emerald-500 uppercase tracking-widest mb-3">
+                        <h4 className="flex items-center gap-2 text-xs font-semibold text-emerald-500 uppercase tracking-widest mb-3">
                           <CheckCircle2 className="w-4 h-4" /> Why you&apos;re a match
                         </h4>
-                        <p className="text-sm text-text-secondary leading-relaxed bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-xl italic">
+                        <p className="text-sm text-text-secondary leading-relaxed bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-md italic">
                           &quot;{job.whatsStrong}&quot;
                         </p>
                       </div>
                       <div>
-                        <h4 className="flex items-center gap-2 text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">
+                        <h4 className="flex items-center gap-2 text-xs font-semibold text-amber-500 uppercase tracking-widest mb-3">
                           <AlertTriangle className="w-4 h-4" /> Area to address
                         </h4>
-                        <p className="text-sm text-text-secondary leading-relaxed bg-amber-500/5 border border-amber-500/10 p-4 rounded-xl italic">
+                        <p className="text-sm text-text-secondary leading-relaxed bg-amber-500/5 border border-amber-500/10 p-4 rounded-md italic">
                           &quot;{job.biggestGap}&quot;
                         </p>
                       </div>
                     </div>
                     <div className="space-y-5">
                       <div>
-                         <h4 className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest mb-3">
+                         <h4 className="flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-widest mb-3">
                             <Target className="w-4 h-4" /> Action Plan
                          </h4>
-                         <p className="text-sm text-text-primary font-medium leading-relaxed bg-primary/5 border border-primary/10 p-4 rounded-xl border-dashed">
+                         <p className="text-sm text-text-primary font-medium leading-relaxed bg-primary/5 border border-primary/10 p-4 rounded-md border-dashed">
                             {job.actionToday}
                          </p>
                       </div>
                       <div className="flex gap-3 pt-2">
-                        <Link href={`/jobs/${job._id}`} className="flex-1 text-center py-2.5 bg-bg-surface border border-border-default rounded-xl text-xs font-bold text-text-primary hover:bg-bg-surface-hover transition-all">
+                        <Link href={`/jobs/${job._id}`} className="flex-1 text-center py-2.5 bg-bg-surface border border-border-default rounded-md text-xs font-semibold text-text-primary hover:bg-bg-surface-hover transition-all">
                           Full Details
                         </Link>
-                        <Link href={`/ai-coach?tab=outreach&jobId=${job._id}`} className="flex-1 text-center py-2.5 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary-hover transition-all shadow-md shadow-primary/10">
+                        <Link href={`/ai-coach?tab=outreach&jobId=${job._id}`} className="flex-1 text-center py-2.5 bg-primary text-white rounded-md text-xs font-semibold hover:bg-primary-hover transition-all shadow-md shadow-primary/10">
                           Generate Outreach
                         </Link>
                       </div>
@@ -251,7 +248,7 @@ function TailorResumeButton({ job }: { job: IJob }) {
     <div className="flex flex-col gap-3 mt-4">
       <button
         onClick={() => setModalOpen(true)}
-        className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground font-bold px-6 py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 group"
+        className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-primary-foreground font-semibold px-6 py-3 rounded-md transition-all shadow-md flex items-center justify-center gap-2 group"
       >
         <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
         {history.length > 0 ? "Open Tailoring Studio" : "Auto-Tailor Resume (Studio)"}
@@ -259,8 +256,8 @@ function TailorResumeButton({ job }: { job: IJob }) {
 
       {/* Mini ROI Timeline */}
       {history.length > 1 && (
-        <div className="bg-bg-surface-hover rounded-xl p-3 border border-border-subtle mt-1 text-xs">
-          <p className="font-bold text-text-secondary mb-2 flex items-center gap-2">
+        <div className="bg-bg-surface-hover rounded-md p-3 border border-border-subtle mt-1 text-xs">
+          <p className="font-semibold text-text-secondary mb-2 flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-emerald-500" /> Resume Improvement History
           </p>
           <div className="space-y-2">
@@ -270,7 +267,7 @@ function TailorResumeButton({ job }: { job: IJob }) {
                   <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-amber-500' : 'bg-emerald-500'}`} />
                   <span className="font-semibold">{entry.version}</span>
                 </div>
-                <span className="font-bold text-text-primary">{entry.analysis?.matchScore}% Match</span>
+                <span className="font-semibold text-text-primary">{entry.analysis?.matchScore}% Match</span>
               </div>
             ))}
           </div>
@@ -280,7 +277,7 @@ function TailorResumeButton({ job }: { job: IJob }) {
       {/* Always show the link to the detailed history page */}
       <Link 
         href={`/jobs/${job._id}/history`}
-        className="mt-1 block text-center w-full bg-bg-surface border border-border-default hover:bg-bg-base text-text-secondary py-2 rounded-xl font-bold transition-colors shadow-sm"
+        className="mt-1 block text-center w-full bg-bg-surface border border-border-default hover:bg-bg-base text-text-secondary py-2 rounded-md font-semibold transition-colors shadow-sm"
       >
         View Detailed Timeline
       </Link>
@@ -353,15 +350,15 @@ function ResumeHealthTab({ user }: { user: any }) {
         <div className="bg-bg-surface border border-border-subtle rounded-3xl p-8 relative overflow-hidden shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
-              <div className="grid place-items-center w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 shrink-0">
+              <div className="grid place-items-center w-10 h-10 rounded-md bg-emerald-500/10 text-emerald-500 shrink-0">
                 <Target className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-extrabold text-text-primary">ATS Compatibility Scanner</h3>
+              <h3 className="text-xl font-semibold text-text-primary">ATS Compatibility Scanner</h3>
             </div>
             <button 
               onClick={checkATS} 
               disabled={loading}
-              className="px-5 py-2.5 w-full sm:w-auto bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-bold text-text-primary border border-border-default rounded-xl transition-all flex items-center justify-center gap-2"
+              className="px-5 py-2.5 w-full sm:w-auto bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary border border-border-default rounded-md transition-all flex items-center justify-center gap-2"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
               {loading ? "Scanning..." : (atsDetails ? "Re-scan Resume" : "Start Initial Scan")}
@@ -369,13 +366,13 @@ function ResumeHealthTab({ user }: { user: any }) {
           </div>
 
           {!atsDetails ? (
-            <div className="text-center py-10 bg-bg-surface-elevated/50 rounded-2xl border border-dashed border-border-default">
+            <div className="text-center py-10 bg-bg-surface-elevated/50 rounded-lg border border-dashed border-border-default">
               <p className="text-sm text-text-secondary max-w-xs mx-auto mb-6">
                 Analyzing your resume text for ATS compatibility will give you specific fixes to rank higher in recruiter searches.
               </p>
               <button 
                 onClick={checkATS} 
-                className="bg-primary hover:bg-primary-hover text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/20"
+                className="bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-md transition-all shadow-lg shadow-primary/20"
               >
                 Launch Scanner
               </button>
@@ -398,12 +395,12 @@ function ResumeHealthTab({ user }: { user: any }) {
                   </svg>
                   <div className="absolute flex flex-col items-center">
                     <span className="text-3xl font-black text-text-primary">{atsDetails.atsScore}</span>
-                    <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest">Score</span>
+                    <span className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest">Score</span>
                   </div>
                 </div>
                 <div className="flex-1 text-center sm:text-left">
-                  <p className="text-xs font-bold text-text-tertiary uppercase tracking-widest mb-1">Expert Verdict</p>
-                  <h4 className="text-lg font-extrabold text-text-primary leading-tight mb-2">{atsDetails.verdict}</h4>
+                  <p className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-1">Expert Verdict</p>
+                  <h4 className="text-lg font-semibold text-text-primary leading-tight mb-2">{atsDetails.verdict}</h4>
                   <div className="flex justify-center sm:justify-start gap-2">
                     <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500`}>Keyword Density: {atsDetails.keywordDensity}</span>
                   </div>
@@ -413,12 +410,12 @@ function ResumeHealthTab({ user }: { user: any }) {
               {/* Actionable Recs */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <h5 className="text-xs font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
+                  <h5 className="text-xs font-semibold text-text-primary uppercase tracking-widest flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Top Improvements
                   </h5>
                   <ul className="space-y-2.5">
                     {atsDetails.topRecommendations.map((rec: string, i: number) => (
-                      <li key={i} className="flex gap-3 items-start bg-bg-surface-elevated p-3 rounded-xl border border-border-subtle">
+                      <li key={i} className="flex gap-3 items-start bg-bg-surface-elevated p-3 rounded-md border border-border-subtle">
                         <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                         <span className="text-xs text-text-secondary leading-snug">{rec}</span>
                       </li>
@@ -427,13 +424,13 @@ function ResumeHealthTab({ user }: { user: any }) {
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <h5 className="text-xs font-bold text-text-primary uppercase tracking-widest flex items-center gap-2">
+                    <h5 className="text-xs font-semibold text-text-primary uppercase tracking-widest flex items-center gap-2">
                       <Zap className="w-4 h-4 text-amber-500" /> Quick Wins
                     </h5>
                     <div className="space-y-2">
                       {atsDetails.quickWins.map((win: string, i: number) => (
-                        <div key={i} className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl">
-                          <p className="text-xs font-bold text-amber-600 mb-0.5">Under 5 mins</p>
+                        <div key={i} className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-md">
+                          <p className="text-xs font-semibold text-amber-600 mb-0.5">Under 5 mins</p>
                           <p className="text-xs text-text-secondary leading-tight">{win}</p>
                         </div>
                       ))}
@@ -441,12 +438,12 @@ function ResumeHealthTab({ user }: { user: any }) {
                   </div>
                   {atsDetails.formatIssues.length > 0 && (
                     <div className="space-y-3">
-                       <h5 className="text-xs font-bold text-red-500 uppercase tracking-widest flex items-center gap-2">
+                       <h5 className="text-xs font-semibold text-red-500 uppercase tracking-widest flex items-center gap-2">
                           <AlertTriangle className="w-4 h-4" /> Format Issues
                        </h5>
                        <div className="flex flex-wrap gap-2">
                           {atsDetails.formatIssues.map((iss: string, i: number) => (
-                            <span key={i} className="text-[10px] font-bold bg-red-500/10 text-red-500 px-2 py-1 rounded border border-red-500/20">{iss}</span>
+                            <span key={i} className="text-[10px] font-semibold bg-red-500/10 text-red-500 px-2 py-1 rounded border border-red-500/20">{iss}</span>
                           ))}
                        </div>
                     </div>
@@ -462,12 +459,12 @@ function ResumeHealthTab({ user }: { user: any }) {
       <div className="lg:col-span-5 space-y-6">
         <div className="bg-bg-surface border border-border-subtle rounded-3xl p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-glow">
+            <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center text-primary text-glow">
               <Zap className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-extrabold text-text-primary">Bullet Point Improver</h3>
-              <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest">Quantify your impact</p>
+              <h3 className="text-lg font-semibold text-text-primary">Bullet Point Improver</h3>
+              <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest">Quantify your impact</p>
             </div>
           </div>
 
@@ -476,12 +473,12 @@ function ResumeHealthTab({ user }: { user: any }) {
                value={bulletText}
                onChange={(e) => setBulletText(e.target.value)}
                placeholder="Paste a weak bullet point (e.g., &apos;Helped build a website used by many  people&apos;)"
-               className="w-full h-32 p-4 text-sm bg-bg-surface-elevated border border-border-default rounded-2xl text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 resize-none transition-all"
+               className="w-full h-32 p-4 text-sm bg-bg-surface-elevated border border-border-default rounded-lg text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 resize-none transition-all"
             />
             <button 
               onClick={improveBullet}
               disabled={improving || !bulletText.trim()}
-              className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white font-extrabold text-sm rounded-2xl transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {improving ? <><RefreshCw className="w-4 h-4 animate-spin" /> Perfecting...</> : <><Sparkles className="w-4 h-4" /> Improve Bullet Point</>}
             </button>
@@ -494,10 +491,10 @@ function ResumeHealthTab({ user }: { user: any }) {
                 animate={{ opacity: 1, scale: 1 }}
                 className="mt-8 space-y-4"
               >
-                <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest px-1">AI-Powered Versions (STAR Pattern)</p>
+                <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest px-1">AI-Powered Versions (STAR Pattern)</p>
                 <div className="space-y-3">
                   {improvedResult.improved.map((bullet: any, i: number) => (
-                    <div key={i} className="group bg-bg-surface-elevated border border-border-subtle rounded-2xl p-4 relative hover:border-primary/30 transition-all">
+                    <div key={i} className="group bg-bg-surface-elevated border border-border-subtle rounded-lg p-4 relative hover:border-primary/30 transition-all">
                       <div className="flex justify-between items-start gap-3 mb-2">
                         <span className="text-[10px] font-black text-primary uppercase">Option {i+1}</span>
                         <button 
@@ -515,8 +512,8 @@ function ResumeHealthTab({ user }: { user: any }) {
                     </div>
                   ))}
                 </div>
-                <div className="bg-primary/5 border border-primary/20 p-3 rounded-xl mt-4">
-                  <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Expert Tip</p>
+                <div className="bg-primary/5 border border-primary/20 p-3 rounded-md mt-4">
+                  <p className="text-[10px] font-semibold text-primary uppercase tracking-widest mb-1">Expert Tip</p>
                   <p className="text-[11px] text-text-secondary leading-relaxed">{improvedResult.tip}</p>
                 </div>
               </motion.div>
@@ -556,22 +553,22 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Sidebar - Job Picker */}
       <div className="lg:col-span-4 space-y-4">
-        <h4 className="text-xs font-bold text-text-tertiary uppercase tracking-widest pl-1 mb-2">Select a Job</h4>
+        <h4 className="text-xs font-semibold text-text-tertiary uppercase tracking-widest pl-1 mb-2">Select a Job</h4>
         <div className="space-y-2 max-h-150 overflow-y-auto no-scrollbar pb-10">
           {jobs.map(job => (
             <button
               key={job._id.toString()}
               onClick={() => setJobId(job._id.toString())}
-              className={`w-full text-left p-4 rounded-2xl border transition-all ${
+              className={`w-full text-left p-4 rounded-lg border transition-all ${
                 selectedJob?._id.toString() === job._id.toString()
                 ? "bg-primary/10 border-primary shadow-sm"
                 : "bg-bg-surface border-border-subtle hover:border-primary/30"
               }`}
             >
-              <p className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${selectedJob?._id.toString() === job._id.toString() ? "text-primary" : "text-text-tertiary"}`}>
+              <p className={`text-[10px] font-semibold uppercase tracking-widest mb-1 ${selectedJob?._id.toString() === job._id.toString() ? "text-primary" : "text-text-tertiary"}`}>
                 {job.company }
               </p>
-              <h5 className="text-sm font-extrabold text-text-primary truncate">{job.title}</h5>
+              <h5 className="text-sm font-semibold text-text-primary truncate">{job.title}</h5>
             </button>
           ))}
         </div>
@@ -582,19 +579,19 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
         {!selectedJob ? (
           <div className="h-full bg-bg-surface border border-border-subtle border-dashed rounded-3xl flex flex-col items-center justify-center p-12 text-center">
             <Search className="w-12 h-12 text-text-tertiary mb-4 opacity-20" />
-            <p className="text-sm text-text-tertiary font-bold lowercase tracking-widest">Select a job to start intelligence report</p>
+            <p className="text-sm text-text-tertiary font-semibold lowercase tracking-widest">Select a job to start intelligence report</p>
           </div>
         ) : (
           <div className="bg-bg-surface border border-border-subtle rounded-3xl p-8 relative overflow-hidden shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-8 border-b border-border-subtle">
               <div>
-                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Evaluating Opportunity</p>
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-1">Evaluating Opportunity</p>
                 <h3 className="text-2xl font-black text-text-primary">{selectedJob.company }</h3>
                 <p className="text-sm text-text-secondary font-medium">{selectedJob.title}</p>
               </div>
-              <div className="bg-bg-surface-elevated p-2 rounded-2xl border border-border-subtle w-full sm:w-auto">
+              <div className="bg-bg-surface-elevated p-2 rounded-lg border border-border-subtle w-full sm:w-auto">
                  {analysis ? (
-                   <div className="flex items-center justify-center gap-2 px-4 py-2 bg-bg-base rounded-xl border border-border-default">
+                   <div className="flex items-center justify-center gap-2 px-4 py-2 bg-bg-base rounded-md border border-border-default">
                      <div className={`w-3 h-3 rounded-full ${analysis.overallRating === 'safe' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : analysis.overallRating === 'caution' ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'}`} />
                      <span className="text-xs font-black uppercase text-text-primary">{analysis.overallRating} Rating</span>
                    </div>
@@ -602,7 +599,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
                    <button 
                     onClick={analyzeRedFlags} 
                     disabled={loading || !selectedJob.jobDescription}
-                    className="bg-primary hover:bg-primary-hover text-white px-6 py-2.5 w-full rounded-xl text-xs font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                    className="bg-primary hover:bg-primary-hover text-white px-6 py-2.5 w-full rounded-md text-xs font-semibold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                    >
                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                      Perform Deep Scan
@@ -612,20 +609,20 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
             </div>
 
             {!analysis ? (
-              <div className="text-center py-20 bg-bg-surface-elevated/30 rounded-2xl flex flex-col items-center">
+              <div className="text-center py-20 bg-bg-surface-elevated/30 rounded-lg flex flex-col items-center">
                  <ShieldAlert className="w-12 h-12 text-primary mb-4 opacity-50" />
-                 <h4 className="text-lg font-bold text-text-primary mb-2">Ready to Scan for Concerns</h4>
+                 <h4 className="text-lg font-semibold text-text-primary mb-2">Ready to Scan for Concerns</h4>
                  <p className="text-sm text-text-secondary max-w-sm mb-8">
                    We'll look for realistic requirements, work-life balance signals, toxic traits, and salary transparency in the job post.
                  </p>
                  <button 
                   onClick={analyzeRedFlags} 
                   disabled={loading || !selectedJob.jobDescription}
-                  className="bg-primary hover:bg-primary-hover text-white px-10 py-3.5 rounded-2xl text-sm font-extrabold shadow-xl shadow-primary/20 transition-all flex items-center gap-2"
+                  className="bg-primary hover:bg-primary-hover text-white px-10 py-3.5 rounded-lg text-sm font-semibold shadow-xl shadow-primary/20 transition-all flex items-center gap-2"
                  >
                    {loading ? "Analyzing Description..." : "Generate Intelligence Report"}
                  </button>
-                 {!selectedJob.jobDescription && <p className="mt-4 text-xs text-red-400 font-bold italic">Add job description first</p>}
+                 {!selectedJob.jobDescription && <p className="mt-4 text-xs text-red-400 font-semibold italic">Add job description first</p>}
               </div>
             ) : (
               <div className="space-y-10 animate-in fade-in duration-700">
@@ -640,18 +637,18 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Red Flags */}
                   <div className="space-y-4">
-                    <h5 className="text-xs font-bold text-red-500 uppercase tracking-widest px-1">Red Flags & Concerns</h5>
+                    <h5 className="text-xs font-semibold text-red-500 uppercase tracking-widest px-1">Red Flags & Concerns</h5>
                     <div className="space-y-3">
                       {(analysis.redFlags || []).length === 0 ? (
-                        <div className="text-xs text-text-tertiary p-4 rounded-2xl bg-emerald-500/5 italic">No red flags identified.</div>
+                        <div className="text-xs text-text-tertiary p-4 rounded-lg bg-emerald-500/5 italic">No red flags identified.</div>
                       ) : (
                         (analysis.redFlags || []).map((flag: any, i: number) => (
-                           <div key={i} className="bg-red-500/5 border border-red-500/10 p-4 rounded-2xl">
+                           <div key={i} className="bg-red-500/5 border border-red-500/10 p-4 rounded-lg">
                               <div className="flex items-center justify-between mb-2">
                                  <p className="text-xs font-black text-red-600 uppercase">Concern {i+1}</p>
-                                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${flag.severity === 'high' ? 'bg-red-500 text-white' : 'bg-red-200 text-red-800'}`}>{flag.severity}</span>
+                                 <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded ${flag.severity === 'high' ? 'bg-red-500 text-white' : 'bg-red-200 text-red-800'}`}>{flag.severity}</span>
                               </div>
-                              <p className="text-sm text-text-primary font-bold mb-1 leading-tight">{flag.flag}</p>
+                              <p className="text-sm text-text-primary font-semibold mb-1 leading-tight">{flag.flag}</p>
                               <p className="text-xs text-text-secondary leading-normal italic">Meaning: {flag.meaning}</p>
                            </div>
                         ))
@@ -661,15 +658,15 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
 
                   {/* Green Flags */}
                   <div className="space-y-4">
-                    <h5 className="text-xs font-bold text-emerald-500 uppercase tracking-widest px-1">Green Flags & Upsides</h5>
+                    <h5 className="text-xs font-semibold text-emerald-500 uppercase tracking-widest px-1">Green Flags & Upsides</h5>
                     <div className="space-y-3">
                       {(analysis.greenFlags || []).map((flag: any, i: number) => (
-                        <div key={i} className="bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-2xl">
+                        <div key={i} className="bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-lg">
                            <div className="flex items-center gap-2 mb-2">
                               <div className="w-2 h-2 rounded-full bg-emerald-500" />
                               <p className="text-xs font-black text-emerald-600 uppercase">Upside {i+1}</p>
                            </div>
-                           <p className="text-sm text-text-primary font-bold mb-1 leading-tight">{flag.flag}</p>
+                           <p className="text-sm text-text-primary font-semibold mb-1 leading-tight">{flag.flag}</p>
                            <p className="text-xs text-text-secondary leading-normal italic">Context: {flag.meaning}</p>
                         </div>
                       ))}
@@ -678,27 +675,27 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border-subtle pt-8">
-                  <div className="bg-bg-surface-elevated p-4 rounded-2xl text-center">
-                    <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-1">Salary Status</p>
-                    <p className="text-xs font-extrabold text-text-primary">{analysis.salaryAssessment}</p>
+                  <div className="bg-bg-surface-elevated p-4 rounded-lg text-center">
+                    <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest mb-1">Salary Status</p>
+                    <p className="text-xs font-semibold text-text-primary">{analysis.salaryAssessment}</p>
                   </div>
-                  <div className="bg-bg-surface-elevated p-4 rounded-2xl text-center">
-                    <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-1">Requirements</p>
-                    <p className="text-xs font-extrabold text-text-primary">{analysis.requirementsRealism}</p>
+                  <div className="bg-bg-surface-elevated p-4 rounded-lg text-center">
+                    <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest mb-1">Requirements</p>
+                    <p className="text-xs font-semibold text-text-primary">{analysis.requirementsRealism}</p>
                   </div>
-                  <div className="bg-bg-surface-elevated p-4 rounded-2xl text-center">
-                    <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-1">Work-Life</p>
-                    <p className="text-xs font-extrabold text-text-primary">{analysis.workLifeBalance}</p>
+                  <div className="bg-bg-surface-elevated p-4 rounded-lg text-center">
+                    <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest mb-1">Work-Life</p>
+                    <p className="text-xs font-semibold text-text-primary">{analysis.workLifeBalance}</p>
                   </div>
                 </div>
 
                 <div className="bg-amber-500 border border-amber-600 p-5 rounded-3xl flex items-start gap-4">
-                  <div className="bg-white/20 p-2 rounded-xl text-white">
+                  <div className="bg-white/20 p-2 rounded-md text-white">
                     <AlertTriangle className="w-6 h-6" />
                   </div>
                   <div>
                     <h6 className="text-xs font-black text-white uppercase tracking-widest leading-none mb-2">Top concern to investigate</h6>
-                    <p className="text-sm text-amber-50 font-bold leading-relaxed">{analysis.topConcern}</p>
+                    <p className="text-sm text-amber-50 font-semibold leading-relaxed">{analysis.topConcern}</p>
                   </div>
                 </div>
               </div>
@@ -743,25 +740,25 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Job Picker */}
       <div className="lg:col-span-4 space-y-4">
-        <h4 className="text-xs font-bold text-text-tertiary uppercase tracking-widest pl-1 mb-2">Context for Outreach</h4>
+        <h4 className="text-xs font-semibold text-text-tertiary uppercase tracking-widest pl-1 mb-2">Context for Outreach</h4>
         <div className="space-y-2 max-h-150 overflow-y-auto no-scrollbar pb-10">
           {jobs.map(job => (
             <button
               key={job._id.toString()}
               onClick={() => setJobId(job._id.toString())}
-              className={`w-full text-left p-4 rounded-2xl border transition-all ${
+              className={`w-full text-left p-4 rounded-lg border transition-all ${
                 selectedJob?._id.toString() === job._id.toString()
                 ? "bg-primary/10 border-primary shadow-sm"
                 : "bg-bg-surface border-border-subtle hover:border-primary/30"
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                 <p className={`text-[10px] font-bold uppercase tracking-widest ${selectedJob?._id.toString() === job._id.toString() ? "text-primary" : "text-text-tertiary"}`}>
+                 <p className={`text-[10px] font-semibold uppercase tracking-widest ${selectedJob?._id.toString() === job._id.toString() ? "text-primary" : "text-text-tertiary"}`}>
                   {job.company }
                 </p>
                 {job.coldEmail && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Email generated" />}
               </div>
-              <h5 className="text-sm font-extrabold text-text-primary truncate">{job.title}</h5>
+              <h5 className="text-sm font-semibold text-text-primary truncate">{job.title}</h5>
             </button>
           ))}
         </div>
@@ -772,22 +769,22 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
         {!selectedJob ? (
           <div className="h-full bg-bg-surface border border-border-subtle border-dashed rounded-3xl flex flex-col items-center justify-center p-12 text-center">
             <Mail className="w-12 h-12 text-text-tertiary mb-4 opacity-20" />
-            <p className="text-sm text-text-tertiary font-bold lowercase tracking-widest">Select a target job</p>
+            <p className="text-sm text-text-tertiary font-semibold lowercase tracking-widest">Select a target job</p>
           </div>
         ) : (
           <div className="bg-bg-surface border border-border-subtle rounded-3xl p-8 shadow-sm">
              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 pb-6 border-b border-border-subtle">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center text-primary shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="text-lg font-black text-text-primary tracking-tight">Cold Professional Outreach</h3>
-                    <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest leading-none mt-1">Short, Human, Effective</p>
+                    <p className="text-[10px] font-semibold text-text-tertiary uppercase tracking-widest leading-none mt-1">Short, Human, Effective</p>
                   </div>
                 </div>
                 {email && (
-                  <button onClick={generateEmail} disabled={generating} className="text-xs font-bold text-primary hover:text-primary-hover flex items-center justify-center gap-1.5 transition-all w-full sm:w-auto p-2 bg-primary/5 sm:bg-transparent rounded-lg">
+                  <button onClick={generateEmail} disabled={generating} className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center justify-center gap-1.5 transition-all w-full sm:w-auto p-2 bg-primary/5 sm:bg-transparent rounded-lg">
                      <RefreshCw className={`w-3.5 h-3.5 ${generating ? 'animate-spin' : ''}`} /> 
                      {generating ? 'Regenerating...' : 'Regenerate'}
                   </button>
@@ -795,21 +792,21 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
              </div>
 
              {!email ? (
-               <div className="text-center py-24 bg-bg-surface-elevated/30 rounded-2xl flex flex-col items-center border border-dashed border-border-default">
+               <div className="text-center py-24 bg-bg-surface-elevated/30 rounded-lg flex flex-col items-center border border-dashed border-border-default">
                   <Zap className="w-12 h-12 text-primary mb-6 opacity-30 shadow-primary/20 shadow-xl" />
                   <h4 className="text-xl font-black text-text-primary mb-3">Skip the line with AI outreach</h4>
                   <p className="text-sm text-text-secondary max-w-sm mb-10 leading-relaxed font-medium">
-                    We'll draft a concise, human-toned message tailored specifically to <span className="text-primary font-bold">{selectedJob.company }</span> using your strongest matching skills.
+                    We'll draft a concise, human-toned message tailored specifically to <span className="text-primary font-semibold">{selectedJob.company }</span> using your strongest matching skills.
                   </p>
                   <button 
                     onClick={generateEmail}
                     disabled={generating || !selectedJob.jobDescription}
-                    className="bg-primary hover:bg-primary-hover text-white px-12 py-4 rounded-2xl text-sm font-black shadow-2xl shadow-primary/30 transition-all flex items-center gap-3"
+                    className="bg-primary hover:bg-primary-hover text-white px-12 py-4 rounded-lg text-sm font-black shadow-2xl shadow-primary/30 transition-all flex items-center gap-3"
                   >
                     {generating ? <RefreshCw className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                     Compose Outreach Message
                   </button>
-                  {!selectedJob.jobDescription && <p className="mt-4 text-xs text-red-400 font-bold italic">Missing job description</p>}
+                  {!selectedJob.jobDescription && <p className="mt-4 text-xs text-red-400 font-semibold italic">Missing job description</p>}
                </div>
              ) : (
                <motion.div 
@@ -819,7 +816,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
                >
                   <div className="bg-bg-surface-elevated border border-border-subtle p-8 rounded-3xl relative group shadow-inner min-h-75">
                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={copyEmail} className="p-2 bg-white dark:bg-bg-surface border border-border-default rounded-xl shadow-sm text-text-secondary hover:text-primary transition-colors">
+                        <button onClick={copyEmail} className="p-2 bg-white dark:bg-bg-surface border border-border-default rounded-md shadow-sm text-text-secondary hover:text-primary transition-colors">
                            <Copy className="w-4 h-4" />
                         </button>
                      </div>
@@ -832,12 +829,12 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
                   </div>
 
                   <div className="flex gap-4">
-                     <button onClick={copyEmail} className="flex-1 py-4 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-2">
+                     <button onClick={copyEmail} className="flex-1 py-4 bg-primary text-white font-black rounded-lg shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-2">
                         <Copy className="w-4 h-4" /> Copy Message Body
                      </button>
                   </div>
                   
-                  <div className="bg-bg-surface-elevated/50 p-6 rounded-2xl border border-border-subtle">
+                  <div className="bg-bg-surface-elevated/50 p-6 rounded-lg border border-border-subtle">
                      <h5 className="text-[10px] font-black text-text-tertiary uppercase tracking-widest mb-3">AI Expert Feedback</h5>
                      <div className="space-y-3">
                         <div className="flex gap-3 items-center">
