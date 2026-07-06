@@ -38,7 +38,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const improvementContext = [
       job.whatsStrong ? `Strengths to emphasize: ${job.whatsStrong}` : '',
       job.biggestGap ? `Gap to address in bullets: ${job.biggestGap}` : '',
-      job.improvementTips?.length ? `Specific improvements to make:\n${job.improvementTips.map((t: string) => `- ${t}`).join('\n')}` : '',
+      job.aiCoachTips?.length ? `Specific improvements to make:\n${job.aiCoachTips.map((t: string) => `- ${t}`).join('\n')}` : '',
     ].filter(Boolean).join('\n\n');
 
     const prompt = `
@@ -70,7 +70,7 @@ JOB TO TAILOR FOR:
 Company: ${job.company}
 Title: ${job.title}
 Description:
-${job.description || "No description provided."}
+${job.jobDescription || "No description provided."}
 `;
 
     const completion = await groq.chat.completions.create({
@@ -110,7 +110,7 @@ ${job.description || "No description provided."}
       
       Job Title: ${job.title}
       Job Company: ${job.company}
-      Job Description: ${job.description}
+      Job Description: ${job.jobDescription}
       Tailored Resume JSON: ${JSON.stringify(mergedJson)}
       
       Return ONLY valid JSON.
@@ -129,8 +129,11 @@ ${job.description || "No description provided."}
     const newVersionId = `Tailored_v${(job.resumeHistory?.length || 0) + 1}`;
 
     // If there is no history yet, push the original baseline first!
-    if (!job.resumeHistory || job.resumeHistory.length === 0) {
-      job.resumeHistory = [];
+    if (!job.resumeHistory) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      job.resumeHistory = [] as any;
+    }
+    if (job.resumeHistory.length === 0) {
       job.resumeHistory.push({
         version: "Original Baseline",
         createdAt: new Date(),

@@ -3,8 +3,17 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Save, X, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { Save, X, ChevronDown, ChevronUp, Loader2, Globe, Linkedin } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { Dropdown } from "@/components/ui/Dropdown";
+
+const PREDEFINED_PLATFORMS = ["LinkedIn", "Indeed", "Glassdoor", "Wellfound", "Y Combinator", "Greenhouse", "Lever", "Workday", "Company Website", "Referral"];
+
+function matchPlatform(p: string) {
+  if (!p) return "";
+  const found = PREDEFINED_PLATFORMS.find(opt => opt.toLowerCase() === p.toLowerCase());
+  return found || "Other";
+}
 
 interface EditJobModalProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,8 +26,9 @@ export function EditJobModal({ job, open, onClose }: EditJobModalProps) {
   const router = useRouter();
   const triggerRefresh = useAppStore((s) => s.triggerRefresh);
   const [loading, setLoading] = useState(false);
-  const [showOptional, setShowOptional] = useState(!!(job.location || job.jobUrl || job.salaryMin || job.salaryMax));
+  const [showOptional, setShowOptional] = useState(!!(job.location || job.jobUrl || job.salaryMin || job.salaryMax || job.platform));
   
+  const [isCustomPlatform, setIsCustomPlatform] = useState(() => matchPlatform(job.platform) === "Other" && !!job.platform);
   const [formData, setFormData] = useState({
     title: job.title || "", 
     company: job.company || "", 
@@ -26,7 +36,22 @@ export function EditJobModal({ job, open, onClose }: EditJobModalProps) {
     location: job.location || "", 
     salaryMin: job.salaryMin || "", 
     salaryMax: job.salaryMax || "",
+    platform: job.platform || "",
   });
+
+  useEffect(() => {
+    setFormData({
+      title: job.title || "", 
+      company: job.company || "", 
+      jobUrl: job.jobUrl || "", 
+      location: job.location || "", 
+      salaryMin: job.salaryMin || "", 
+      salaryMax: job.salaryMax || "",
+      platform: job.platform || "",
+    });
+    setIsCustomPlatform(matchPlatform(job.platform) === "Other" && !!job.platform);
+    setShowOptional(!!(job.location || job.jobUrl || job.salaryMin || job.salaryMax || job.platform));
+  }, [job]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -103,7 +128,7 @@ export function EditJobModal({ job, open, onClose }: EditJobModalProps) {
             className="flex items-center gap-1.5 text-xs font-semibold text-text-tertiary hover:text-text-secondary transition-colors"
           >
             {showOptional ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            {showOptional ? "Hide" : "Show"} location, salary & URL
+            {showOptional ? "Hide" : "Show"} location, salary, platform & URL
           </button>
 
           {showOptional && (
@@ -123,6 +148,44 @@ export function EditJobModal({ job, open, onClose }: EditJobModalProps) {
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-text-tertiary">Salary Max</label>
                 <input type="number" className={inputClass} placeholder="150000" value={formData.salaryMax} onChange={(e) => setFormData({ ...formData, salaryMax: e.target.value })} />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <label className="block text-xs font-semibold text-text-tertiary">Platform</label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary z-10 pointer-events-none">
+                      {formData.platform.toLowerCase() === "linkedin" ? <Linkedin className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
+                    </div>
+                    <Dropdown
+                      className="flex-1 [&>button]:pl-9"
+                      value={isCustomPlatform ? "Other" : matchPlatform(formData.platform)}
+                      onChange={(val) => {
+                        if (val === "Other") {
+                          setIsCustomPlatform(true);
+                          setFormData({ ...formData, platform: "" });
+                        } else {
+                          setIsCustomPlatform(false);
+                          setFormData({ ...formData, platform: val });
+                        }
+                      }}
+                      placeholder="Select platform..."
+                      options={[
+                        ...PREDEFINED_PLATFORMS.map(p => ({ value: p, label: p })),
+                        { value: "Other", label: "Other (Custom)" }
+                      ]}
+                    />
+                  </div>
+                  {isCustomPlatform && (
+                    <input 
+                      type="text" 
+                      placeholder="Enter custom platform..." 
+                      className={`${inputClass} flex-1`}
+                      value={formData.platform}
+                      onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+                      autoFocus
+                    />
+                  )}
+                </div>
               </div>
             </div>
           )}

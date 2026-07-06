@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Plus, X, ChevronDown, ChevronUp, Sparkles, Loader2, Globe, Linkedin, } from "lucide-react";
-import Link from "next/link";
+import { Sparkles, X, ChevronDown, ChevronUp, Loader2, Globe, Linkedin, Plus } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { Dropdown } from "@/components/ui/Dropdown";
+import Link from "next/link";
 
 interface AddJobModalProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
     title: "", company: "", jobDescription: "",
     jobUrl: "", location: "", salaryMin: "", salaryMax: "", salaryCurrency: "USD", platform: ""
   });
+  const [isCustomPlatform, setIsCustomPlatform] = useState(false);
 
   const detectPlatform = (url: string) => {
     if (!url) return "";
@@ -252,13 +254,42 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
 
               {showOptional && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 border border-border-subtle rounded-lg p-4 bg-bg-surface">
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 sm:col-span-2">
                     <label className="block text-xs font-semibold text-text-tertiary">Platform</label>
-                    <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary">
-                        {formData.platform.toLowerCase() === "linkedin" ? <Linkedin className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary z-10 pointer-events-none">
+                          {formData.platform.toLowerCase() === "linkedin" ? <Linkedin className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
+                        </div>
+                        <Dropdown
+                          className="flex-1 [&>button]:pl-9"
+                          value={isCustomPlatform ? "Other" : formData.platform}
+                          onChange={(val) => {
+                            if (val === "Other") {
+                              setIsCustomPlatform(true);
+                              setFormData({ ...formData, platform: "" });
+                            } else {
+                              setIsCustomPlatform(false);
+                              setFormData({ ...formData, platform: val });
+                            }
+                          }}
+                          placeholder="Select platform..."
+                          options={[
+                            ...["LinkedIn", "Indeed", "Glassdoor", "Wellfound", "Y Combinator", "Greenhouse", "Lever", "Workday", "Company Website", "Referral"].map(p => ({ value: p, label: p })),
+                            { value: "Other", label: "Other (Custom)" }
+                          ]}
+                        />
                       </div>
-                      <input className={`${inputClass} pl-9`} placeholder="e.g. LinkedIn" value={formData.platform} onChange={(e) => setFormData({ ...formData, platform: e.target.value })} />
+                      {isCustomPlatform && (
+                        <input 
+                          type="text" 
+                          placeholder="Enter custom platform..." 
+                          className={`${inputClass} flex-1`}
+                          value={formData.platform}
+                          onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+                          autoFocus
+                        />
+                      )}
                     </div>
                   </div>
                   <div className="space-y-1.5">
@@ -268,15 +299,14 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
                   <div className="space-y-1.5">
                     <label className="block text-xs font-semibold text-text-tertiary">Currency</label>
                     <div className="relative">
-                      <select 
-                        className={`${inputClass} appearance-none cursor-pointer pr-10`} 
-                        value={formData.salaryCurrency} 
-                        onChange={(e) => setFormData({ ...formData, salaryCurrency: e.target.value })}
-                      >
-                        <option value="USD">USD ($)</option>
-                        <option value="INR">INR (₹)</option>
-                      </select>
-                      <ChevronDown className="w-4 h-4 text-text-tertiary absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <Dropdown
+                        value={formData.salaryCurrency}
+                        onChange={(val) => setFormData({ ...formData, salaryCurrency: val })}
+                        options={[
+                          { value: "USD", label: "USD ($)" },
+                          { value: "INR", label: "INR (₹)" }
+                        ]}
+                      />
                     </div>
                   </div>
                   <div className="space-y-1.5">

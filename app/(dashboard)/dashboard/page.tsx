@@ -18,8 +18,8 @@ import { Greeting } from "@/components/dashboard/Greeting";
 // so layout + page don't each make a separate auth call
 const getSession = cache(auth);
 
-// Revalidate cached page every 30 seconds
-export const revalidate = 30;
+// Revalidate cached page every 0 seconds
+export const revalidate = 0;
 
 interface BaseJob {
   _id: string | mongoose.Types.ObjectId;
@@ -144,7 +144,18 @@ async function getDashboardData(userId: string) {
     rejected: jobs.filter((j: BaseJob) => j.status === "rejected").length,
   };
 
-  return { totalApplications, interviews, offers, responseRate, dailyStreak, recentlyApplied, setupItems: incompleteSetup, focusItems, userResumeText: typedUser?.resumeText || "", pipeline };
+  // Platform distribution
+  const platformMap: Record<string, number> = {};
+  jobs.forEach((j: BaseJob & { platform?: string }) => {
+    const p = j.platform || "Other";
+    platformMap[p] = (platformMap[p] || 0) + 1;
+  });
+  const platformDistribution = Object.entries(platformMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, count]) => ({ name, count, pct: totalApplications > 0 ? Math.round((count / totalApplications) * 100) : 0 }));
+
+  return { totalApplications, interviews, offers, responseRate, dailyStreak, recentlyApplied, setupItems: incompleteSetup, focusItems, userResumeText: typedUser?.resumeText || "", pipeline, platformDistribution };
 }
 
 export default async function DashboardPage() {
@@ -381,6 +392,31 @@ export default async function DashboardPage() {
               View All Activity
             </button>
           </div>
+
+          {/* Platform Distribution */}
+          {stats.platformDistribution && stats.platformDistribution.length > 0 && (
+            <div className="rounded-lg border border-border-subtle bg-bg-surface p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-text-primary">Top Platforms</h3>
+                <Link href="/analytics" className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors">
+                  Details <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+              <div className="space-y-3">
+                {stats.platformDistribution.map((p: { name: string; count: number; pct: number }) => (
+                  <div key={p.name}>
+                    <div className="flex justify-between text-xs font-medium text-text-secondary mb-1.5">
+                      <span>{p.name}</span>
+                      <span className="text-text-tertiary">{p.count} ({p.pct}%)</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-border-subtle rounded-full overflow-hidden">
+                      <div className="h-full bg-primary rounded-full" style={{ width: `${p.pct}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

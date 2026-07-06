@@ -19,6 +19,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get("tab") as string) || "overview";
+
   const [analyzing, setAnalyzing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(job.jobDescription || "");
@@ -27,9 +28,12 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
   
   // Tab states
   const [activeTab, setActiveTab] = useState<"overview" | "notes" | "contacts" | "activity">(initialTab === "notes" ? "notes" : "overview");
-  const [activeAITab, setActiveAITab] = useState<"coach" | "cover-letter">(initialTab === "interview-prep" ? "coach" : "coach");
+  const [activeAITab, setActiveAITab] = useState<"coach" | "cover-letter" | "outreach">(initialTab === "interview-prep" ? "coach" : "coach");
   const [coverLetter, setCoverLetter] = useState(job.coverLetter || "");
   const [generatingLetter, setGeneratingLetter] = useState(false);
+  
+  const [outreachMessage, setOutreachMessage] = useState(job.coldEmail || "");
+  const [generatingOutreach, setGeneratingOutreach] = useState(false);
   
   const [notes, setNotes] = useState(job.notes || "");
   const [savingNotes, setSavingNotes] = useState(false);
@@ -116,6 +120,34 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
 
   const handleCopyLetter = () => {
     navigator.clipboard.writeText(coverLetter);
+    toast.success("Copied to clipboard!");
+  };
+
+  const handleGenerateOutreach = async (forceRegenerate = false) => {
+    setGeneratingOutreach(true);
+    try {
+      const res = await fetch(`/api/jobs/${job._id}/outreach`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ forceRegenerate })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed");
+
+      setOutreachMessage(data.outreachMessage);
+      toast.success(forceRegenerate ? "Outreach message regenerated!" : "Outreach message generated!");
+      router.refresh();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message || "Failed to generate outreach message");
+    } finally {
+      setGeneratingOutreach(false);
+    }
+  };
+
+  const handleCopyOutreach = () => {
+    navigator.clipboard.writeText(outreachMessage);
     toast.success("Copied to clipboard!");
   };
 
@@ -325,6 +357,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                <div className="flex bg-bg-surface-elevated p-1 rounded-lg mb-6 border border-border-subtle">
                   <button onClick={() => setActiveAITab("coach")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "coach" ? "bg-primary text-bg-base" : "text-text-secondary hover:text-text-primary")}>Analysis</button>
                   <button onClick={() => setActiveAITab("cover-letter")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "cover-letter" ? "bg-primary text-bg-base" : "text-text-secondary hover:text-text-primary")}>Letter</button>
+                  <button onClick={() => setActiveAITab("outreach")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "outreach" ? "bg-primary text-bg-base" : "text-text-secondary hover:text-text-primary")}>Outreach</button>
                </div>
 
                {/* Content based on AI Tab */}
@@ -389,10 +422,10 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                                     <ShieldAlert className="w-3 h-3 text-red-400" /> Red Flags
                                   </Link>
                                   <Link 
-                                    href={`/ai-coach?tab=outreach&jobId=${job._id}`}
-                                    className="flex items-center justify-center gap-2 py-2 bg-bg-surface-elevated border border-border-subtle rounded-md text-[10px] font-semibold text-text-secondary hover:text-primary hover:border-primary/30 transition-all"
+                                    href={`/ai-coach?tab=analyses&jobId=${job._id}`}
+                                    className="flex items-center justify-center gap-2 py-2 bg-primary text-white rounded-md text-[10px] font-semibold hover:bg-primary-hover transition-all shadow-md shadow-primary/20"
                                   >
-                                    <Mail className="w-3 h-3 text-primary" /> Outreach
+                                    <FileText className="w-3 h-3" /> Tailor Resume
                                   </Link>
                                </div>
                            </div>
@@ -445,8 +478,41 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                   </div>
                )}
 
+               {activeAITab === "outreach" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                     {!outreachMessage ? (
+                        <div className="text-center py-6">
+                           <p className="text-xs text-text-secondary mb-4">Generate a personalized networking outreach message for this role.</p>
+                           <button 
+                              className="w-full py-3 bg-primary hover:bg-primary-hover text-bg-base font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                              onClick={() => handleGenerateOutreach()} disabled={generatingOutreach || !job.jobDescription}
+                           >
+                              {generatingOutreach ? <><Sparkles className="w-4 h-4 animate-spin" /> Generating...</> : <><Mail className="w-4 h-4" /> Generate Message</>}
+                           </button>
+                        </div>
+                     ) : (
+                        <div className="space-y-4">
+                           <div className="flex justify-between items-center bg-bg-surface-elevated p-2 rounded-md border border-border-subtle">
+                              <span className="text-[10px] font-semibold text-text-tertiary uppercase pl-2">Ready to send</span>
+                              <div className="flex gap-1">
+                                 <button onClick={handleCopyOutreach} className="px-3 py-1.5 bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary rounded-lg border border-border-default transition-colors flex items-center gap-1.5">
+                                    <Copy className="w-3.5 h-3.5" /> Copy
+                                 </button>
+                                 <button onClick={() => handleGenerateOutreach(true)} disabled={generatingOutreach} className="px-3 py-1.5 bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary rounded-lg border border-border-default transition-colors flex items-center gap-1.5 disabled:opacity-50">
+                                    <RefreshCw className={`w-3.5 h-3.5 ${generatingOutreach ? 'animate-spin' : ''}`} /> Retry
+                                 </button>
+                              </div>
+                           </div>
+                           
+                           <div className="bg-bg-surface-elevated border border-border-subtle p-4 rounded-md max-h-75 overflow-y-auto scrollbar-hide text-xs text-text-secondary leading-relaxed whitespace-pre-wrap">
+                              {outreachMessage}
+                           </div>
+                        </div>
+                     )}
+                  </div>
+               )}
             </div>
-            
+
             {/* Interview Prep Summary */}
             <div className="bg-bg-surface border border-border-subtle rounded-lg p-6 shadow-sm mt-6">
                <h3 className="text-sm font-semibold text-text-primary mb-4">Interview Prep Summary</h3>

@@ -95,7 +95,7 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
         >
-          {activeTab === "analyses" && <JobAnalysesTab jobs={jobs} />}
+          {activeTab === "analyses" && <JobAnalysesTab jobs={jobs} initialExpandedId={selectedJobId} />}
           {activeTab === "resume" && <ResumeHealthTab user={user} />}
           {activeTab === "intelligence" && (
             <JobIntelligenceTab jobs={jobs} selectedJob={selectedJob} setJobId={setJobId} />
@@ -111,13 +111,20 @@ export function AICoachClient({ user, jobs }: AICoachClientProps) {
 
 // --- TAB COMPONENTS ---
 
-function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+const AI_COACH_PER_PAGE = 8;
+
+function JobAnalysesTab({ jobs, initialExpandedId }: { jobs: IJob[], initialExpandedId?: string | null }) {
+  const [expandedId, setExpandedId] = useState<string | null>(initialExpandedId || null);
+  const [page, setPage] = useState(1);
   
   const analyzedJobs = jobs.filter(j => j.matchScore !== null);
   const avgScore = analyzedJobs.length 
     ? Math.round(analyzedJobs.reduce((sum, j) => sum + (j.matchScore || 0), 0) / analyzedJobs.length)
     : 0;
+
+  const totalPages = Math.max(1, Math.ceil(analyzedJobs.length / AI_COACH_PER_PAGE));
+  const safePage = Math.min(page, totalPages);
+  const paginatedJobs = analyzedJobs.slice((safePage - 1) * AI_COACH_PER_PAGE, safePage * AI_COACH_PER_PAGE);
 
   if (analyzedJobs.length === 0) {
     return (
@@ -159,7 +166,7 @@ function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
 
       {/* Job Rows */}
       <div className="space-y-3">
-        {analyzedJobs.map(job => (
+        {paginatedJobs.map(job => (
           <div key={job._id.toString()} className="bg-bg-surface border border-border-subtle rounded-lg overflow-hidden transition-all hover:border-primary/40 group">
             <button 
               onClick={() => setExpandedId(expandedId === job._id.toString() ? null : job._id.toString())}
@@ -236,6 +243,34 @@ function JobAnalysesTab({ jobs }: { jobs: IJob[] }) {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-4 border-t border-border-subtle">
+          <p className="text-xs text-text-tertiary font-medium">
+            Showing {(safePage - 1) * AI_COACH_PER_PAGE + 1}–{Math.min(safePage * AI_COACH_PER_PAGE, analyzedJobs.length)} of {analyzedJobs.length} analyses
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={safePage === 1}
+              className="px-3 py-1.5 rounded-md text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-surface-elevated border border-border-default transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            >
+              Previous
+            </button>
+            <span className="text-xs font-semibold text-text-primary px-2">
+              {safePage} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={safePage === totalPages}
+              className="px-3 py-1.5 rounded-md text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-surface-elevated border border-border-default transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

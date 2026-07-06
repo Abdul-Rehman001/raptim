@@ -6,7 +6,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowRight, Sparkles, LayoutDashboard, FileSearch,
-  TrendingUp, CheckCircle, Zap, ChevronRight
+  TrendingUp, CheckCircle, Zap,
+  Flame, Send, Mail, Calendar, PartyPopper, Link2, Target, CheckCircle2
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
@@ -77,22 +78,22 @@ export default function Home() {
       <div className="relative min-h-screen bg-bg-base overflow-x-hidden font-sans transition-colors duration-300">
 
         {/* ── GRADIENT MESH BACKGROUND ── */}
-        <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="fixed inset-0 pointer-events-none z-0 bg-[#0D0A18]">
           {/* Primary purple orb */}
           <div className="absolute -top-40 -left-40 w-175 h-175 rounded-full
-            bg-purple-600/25 blur-[120px] animate-[drift_14s_ease-in-out_infinite_alternate]" />
+            bg-[#2E1065]/20 blur-[120px] animate-[drift_14s_ease-in-out_infinite_alternate]" />
           {/* Secondary violet orb */}
           <div className="absolute top-1/4 -right-20 w-125 h-125 rounded-full
-            bg-violet-500/15 blur-[100px] animate-[drift_18s_ease-in-out_4s_infinite_alternate-reverse]" />
+            bg-[#4C1D95]/15 blur-[100px] animate-[drift_18s_ease-in-out_4s_infinite_alternate-reverse]" />
           {/* Accent pink-indigo orb */}
           <div className="absolute bottom-1/3 left-1/3 w-100 h-100 rounded-full
-            bg-indigo-500/10 blur-[90px] animate-[drift_16s_ease-in-out_8s_infinite_alternate]" />
+            bg-[#312E81]/10 blur-[90px] animate-[drift_16s_ease-in-out_8s_infinite_alternate]" />
           {/* Bottom right soft pink */}
           <div className="absolute -bottom-20 right-0 w-87.5 h-87.5 rounded-full
-            bg-fuchsia-600/10 blur-[80px] animate-[drift_20s_ease-in-out_2s_infinite_alternate-reverse]" />
+            bg-[#2E1065]/15 blur-[80px] animate-[drift_20s_ease-in-out_2s_infinite_alternate-reverse]" />
 
           {/* Fine grid overlay */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none text-white"
+          <div className="absolute inset-0 opacity-[0.01] pointer-events-none text-white"
             style={{ 
               backgroundImage: `
                 linear-gradient(to right, currentColor 1px, transparent 1px),
@@ -104,47 +105,49 @@ export default function Home() {
         </div>
 
         {/* ── NAV ── */}
-        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between
-          px-6 lg:px-10 h-15
-          backdrop-blur-2xl bg-black/20
-          border-b border-border-subtle">
+        <nav className="fixed top-0 left-0 right-0 z-50 h-15 px-6 lg:px-16
+          backdrop-blur-2xl bg-black/20 border-b border-border-subtle">
+          <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-violet-600
+                flex items-center justify-center shadow-lg shadow-purple-500/30
+                group-hover:shadow-purple-500/50 transition-shadow">
+                <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
+              </div>
+              <span className="text-white font-bold text-lg tracking-tight">ApplyIQ</span>
+            </Link>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-violet-600
-              flex items-center justify-center shadow-lg shadow-purple-500/30
-              group-hover:shadow-purple-500/50 transition-shadow">
-              <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
+            {/* Center links — hidden on mobile */}
+            <div className="hidden md:flex items-center gap-1">
+              {[
+                { label: "Features", href: "#features" },
+                { label: "How it works", href: "#how-it-works" },
+                { label: "About", href: "#about" }
+              ].map(l => (
+                <Link key={l.label} href={l.href}
+                  className="px-4 py-1.5 text-sm text-white/50 hover:text-white
+                  rounded-lg hover:bg-white/6 transition-all duration-150 font-normal">
+                  {l.label}
+                </Link>
+              ))}
             </div>
-            <span className="text-white font-bold text-lg tracking-tight">ApplyIQ</span>
-          </Link>
 
-          {/* Center links — hidden on mobile */}
-          <div className="hidden md:flex items-center gap-1">
-            {["Features", "Pricing", "Blog"].map(l => (
-              <Link key={l} href="#"
-                className="px-4 py-1.5 text-sm text-white/50 hover:text-white
-                rounded-lg hover:bg-white/6 transition-all duration-150 font-medium">
-                {l}
+            {/* Right actions */}
+            <div className="flex items-center gap-2">
+              <Link href="/login"
+                className="hidden sm:block px-4 py-1.5 text-sm font-medium text-white/60
+                hover:text-white transition-colors">
+                Log in
               </Link>
-            ))}
-          </div>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            <Link href="/login"
-              className="hidden sm:block px-4 py-1.5 text-sm font-medium text-white/60
-              hover:text-white transition-colors">
-              Log in
-            </Link>
-            <Link href="/signup"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold
-              bg-linear-to-r from-purple-600 to-violet-600 text-white
-              shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40
-              hover:-translate-y-px transition-all duration-200">
-              Get started
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+              <Link href="/signup"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-semibold
+                bg-linear-to-r from-purple-500 to-purple-800 text-white
+                shadow-sm hover:-translate-y-px transition-all duration-200">
+                Get started
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
         </nav>
 
@@ -154,21 +157,6 @@ export default function Home() {
         <section className="relative z-10 pt-32 pb-10 px-6 lg:px-16">
           <div className="max-w-7xl mx-auto">
 
-            {/* ── Eyebrow pill ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex justify-center mb-8"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-1.5
-                backdrop-blur-xl bg-white/6 border border-purple-400/20
-                rounded-full text-xs font-semibold text-purple-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_6px_#a78bfa] animate-pulse" />
-                AI-powered job tracker — free to start
-                <ChevronRight className="w-3 h-3 opacity-60" />
-              </div>
-            </motion.div>
 
             {/* ── Main heading + CTA — asymmetric layout ── */}
             <div className="grid lg:grid-cols-[1fr_420px] gap-12 lg:gap-16 items-start">
@@ -179,18 +167,12 @@ export default function Home() {
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.1 }}
-                  className="text-[clamp(44px,7vw,88px)] font-bold leading-[1.05] md:leading-none tracking-[-0.04em] text-white mb-6"
+                  className="text-[clamp(44px,7vw,88px)] font-semibold leading-[1.05] md:leading-none tracking-[-0.03em] text-white mb-6"
                 >
                   Your job search,{" "}
                   <br />
-                  <span className="relative">
-                    <span className="bg-linear-to-r from-purple-300 via-violet-300 to-fuchsia-300
-                      bg-clip-text text-transparent">
-                      finally organized.
-                    </span>
-                    {/* underline glow */}
-                    <span className="absolute -bottom-1 left-0 right-0 h-px
-                      bg-linear-to-r from-purple-500/0 via-purple-400/60 to-purple-500/0" />
+                  <span className="text-purple-400">
+                    finally organized.
                   </span>
                 </motion.h1>
 
@@ -213,22 +195,20 @@ export default function Home() {
                   className="flex flex-col sm:flex-row gap-3 mb-10"
                 >
                   <Link href="/signup"
-                    className="group flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                    className="group flex items-center justify-center gap-2 px-7 py-3.5 rounded-md
                     text-sm font-semibold text-white
-                    bg-linear-to-r from-purple-600 via-violet-600 to-purple-700
-                    shadow-[0_0_30px_rgba(124,58,237,0.4)]
-                    hover:shadow-[0_0_40px_rgba(124,58,237,0.6)]
-                    hover:-translate-y-0.5 transition-all duration-200">
+                    bg-linear-to-r from-purple-500 to-purple-800
+                    shadow-sm hover:-translate-y-0.5 transition-all duration-200">
                     Start for free
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
-                  <Link href="#demo"
-                    className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl
+                  <Link href="#about"
+                    className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-md
                     text-sm font-semibold text-text-secondary
                     backdrop-blur-xl bg-white/2 border border-border-subtle
                     hover:bg-white/6 hover:text-text-primary hover:border-border-default
                     transition-all duration-200">
-                    Watch demo
+                    Learn more
                   </Link>
                 </motion.div>
 
@@ -292,8 +272,8 @@ export default function Home() {
                 {/* Streak */}
                 <GlassCard className="p-3.5 flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-linear-to-br from-orange-500/20 to-amber-500/20
-                    border border-orange-500/20 flex items-center justify-center text-lg shrink-0">
-                    🔥
+                    border border-orange-500/20 flex items-center justify-center shrink-0">
+                    <Flame className="w-5 h-5 text-orange-400" />
                   </div>
                   <div>
                     <p className="text-text-primary font-semibold text-sm">12-day streak</p>
@@ -329,25 +309,17 @@ export default function Home() {
                 bg-linear-to-r from-purple-600/20 via-violet-500/30 to-purple-600/20
                 blur-2xl rounded-full" />
 
-              {/* Browser frame */}
+              {/* Glassmorphism Dashboard Container */}
               <div className="relative rounded-2xl overflow-hidden border border-white/10
-                shadow-[0_40px_80px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.05)]
-                backdrop-blur-sm bg-[#0D0A18]">
+                shadow-[0_40px_80px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]
+                backdrop-blur-2xl bg-white/5">
 
-                {/* Browser bar */}
-                <div className="flex items-center gap-3 px-5 py-3.5 border-b border-white/6
-                  bg-[#110D1E]/80">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
-                  </div>
-                  <div className="flex-1 max-w-xs mx-auto h-6 rounded-lg bg-white/4
-                    border border-white/6 flex items-center justify-center
-                    text-[11px] text-white/30 font-mono tracking-tight">
-                    app.applyiq.com/dashboard
-                  </div>
-                  <div className="w-16 h-5 rounded bg-white/3" />
+                {/* Status Bar */}
+                <div className="flex items-center justify-center px-5 py-3 border-b border-white/10 bg-white/5">
+                   <div className="flex items-center gap-2">
+                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                     <span className="text-[10px] font-semibold text-white/50 uppercase tracking-widest">Live Pipeline</span>
+                   </div>
                 </div>
 
                 {/* Dashboard content */}
@@ -361,14 +333,14 @@ export default function Home() {
                           flex items-center justify-center">
                           <Zap className="w-3 h-3 text-white" strokeWidth={2.5} />
                         </div>
-                        <h2 className="text-white/90 font-bold text-sm">Good morning, Rahul 👋</h2>
+                        <h2 className="text-white/90 font-bold text-sm">Good morning, Rahul</h2>
                       </div>
                       <p className="text-white/30 text-xs">You have 3 follow-ups due today</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs
-                        font-semibold text-white bg-linear-to-r from-purple-600 to-violet-600
-                        shadow-md shadow-purple-500/20">
+                      <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs
+                        font-semibold text-white bg-linear-to-r from-purple-500 to-purple-800
+                        shadow-sm">
                         <span>+</span> Add Job
                       </button>
                     </div>
@@ -377,10 +349,10 @@ export default function Home() {
                   {/* Stat cards */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {[
-                      { icon: "📤", label: "Applied", value: "47", sub: "+8 this week", c: "from-purple-500/10 to-violet-500/10" },
-                      { icon: "📬", label: "Response Rate", value: "24%", sub: "↑ 6% avg", c: "from-blue-500/10 to-indigo-500/10" },
-                      { icon: "🗓", label: "Interviews", value: "3", sub: "2 this week", c: "from-emerald-500/10 to-teal-500/10" },
-                      { icon: "🔥", label: "Day Streak", value: "12", sub: "Personal best!", c: "from-orange-500/10 to-amber-500/10" },
+                      { icon: <Send className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />, label: "Applied", value: "47", sub: "+8 this week", c: "from-purple-500/10 to-violet-500/10" },
+                      { icon: <Mail className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />, label: "Response Rate", value: "24%", sub: "↑ 6% avg", c: "from-blue-500/10 to-indigo-500/10" },
+                      { icon: <Calendar className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />, label: "Interviews", value: "3", sub: "2 this week", c: "from-emerald-500/10 to-teal-500/10" },
+                      { icon: <Flame className="w-4 h-4 md:w-5 md:h-5 text-orange-400" />, label: "Day Streak", value: "12", sub: "Personal best!", c: "from-orange-500/10 to-amber-500/10" },
                     ].map((s, i) => (
                       <motion.div
                         key={s.label}
@@ -448,9 +420,10 @@ export default function Home() {
                           <JobCard key={ji} {...j} delay={0.8 + ci * 0.1 + ji * 0.05} />
                         ))}
                         {col.jobs.length === 0 && (
-                          <div className="flex-1 flex items-center justify-center
+                          <div className="flex-1 flex flex-col items-center justify-center
                             text-[10px] text-white/15 text-center py-4 leading-relaxed">
-                            🎉<br />Your offer<br />lands here
+                            <PartyPopper className="w-6 h-6 text-white/20 mb-2" />
+                            Your offer<br />lands here
                           </div>
                         )}
                       </div>
@@ -459,6 +432,171 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════
+            HOW IT WORKS
+        ═══════════════════════════════════════ */}
+        <section id="how-it-works" className="relative z-10 px-6 lg:px-16 py-20 border-t border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-16 text-center"
+            >
+              <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">Simple Process</p>
+              <h2 className="text-[clamp(28px,4vw,52px)] font-semibold text-white tracking-tight leading-tight">
+                How ApplyIQ works.
+              </h2>
+            </motion.div>
+
+            <div className="flex flex-col gap-12 relative max-w-5xl mx-auto mt-20">
+              {/* Vertical connecting line */}
+              <div className="absolute top-0 bottom-0 left-8 md:left-1/2 w-px bg-white/5 -translate-x-1/2" />
+              
+              {[
+                { 
+                  step: "01", 
+                  title: "Save any job instantly", 
+                  desc: "Found a role on LinkedIn or a company career page? Just paste the URL. ApplyIQ's engine automatically extracts the title, company, description, and key requirements.",
+                  icon: <Link2 className="w-5 h-5 text-purple-400" />,
+                  features: ["Auto-extracts job details", "Works with any URL", "Saves to Kanban board"]
+                },
+                { 
+                  step: "02", 
+                  title: "AI Match & Resume Gap Analysis", 
+                  desc: "Stop guessing what recruiters want. Our AI compares the job description directly against your resume, providing a clear match score and highlighting missing keywords.",
+                  icon: <Target className="w-5 h-5 text-emerald-400" />,
+                  features: ["Detailed Match Score", "Missing Keywords", "Resume Optimization Tips"]
+                },
+                { 
+                  step: "03", 
+                  title: "Generate Tailored Outreach", 
+                  desc: "Ready to apply? Generate a highly-personalized cover letter or a networking message for recruiters on LinkedIn—contextualized perfectly to your resume.",
+                  icon: <Mail className="w-5 h-5 text-blue-400" />,
+                  features: ["Contextual Cover Letters", "LinkedIn Outreach Messages", "One-click copy"]
+                }
+              ].map((item, i) => (
+                <motion.div
+                  key={item.step}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6 }}
+                  className={`relative flex flex-col md:flex-row items-center gap-12 md:gap-24 ${i % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
+                >
+                  {/* Timeline node */}
+                  <div className="absolute left-8 md:left-1/2 w-12 h-12 rounded-full bg-[#0D0A18] border border-white/10 shadow-sm flex items-center justify-center -translate-x-1/2 z-10">
+                    <span className="text-sm font-semibold text-white">{item.step}</span>
+                  </div>
+
+                  {/* Content (Text) */}
+                  <div className={`w-full pl-24 md:pl-0 md:w-1/2 ${i % 2 === 0 ? 'md:pr-8 md:text-right flex flex-col md:items-end' : 'md:pl-8 text-left flex flex-col items-start'}`}>
+                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 mb-5">
+                      {item.icon}
+                    </div>
+                    <h3 className="text-2xl font-semibold text-white mb-3 tracking-tight">{item.title}</h3>
+                    <p className="text-white/50 leading-relaxed mb-6 font-light">{item.desc}</p>
+                    <ul className="flex flex-col gap-2.5">
+                      {item.features.map(f => (
+                        <li key={f} className={`flex items-center gap-2.5 text-sm text-white/70 ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                          <CheckCircle2 className="w-4 h-4 text-purple-400 opacity-70" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {/* Content (Visual UI) */}
+                  <div className={`hidden md:block w-full md:w-1/2 ${i % 2 === 0 ? 'pl-8' : 'pr-8'}`}>
+                     {i === 0 && (
+                        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm overflow-hidden group">
+                           <div className="absolute inset-0 bg-linear-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                           <div className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-black/40 mb-4 relative z-10">
+                              <Link2 className="w-4 h-4 text-white/30" />
+                              <span className="text-xs text-white/30 font-mono">https://linkedin.com/jobs/view/123</span>
+                              <div className="ml-auto w-4 h-4 rounded-full border-2 border-purple-500 border-t-transparent animate-spin" />
+                           </div>
+                           <div className="bg-white/5 border border-white/10 rounded-xl p-4 relative z-10">
+                              <div className="flex items-center gap-4 mb-4">
+                                 <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                    <span className="text-blue-400 font-semibold text-xs">IN</span>
+                                 </div>
+                                 <div className="flex-1">
+                                    <div className="w-2/3 h-2.5 bg-white/20 rounded mb-2" />
+                                    <div className="w-1/2 h-2 bg-white/10 rounded" />
+                                 </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-[9px] text-white/40 font-medium tracking-wider uppercase">Full-time</span>
+                                <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-[9px] text-white/40 font-medium tracking-wider uppercase">Remote</span>
+                              </div>
+                           </div>
+                        </div>
+                     )}
+
+                     {i === 1 && (
+                        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm overflow-hidden group">
+                           <div className="absolute inset-0 bg-linear-to-bl from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                           <div className="flex items-center justify-between mb-6 relative z-10">
+                              <span className="text-xs font-semibold text-white/50 uppercase tracking-widest">AI Match Score</span>
+                              <Target className="w-4 h-4 text-emerald-400 animate-pulse" />
+                           </div>
+                           <div className="flex items-center gap-8 relative z-10">
+                              <div className="relative w-24 h-24 flex items-center justify-center">
+                                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="3" />
+                                    <motion.path 
+                                       initial={{ strokeDasharray: "0, 100" }}
+                                       whileInView={{ strokeDasharray: "91, 100" }}
+                                       transition={{ duration: 1.5, delay: 0.5 }}
+                                       d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#34d399" strokeWidth="3" strokeDasharray="91, 100" />
+                                 </svg>
+                                 <span className="absolute text-2xl font-bold text-white">91<span className="text-xs text-white/50">%</span></span>
+                              </div>
+                              <div className="flex-1 space-y-2.5">
+                                 <div className="flex items-center justify-between p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10">
+                                    <span className="text-[11px] font-medium text-emerald-400">React.js</span>
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                 </div>
+                                 <div className="flex items-center justify-between p-2.5 rounded-lg border border-red-500/20 bg-red-500/10">
+                                    <span className="text-[11px] font-medium text-red-400">GraphQL</span>
+                                    <span className="text-[9px] uppercase tracking-wider text-red-400 font-semibold bg-red-500/20 px-1.5 py-0.5 rounded">Missing</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     )}
+
+                     {i === 2 && (
+                        <div className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm overflow-hidden group">
+                           <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                           <div className="flex items-center justify-between mb-5 relative z-10">
+                              <div className="flex items-center gap-2">
+                                 <Mail className="w-4 h-4 text-blue-400" />
+                                 <span className="text-xs font-semibold text-white/50 uppercase tracking-widest">Drafting outreach</span>
+                              </div>
+                           </div>
+                           <div className="space-y-3 relative z-10">
+                              <div className="w-3/4 h-2 bg-white/20 rounded animate-pulse" />
+                              <div className="w-full h-2 bg-white/10 rounded animate-pulse" style={{ animationDelay: "150ms" }} />
+                              <div className="w-5/6 h-2 bg-white/10 rounded animate-pulse" style={{ animationDelay: "300ms" }} />
+                              <div className="w-full h-2 bg-white/10 rounded animate-pulse" style={{ animationDelay: "450ms" }} />
+                              <div className="w-1/2 h-2 bg-white/10 rounded animate-pulse" style={{ animationDelay: "600ms" }} />
+                           </div>
+                           <div className="mt-6 flex justify-end relative z-10">
+                              <button className="px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-400 text-[10px] font-semibold border border-blue-500/20 hover:bg-blue-500/20 transition-colors">
+                                 Copy to Clipboard
+                              </button>
+                           </div>
+                        </div>
+                     )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -474,8 +612,8 @@ export default function Home() {
               viewport={{ once: true }}
               className="mb-12"
             >
-              <p className="text-xs font-bold text-purple-400 uppercase tracking-[0.2em] mb-3">Features</p>
-              <h2 className="text-[clamp(28px,4vw,52px)] font-bold text-white tracking-tight leading-tight">
+              <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">Platform Features</p>
+              <h2 className="text-[clamp(28px,4vw,52px)] font-semibold text-white tracking-tight leading-tight">
                 Everything you need to<br />
                 <span className="text-white/30">get hired faster.</span>
               </h2>
@@ -490,7 +628,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="md:col-span-2 relative rounded-2xl overflow-hidden border border-border-subtle
+                className="md:col-span-2 relative rounded-2xl overflow-hidden border border-white/10
                   bg-linear-to-br from-purple-900/20 via-[#0D0A18] to-violet-900/10
                   p-7 group hover:border-purple-500/20 transition-all duration-300"
               >
@@ -527,7 +665,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="rounded-2xl border border-border-subtle
+                className="rounded-2xl border border-white/10
                   bg-linear-to-br from-[#0D0A18] to-blue-900/10
                   p-7 group hover:border-blue-500/20 transition-all duration-300"
               >
@@ -548,7 +686,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="rounded-2xl border border-border-subtle
+                className="rounded-2xl border border-white/10
                   bg-linear-to-br from-[#0D0A18] to-emerald-900/10
                   p-7 group hover:border-emerald-500/20 transition-all duration-300"
               >
@@ -568,7 +706,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="md:col-span-2 rounded-2xl border border-border-subtle
+                className="md:col-span-2 rounded-2xl border border-white/10
                   bg-linear-to-br from-[#0D0A18] via-fuchsia-900/10 to-[#0D0A18]
                   p-7 group hover:border-fuchsia-500/20 transition-all duration-300
                   flex flex-col md:flex-row gap-6 items-start"
@@ -617,6 +755,21 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════
+            ABOUT SECTION
+        ═══════════════════════════════════════ */}
+        <section id="about" className="relative z-10 px-6 lg:px-16 py-20 border-t border-border-subtle">
+          <div className="max-w-3xl mx-auto text-center">
+             <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">About ApplyIQ</p>
+             <h2 className="text-3xl font-semibold text-white tracking-tight mb-6">
+                Built for the modern job seeker.
+             </h2>
+             <p className="text-lg text-text-secondary leading-relaxed font-light">
+                We believe the job search shouldn't be a black box. ApplyIQ was created to give you the data, insights, and AI tooling previously only available to recruiters. By automating the repetitive tasks like resume matching and application tracking, we give you the time to focus on what actually gets you hired: preparing for interviews and having meaningful conversations.
+             </p>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════
             CTA SECTION
         ═══════════════════════════════════════ */}
         <section className="relative z-10 px-6 lg:px-16 py-20">
@@ -628,29 +781,27 @@ export default function Home() {
               className="relative rounded-3xl overflow-hidden
                 border border-border-subtle
                 bg-linear-to-br from-purple-900/40 via-[#0D0A18] to-violet-900/30
-                p-12 text-center"
+                p-6 md:p-12 text-center"
             >
               {/* Background orbs inside CTA */}
               <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl" />
               <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl" />
 
               <div className="relative">
-                <p className="text-xs font-bold text-purple-400 uppercase tracking-[0.2em] mb-4">
+                <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-4">
                   Free to start — no credit card
                 </p>
-                <h2 className="text-[clamp(28px,5vw,600px)] font-bold text-white tracking-tight mb-4">
+                <h2 className="text-[clamp(28px,5vw,60px)] font-semibold text-white tracking-tight mb-4">
                   Your next offer starts here.
                 </h2>
-                <p className="text-white/40 text-base md:text-lg mb-8 max-w-lg mx-auto">
+                <p className="text-white/40 text-sm sm:text-base md:text-lg mb-8 max-w-lg mx-auto">
                   Join thousands of job seekers who stopped stressing and started landing.
                 </p>
                 <Link href="/signup"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl
-                  text-base font-semibold text-white
-                  bg-linear-to-r from-purple-600 via-violet-600 to-purple-700
-                  shadow-[0_0_40px_rgba(124,58,237,0.5)]
-                  hover:shadow-[0_0_60px_rgba(124,58,237,0.7)]
-                  hover:-translate-y-0.5 transition-all duration-200">
+                  className="inline-flex items-center justify-center gap-2 px-5 sm:px-8 py-3.5 sm:py-4 rounded-md
+                  text-sm sm:text-base font-semibold text-white whitespace-nowrap
+                  bg-linear-to-r from-purple-500 to-purple-800
+                  shadow-sm hover:-translate-y-0.5 transition-all duration-200">
                   Get started for free
                   <ArrowRight className="w-4 h-4" />
                 </Link>

@@ -13,6 +13,7 @@ const JobSchema = new mongoose.Schema({
     default: "saved",
   },
   priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
+  platform: { type: String, default: "" }, // e.g. LinkedIn, Indeed, Glassdoor, etc.
   salaryMin: { type: Number },
   salaryMax: { type: Number },
   coverLetter: { type: String, default: "" },
@@ -56,5 +57,8 @@ coldEmail:       { type: String, default: "" },
   }],
 }, { timestamps: true });
 
-// Prevent overwrite on hot reload
-export const Job = mongoose.models.Job || mongoose.model("Job", JobSchema);
+// Prevent overwrite on hot reload but allow schema updates
+if (mongoose.models.Job) {
+  delete mongoose.models.Job;
+}
+export const Job = mongoose.model("Job", JobSchema);

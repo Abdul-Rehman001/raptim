@@ -8,7 +8,7 @@ import { JobList } from "@/components/jobs/JobList";
 import { Plus } from "lucide-react";
 import { User } from "@/models/User";
 
-export const revalidate = 30;
+export const revalidate = 0;
 
 async function getJobsAndUser(userId: string) {
   await dbConnect();
