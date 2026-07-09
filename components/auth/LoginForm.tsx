@@ -7,19 +7,20 @@ import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLoading } from "@/components/providers/LoadingProvider";
 
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { setGlobalLoading } = useLoading();
   const [googleLoading, setGoogleLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setGlobalLoading(true);
     try {
       const res = await signIn("credentials", { email, password, redirect: false });
       if (res?.error) {
@@ -35,7 +36,7 @@ export function LoginForm() {
     } catch {
       toast.error("Something went wrong");
     } finally {
-      setLoading(false);
+      setGlobalLoading(false);
     }
   };
 
@@ -44,7 +45,7 @@ export function LoginForm() {
     signIn("google", { callbackUrl: "/dashboard" });
   };
 
-  const inputClass = "w-full h-12 bg-bg-surface-elevated border border-border-default rounded-xl px-4 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
+  const inputClass = "w-full h-12 bg-bg-surface-elevated border border-border-default rounded-md px-4 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
 
   if (isSuccess) {
     return (
@@ -89,7 +90,7 @@ export function LoginForm() {
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <label className="text-xs font-bold text-text-tertiary uppercase tracking-wider" htmlFor="password">Password</label>
-            <Link href="#" className="text-xs text-primary font-semibold hover:underline">Forgot?</Link>
+            <button type="button" onClick={() => toast.error("Password reset is currently disabled.")} className="text-xs text-primary font-semibold hover:underline">Forgot?</button>
           </div>
           <div className="relative">
             <input 
@@ -109,8 +110,8 @@ export function LoginForm() {
             </button>
           </div>
         </div>
-        <button type="submit" className="w-full h-11 bg-primary hover:bg-primary-hover text-primary-foreground font-bold rounded-xl transition-all shadow-md shadow-primary/20 disabled:opacity-50" disabled={loading || googleLoading}>
-          {loading ? "Signing in..." : "Continue"}
+        <button type="submit" className="w-full h-11 bg-primary hover:bg-primary-hover text-primary-foreground font-bold rounded-md transition-all shadow-md shadow-primary/20 disabled:opacity-50" disabled={googleLoading}>
+          Continue
         </button>
       </form>
 
@@ -122,9 +123,9 @@ export function LoginForm() {
       </div>
 
       <button 
-        className="w-full h-11 rounded-xl bg-bg-surface-elevated border border-border-default text-text-primary font-semibold text-sm hover:bg-bg-surface-hover transition-colors flex items-center justify-center gap-2 disabled:opacity-50" 
+        className="w-full h-11 rounded-md bg-bg-surface-elevated border border-border-default text-text-primary font-semibold text-sm hover:bg-bg-surface-hover transition-colors flex items-center justify-center gap-2 disabled:opacity-50" 
         onClick={handleGoogleSignIn}
-        disabled={loading || googleLoading}
+        disabled={googleLoading}
       >
         {googleLoading ? (
           <div className="w-4 h-4 border-2 border-text-tertiary border-t-text-primary rounded-full animate-spin"></div>

@@ -52,7 +52,7 @@ export default async function AdminDashboard() {
               Platform <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">Intelligence</span>
             </h1>
             <p className="text-white/50 mt-4 text-base md:text-lg max-w-xl font-medium">
-              Real-time oversight of ApplyIQ&apos;s growth, engagement, and AI performance across your entire user base.
+              Real-time oversight of Raptim&apos;s growth, engagement, and AI performance across your entire user base.
             </p>
           </div>
           <div className="flex items-center gap-4">

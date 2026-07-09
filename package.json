@@ -13,6 +13,8 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@react-pdf/renderer": "^4.5.1",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "axios": "^1.13.5",
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",

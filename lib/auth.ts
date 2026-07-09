@@ -7,8 +7,13 @@ import bcrypt from "bcryptjs";
 import { authConfig } from "@/lib/auth.config";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
- trustHost: true,
+  trustHost: true,
   ...authConfig,
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60, // Expire session after 24 hours of inactivity
+    updateAge: 60 * 60, // Rotate JWT every hour for security
+  },
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,

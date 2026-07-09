@@ -1,5 +1,5 @@
 import { AddJobModal } from "@/components/jobs/AddJobModal";
-import { cn } from "@/lib/utils";
+import { cn, getPlatformIcon } from "@/lib/utils";
 import { auth } from "@/lib/auth";
 import { cache } from "react";
 import dbConnect from "@/lib/mongodb";
@@ -8,7 +8,7 @@ import { User } from "@/models/User";
 import {
   Send, MessageSquare, CalendarDays, Flame, Plus,
   Bell, MoreHorizontal, CheckCircle2, Circle, ArrowRight,
-  AlertTriangle, Sparkles, CalendarCheck, Zap
+  AlertTriangle, Sparkles, CalendarCheck, Zap, Globe
 } from "lucide-react";
 import mongoose from "mongoose";
 import Link from "next/link";
@@ -406,7 +406,15 @@ export default async function DashboardPage() {
                 {stats.platformDistribution.map((p: { name: string; count: number; pct: number }) => (
                   <div key={p.name}>
                     <div className="flex justify-between text-xs font-medium text-text-secondary mb-1.5">
-                      <span>{p.name}</span>
+                      <span className="flex items-center gap-2">
+                         {getPlatformIcon(p.name) ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={getPlatformIcon(p.name)!} alt="" className="w-4 h-4 rounded-sm" />
+                          ) : (
+                            <Globe className="w-4 h-4 text-text-tertiary" />
+                          )}
+                         {p.name}
+                      </span>
                       <span className="text-text-tertiary">{p.count} ({p.pct}%)</span>
                     </div>
                     <div className="h-1.5 w-full bg-border-subtle rounded-full overflow-hidden">

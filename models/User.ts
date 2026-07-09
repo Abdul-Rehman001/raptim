@@ -14,6 +14,9 @@ const UserSchema = new mongoose.Schema({
   plan: { type: String, enum: ["free", "pro"], default: "free" },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   completedOnboarding: { type: Boolean, default: true }, // true = existing users unaffected
+  isVerified: { type: Boolean, default: false }, // For email verification
+  otp: { type: String }, // For storing the hashed OTP or plaintext depending on preference (plaintext is fine for short lived)
+  otpExpiresAt: { type: Date },
   atsScore: { type: Number, default: null },
   atsLastChecked: { type: Date, default: null },
   atsDetails: { type: Object, default: null },

@@ -9,13 +9,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: applyiq-app-dev
+    container_name: raptim-app-dev
     ports:
       - "3000:3000"
     env_file:
       - .env.local
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/applyiq
+      - MONGODB_URI=mongodb://mongo:27017/raptim
       - NODE_ENV=development
     volumes:
       - .:/app                      # mount source code for hot reload
@@ -27,7 +27,7 @@ services:
 
   mongo:
     image: mongo:7
-    container_name: applyiq-mongo-dev
+    container_name: raptim-mongo-dev
     ports:
       - "27017:27017"
     volumes:

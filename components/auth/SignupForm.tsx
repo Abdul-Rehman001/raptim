@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
+import { useLoading } from "@/components/providers/LoadingProvider";
 
 export function SignupForm() {
   const router = useRouter();
@@ -13,20 +14,20 @@ export function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { setGlobalLoading } = useLoading();
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setGlobalLoading(true);
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || "Failed to sign up");
       }
       
@@ -36,22 +37,17 @@ export function SignupForm() {
     } catch (error: any) {
       toast.error(error.message);
     } finally {
-      setLoading(false);
+      setGlobalLoading(false);
     }
   };
 
-  const handleGoogleSignIn = () => {
-    setGoogleLoading(true);
-    signIn("google", { callbackUrl: "/dashboard" });
-  };
-
-  const inputClass = "w-full h-12 bg-bg-surface-elevated border border-border-default rounded-xl px-4 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
+  const inputClass = "w-full h-12 bg-bg-surface-elevated border border-border-default rounded-md px-4 text-sm text-text-primary placeholder:text-text-tertiary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
 
   return (
     <div className="w-full space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl font-extrabold tracking-tight text-text-primary">Create your account</h1>
-        <p className="text-sm text-text-secondary">Join ApplyIQ today and simplify your job search.</p>
+        <p className="text-sm text-text-secondary">Join Raptim today and simplify your job search.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,8 +80,8 @@ export function SignupForm() {
             </button>
           </div>
         </div>
-        <button type="submit" className="w-full h-11 bg-primary hover:bg-primary-hover text-primary-foreground font-bold rounded-xl transition-all shadow-md shadow-primary/20 disabled:opacity-50" disabled={loading || googleLoading}>
-          {loading ? "Creating account..." : "Start Tracking"}
+        <button type="submit" className="w-full h-11 bg-primary hover:bg-primary-hover text-primary-foreground font-bold rounded-md transition-all shadow-md shadow-primary/20 disabled:opacity-50" disabled={googleLoading}>
+          Start Tracking
         </button>
       </form>
 
@@ -97,9 +93,12 @@ export function SignupForm() {
       </div>
 
       <button 
-        className="w-full h-11 rounded-xl bg-bg-surface-elevated border border-border-default text-text-primary font-semibold text-sm hover:bg-bg-surface-hover transition-colors flex items-center justify-center gap-2 disabled:opacity-50" 
-        onClick={handleGoogleSignIn}
-        disabled={loading || googleLoading}
+        className="w-full h-11 rounded-md bg-bg-surface-elevated border border-border-default text-text-primary font-semibold text-sm hover:bg-bg-surface-hover transition-colors flex items-center justify-center gap-2 disabled:opacity-50" 
+        onClick={() => {
+          setGoogleLoading(true);
+          signIn("google", { callbackUrl: "/dashboard" });
+        }}
+        disabled={googleLoading}
       >
         {googleLoading ? (
           <div className="w-4 h-4 border-2 border-text-tertiary border-t-text-primary rounded-full animate-spin"></div>

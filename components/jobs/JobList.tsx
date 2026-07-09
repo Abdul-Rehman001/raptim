@@ -4,11 +4,12 @@ import { useState, useMemo } from "react";
 import { format, isToday, isThisWeek, isThisMonth } from "date-fns";
 import {
   Edit2, Trash2, MapPin, Banknote, Building2, AlertTriangle, Loader2,
-  ChevronLeft, ChevronRight, ArrowUpDown, Filter, X, ChevronDown
+  ChevronLeft, ChevronRight, ArrowUpDown, Filter, X, ChevronDown, Globe
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
+import {  getPlatformIcon } from "@/lib/utils";
 import Link from "next/link";
 import { EditJobModal } from "./EditJobModal";
 import { IJob } from "@/types";
@@ -18,17 +19,6 @@ interface JobListProps {
 }
 
 const ITEMS_PER_PAGE = 10;
-
-const PLATFORM_ICONS: Record<string, string> = {
-  LinkedIn: "🔗",
-  Indeed: "📋",
-  Glassdoor: "🪟",
-  Wellfound: "🚀",
-  "Y Combinator": "🟧",
-  Greenhouse: "🌱",
-  Lever: "⚡",
-  Workday: "💼",
-};
 
 type SortOption = "newest" | "oldest" | "company-az" | "company-za" | "match-high" | "match-low";
 type TimeFilter = "all" | "today" | "week" | "month";
@@ -267,7 +257,7 @@ export function JobList({ initialJobs }: JobListProps) {
             <div className="relative">
               <button 
                 onClick={() => setIsPlatformDropdownOpen(!isPlatformDropdownOpen)}
-                className="flex items-center justify-between min-w-[160px] px-3 py-1.5 rounded-md text-xs font-semibold bg-bg-surface border border-border-default text-text-primary hover:border-primary/50 transition-colors"
+                className="flex items-center justify-between min-w-40 px-3 py-1.5 rounded-md text-xs font-semibold bg-bg-surface border border-border-default text-text-primary hover:border-primary/50 transition-colors"
               >
                 <span className="truncate flex items-center gap-2">
                   {platformFilter === "all" ? "All Platforms" : platformFilter === "none" ? "No Platform" : platformFilter}
@@ -281,7 +271,7 @@ export function JobList({ initialJobs }: JobListProps) {
               {isPlatformDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsPlatformDropdownOpen(false)} />
-                  <div className="absolute top-full left-0 mt-1 w-full min-w-[180px] max-h-64 overflow-y-auto bg-bg-surface border border-border-subtle rounded-lg shadow-xl z-50 py-1 flex flex-col scrollbar-hide animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="absolute top-full left-0 mt-1 w-full min-w-45 max-h-64 overflow-y-auto bg-bg-surface border border-border-subtle rounded-lg shadow-xl z-50 py-1 flex flex-col scrollbar-hide animate-in fade-in slide-in-from-top-1 duration-150">
                     <button
                       onClick={() => { handleFilterChange(setPlatformFilter, "all"); setIsPlatformDropdownOpen(false); }}
                       className={`flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${platformFilter === "all" ? "bg-primary/10 text-primary" : "text-text-secondary hover:bg-bg-surface-hover hover:text-text-primary"}`}
@@ -306,7 +296,15 @@ export function JobList({ initialJobs }: JobListProps) {
                         onClick={() => { handleFilterChange(setPlatformFilter, p); setIsPlatformDropdownOpen(false); }}
                         className={`flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors ${platformFilter === p ? "bg-primary/10 text-primary" : "text-text-secondary hover:bg-bg-surface-hover hover:text-text-primary"}`}
                       >
-                        <span className="truncate max-w-[120px] text-left">{p}</span>
+                        <span className="flex items-center gap-2 truncate max-w-30 text-left">
+                          {getPlatformIcon(p) ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={getPlatformIcon(p)!} alt="" className="w-3.5 h-3.5 rounded-sm shrink-0" />
+                          ) : (
+                            <Globe className="w-3.5 h-3.5 text-text-tertiary shrink-0" />
+                          )}
+                          <span className="truncate">{p}</span>
+                        </span>
                         <span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle shrink-0">{platformCounts[p] || 0}</span>
                       </button>
                     ))}
@@ -412,7 +410,14 @@ export function JobList({ initialJobs }: JobListProps) {
                   <td className="py-4">
                     {job.platform ? (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border border-border-default bg-bg-surface-elevated text-text-secondary">
-                        <span>{PLATFORM_ICONS[job.platform] || "🌐"}</span>
+                        <span className="flex items-center justify-center shrink-0">
+                          {getPlatformIcon(job.platform) ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img src={getPlatformIcon(job.platform)!} alt="" className="w-3.5 h-3.5 rounded-sm" />
+                          ) : (
+                            <Globe className="w-3.5 h-3.5 text-text-tertiary" />
+                          )}
+                        </span>
                         {job.platform}
                       </span>
                     ) : (

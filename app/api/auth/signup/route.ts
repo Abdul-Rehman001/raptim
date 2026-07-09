@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import { User } from "@/models/User";
 import bcrypt from "bcryptjs";
+// import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
@@ -32,6 +33,8 @@ export async function POST(req: Request) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
 
     const user = await User.create({
       name,
@@ -39,6 +42,9 @@ export async function POST(req: Request) {
       passwordHash,
       provider: "credentials",
       completedOnboarding: false, // new users must complete onboarding
+      isVerified: true, // Auto-verify since email flow is disabled
+      otp,
+      otpExpiresAt,
     });
 
     return NextResponse.json(

@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Sparkles, X, ChevronDown, ChevronUp, Loader2, Globe, Linkedin, Plus } from "lucide-react";
+import { Sparkles, X, ChevronDown, ChevronUp, Loader2, Globe, Plus } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { PLATFORM_DOMAINS, getPlatformIcon } from "@/lib/utils";
 import { Dropdown } from "@/components/ui/Dropdown";
 import Link from "next/link";
 
@@ -32,14 +33,10 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
   const detectPlatform = (url: string) => {
     if (!url) return "";
     const lower = url.toLowerCase();
-    if (lower.includes("linkedin.com")) return "LinkedIn";
-    if (lower.includes("indeed.com")) return "Indeed";
-    if (lower.includes("glassdoor.com")) return "Glassdoor";
-    if (lower.includes("wellfound.com") || lower.includes("angel.co")) return "Wellfound";
-    if (lower.includes("ycombinator.com")) return "Y Combinator";
-    if (lower.includes("greenhouse.io")) return "Greenhouse";
-    if (lower.includes("lever.co")) return "Lever";
-    if (lower.includes("workday.com")) return "Workday";
+    for (const [platform, domain] of Object.entries(PLATFORM_DOMAINS)) {
+      if (lower.includes(domain.split('.')[0])) return platform; // simple match
+    }
+    if (lower.includes("angel.co")) return "Wellfound";
     return "";
   };
 
@@ -258,11 +255,8 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
                     <label className="block text-xs font-semibold text-text-tertiary">Platform</label>
                     <div className="flex gap-2">
                       <div className="relative flex-1">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary z-10 pointer-events-none">
-                          {formData.platform.toLowerCase() === "linkedin" ? <Linkedin className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
-                        </div>
                         <Dropdown
-                          className="flex-1 [&>button]:pl-9"
+                          className="flex-1"
                           value={isCustomPlatform ? "Other" : formData.platform}
                           onChange={(val) => {
                             if (val === "Other") {
@@ -275,8 +269,29 @@ export function AddJobModal({ children, userResumeText = "" }: AddJobModalProps)
                           }}
                           placeholder="Select platform..."
                           options={[
-                            ...["LinkedIn", "Indeed", "Glassdoor", "Wellfound", "Y Combinator", "Greenhouse", "Lever", "Workday", "Company Website", "Referral"].map(p => ({ value: p, label: p })),
-                            { value: "Other", label: "Other (Custom)" }
+                            ...Object.keys(PLATFORM_DOMAINS).concat(["Company Website", "Referral"]).map(p => ({ 
+                              value: p, 
+                              label: (
+                                <div className="flex items-center gap-2">
+                                  {getPlatformIcon(p) ? (
+                                    /* eslint-disable-next-line @next/next/no-img-element */
+                                    <img src={getPlatformIcon(p)!} alt="" className="w-4 h-4 rounded-sm" />
+                                  ) : (
+                                    <Globe className="w-4 h-4 text-text-tertiary" />
+                                  )}
+                                  <span>{p}</span>
+                                </div>
+                              ) 
+                            })),
+                            { 
+                              value: "Other", 
+                              label: (
+                                <div className="flex items-center gap-2">
+                                  <Globe className="w-4 h-4 text-text-tertiary" />
+                                  <span>Other (Custom)</span>
+                                </div>
+                              ) 
+                            }
                           ]}
                         />
                       </div>

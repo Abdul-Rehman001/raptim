@@ -1,0 +1,43 @@
+export function LogoLoader() {
+  return (
+    <svg width="80" height="80" viewBox="7 7 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" className="overflow-visible drop-shadow-2xl">
+      {/* Background circle - FIXED */}
+      <circle cx="35.0079" cy="35.0075" r="28.0607" transform="rotate(-106.904 35.0079 35.0075)" fill="url(#loader_p0)" />
+      {/* Front swoosh - ROTATES clockwise 1.5s */}
+      <g filter="url(#loader_f0)">
+        <path d="M34.4221 53.3527C34.4216 55.0095 33.0718 56.3733 31.4305 56.1467C28.1559 55.6947 25.0123 54.5059 22.2429 52.6541C18.6386 50.244 15.8298 46.8193 14.1719 42.8129C12.514 38.8066 12.0813 34.3986 12.9285 30.1463C13.7758 25.8941 15.865 21.9886 18.9319 18.9237C21.9988 15.8588 25.9057 13.7721 30.1585 12.9277C34.4113 12.0832 38.819 12.5188 42.8243 14.1793C46.8295 15.8399 50.2524 18.6509 52.6601 22.2568C54.5101 25.0274 55.6969 28.1718 56.1468 31.4466C56.3723 33.0881 55.0076 34.437 53.3507 34.4364L37.4283 34.4312C35.7715 34.4307 34.4279 35.7734 34.4273 37.4302L34.4221 53.3527Z" fill="url(#loader_p1)"
+          style={{ transformOrigin: '35px 35px', animation: 'spin 1.5s linear infinite' }} />
+      </g>
+      <defs>
+        <filter id="loader_f0" x="8.50586" y="12.5078" width="51.6655" height="51.6636" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+          <feOffset dy="4"/>
+          <feGaussianBlur stdDeviation="2"/>
+          <feComposite in2="hardAlpha" operator="out"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+        </filter>
+        <linearGradient id="loader_p0" x1="63.0686" y1="24.1534" x2="6.94718" y2="45.8615" gradientUnits="userSpaceOnUse">
+          <stop offset="0.00963908" stopColor="white"/>
+          <stop offset="0.649077" stopColor="#a855f7"/>
+          <stop offset="1" stopColor="#7c3aed"/>
+        </linearGradient>
+        <linearGradient id="loader_p1" x1="42.9009" y1="56.3554" x2="25.9558" y2="12.5051" gradientUnits="userSpaceOnUse">
+          <stop offset="0.413495" stopColor="white"/>
+          <stop offset="0.721194" stopColor="#a855f7"/>
+          <stop offset="1" stopColor="#7c3aed"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+export function FullScreenLoader() {
+  return (
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-bg-base/70 backdrop-blur-sm transition-all duration-300">
+      <LogoLoader />
+    </div>
+  );
+}

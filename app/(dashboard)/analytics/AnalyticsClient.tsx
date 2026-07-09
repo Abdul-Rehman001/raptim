@@ -7,13 +7,14 @@ import {
   Play, Calendar, Trophy, Globe,
 } from "lucide-react";
 import { Dropdown } from "@/components/ui/Dropdown";
+import { getPlatformIcon } from "@/lib/utils";
 
 type TimeRange = "all" | "today" | "week" | "month" | "quarter";
 
 const PLATFORM_COLORS = [
   "bg-violet-600",
   "bg-purple-500",
-  "bg-fuchsia-500",
+  "bg-fuchsia-400",
   "bg-pink-500",
   "bg-rose-400",
   "bg-orange-400",
@@ -207,16 +208,31 @@ export function AnalyticsClient({ jobs: allJobs }: { jobs: IJob[] }) {
               options={[
                 { 
                   value: "all", 
-                  label: <div className="flex justify-between items-center w-full"><span>All Platforms</span><span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle">{allJobs.length}</span></div> 
+                  label: <div className="flex justify-between items-center w-full"><span className="flex items-center gap-2"><Globe className="w-3.5 h-3.5 text-text-tertiary" /> All Platforms</span><span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle">{allJobs.length}</span></div> 
                 },
                 { 
                   value: "none", 
-                  label: <div className="flex justify-between items-center w-full"><span>No Platform</span><span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle">{platformCounts["none"] || 0}</span></div> 
+                  label: <div className="flex justify-between items-center w-full"><span className="flex items-center gap-2"><Globe className="w-3.5 h-3.5 text-text-tertiary" /> No Platform</span><span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle">{platformCounts["none"] || 0}</span></div> 
                 },
                 { value: "divider", label: "" },
                 ...platforms.map(p => ({
                   value: p,
-                  label: <div className="flex justify-between items-center w-full"><span className="truncate max-w-[100px]">{p}</span><span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle shrink-0">{platformCounts[p] || 0}</span></div>
+                  label: (
+                    <div className="flex justify-between items-center w-full">
+                      <span className="flex items-center gap-2 truncate max-w-[100px]">
+                        {getPlatformIcon(p) ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img src={getPlatformIcon(p)!} alt="" className="w-3.5 h-3.5 rounded-sm shrink-0" />
+                        ) : (
+                          <Globe className="w-3.5 h-3.5 text-text-tertiary shrink-0" />
+                        )}
+                        <span className="truncate">{p}</span>
+                      </span>
+                      <span className="text-[10px] bg-bg-surface-elevated px-1.5 py-0.5 rounded-full border border-border-subtle shrink-0">
+                        {platformCounts[p] || 0}
+                      </span>
+                    </div>
+                  )
                 }))
               ]}
             />
@@ -393,7 +409,15 @@ export function AnalyticsClient({ jobs: allJobs }: { jobs: IJob[] }) {
               {platformBreakdown.map((p) => (
                 <div key={p.name}>
                   <div className="flex justify-between text-xs font-bold text-text-primary mb-2">
-                    <span>{p.name}</span>
+                    <span className="flex items-center gap-2">
+                       {getPlatformIcon(p.name) ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img src={getPlatformIcon(p.name)!} alt="" className="w-4 h-4 rounded-sm" />
+                        ) : (
+                          <Globe className="w-4 h-4 text-text-tertiary" />
+                        )}
+                       {p.name}
+                    </span>
                     <span className="text-text-secondary">{p.count} ({p.pct}%)</span>
                   </div>
                   <div className="h-2.5 w-full bg-border-subtle rounded-full overflow-hidden">

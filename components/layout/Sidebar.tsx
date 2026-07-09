@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard, Briefcase, BarChart2, Settings, LogOut, Zap,
+  LayoutDashboard, Briefcase, BarChart2, Settings, LogOut,
   ChevronsLeft, ChevronsRight, X, Sun, Moon, Sparkles, ShieldCheck
 } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -71,11 +71,11 @@ export function Sidebar({
       {/* Logo & Collapse */}
       <div className={cn("flex items-center mb-8", collapsed ? "px-4 flex-col gap-4 justify-center" : "px-6 justify-between")}>
         <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-linear-to-br from-primary to-purple-800 flex items-center justify-center shrink-0">
-              <Zap className="h-4 w-4 text-white" strokeWidth={3} />
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
+              <Image src="/logo.svg" alt="Raptim" className="w-full h-full object-contain" />
             </div>
             {!collapsed && (
-              <span className="text-lg font-extrabold tracking-tight text-text-primary whitespace-nowrap">ApplyIQ</span>
+              <span className="text-lg font-extrabold tracking-tight text-text-primary whitespace-nowrap">Raptim</span>
             )}
         </div>
         <button onClick={onToggle} className="hidden lg:flex p-1.5 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-sidebar-hover transition-colors" title={collapsed ? "Expand" : "Collapse"}>

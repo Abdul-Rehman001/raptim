@@ -3,10 +3,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   ArrowRight, Sparkles, LayoutDashboard, FileSearch,
-  TrendingUp, CheckCircle, Zap,
+  TrendingUp, CheckCircle, Zap, Phone, MapPin,
   Flame, Send, Mail, Calendar, PartyPopper, Link2, Target, CheckCircle2
 } from "lucide-react";
 
@@ -72,6 +75,35 @@ const JobCard = ({
    MAIN PAGE
 ───────────────────────────────────────────── */
 export default function Home() {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      
+      if (!res.ok) throw new Error("Failed to send message");
+      
+      toast.success("Message sent successfully! We'll be in touch.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Contact form error:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="dark">
@@ -110,12 +142,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-violet-600
-                flex items-center justify-center shadow-lg shadow-purple-500/30
-                group-hover:shadow-purple-500/50 transition-shadow">
-                <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                <Image src="/logo.svg" alt="Raptim" width={32} height={32} className="w-full h-full object-contain" />
               </div>
-              <span className="text-white font-bold text-lg tracking-tight">ApplyIQ</span>
+              <span className="text-white font-bold text-lg tracking-tight">Raptim</span>
             </Link>
 
             {/* Center links — hidden on mobile */}
@@ -183,7 +213,7 @@ export default function Home() {
                   className="text-lg text-white/50 leading-relaxed max-w-xl mb-8 font-light"
                 >
                   Stop juggling spreadsheets and sticky notes.
-                  ApplyIQ tracks every application, scores your resume with AI,
+                  Raptim tracks every application, scores your resume with AI,
                   and coaches you from saved to signed offer.
                 </motion.p>
 
@@ -448,7 +478,7 @@ export default function Home() {
             >
               <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">Simple Process</p>
               <h2 className="text-[clamp(28px,4vw,52px)] font-semibold text-white tracking-tight leading-tight">
-                How ApplyIQ works.
+                How Raptim works.
               </h2>
             </motion.div>
 
@@ -460,7 +490,7 @@ export default function Home() {
                 { 
                   step: "01", 
                   title: "Save any job instantly", 
-                  desc: "Found a role on LinkedIn or a company career page? Just paste the URL. ApplyIQ's engine automatically extracts the title, company, description, and key requirements.",
+                  desc: "Found a role on LinkedIn or a company career page? Just paste the URL. Raptim's engine automatically extracts the title, company, description, and key requirements.",
                   icon: <Link2 className="w-5 h-5 text-purple-400" />,
                   features: ["Auto-extracts job details", "Works with any URL", "Saves to Kanban board"]
                 },
@@ -641,7 +671,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-2">AI Career Coach</h3>
                   <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
-                    Paste any job description. ApplyIQ AI scores your resume, identifies gaps,
+                    Paste any job description. Raptim AI scores your resume, identifies gaps,
                     drafts your cover letter, and preps you for interviews — in seconds.
                   </p>
                   <div className="mt-6 space-y-2">
@@ -759,13 +789,103 @@ export default function Home() {
         ═══════════════════════════════════════ */}
         <section id="about" className="relative z-10 px-6 lg:px-16 py-20 border-t border-border-subtle">
           <div className="max-w-3xl mx-auto text-center">
-             <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">About ApplyIQ</p>
+             <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">About Raptim</p>
              <h2 className="text-3xl font-semibold text-white tracking-tight mb-6">
                 Built for the modern job seeker.
              </h2>
              <p className="text-lg text-text-secondary leading-relaxed font-light">
-                We believe the job search shouldn't be a black box. ApplyIQ was created to give you the data, insights, and AI tooling previously only available to recruiters. By automating the repetitive tasks like resume matching and application tracking, we give you the time to focus on what actually gets you hired: preparing for interviews and having meaningful conversations.
+                We believe the job search shouldn't be a black box. Raptim was created to give you the data, insights, and AI tooling previously only available to recruiters. By automating the repetitive tasks like resume matching and application tracking, we give you the time to focus on what actually gets you hired: preparing for interviews and having meaningful conversations.
              </p>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════
+            CONTACT SECTION
+        ═══════════════════════════════════════ */}
+        <section id="contact" className="relative z-10 px-6 lg:px-16 py-20 border-t border-border-subtle">
+          <div className="max-w-5xl mx-auto">
+             <div className="text-center mb-12">
+               <p className="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-3">Get in Touch</p>
+               <h2 className="text-3xl font-semibold text-white tracking-tight mb-4">
+                  Have questions or feedback?
+               </h2>
+               <p className="text-lg text-text-secondary leading-relaxed font-light">
+                  We'd love to hear from you. Whether you have a feature request or need support, our inbox is always open.
+               </p>
+             </div>
+
+             <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+                {/* Contact Info */}
+                <div className="flex flex-col gap-6">
+                   <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <h3 className="text-lg font-semibold text-white mb-6">Contact Information</h3>
+                      <div className="flex flex-col gap-5 text-sm text-text-secondary">
+                          <a href="mailto:abdul.rehman.tahir7377@gmail.com" className="flex items-center gap-3 hover:text-white transition-colors">
+                             <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
+                                <Mail className="w-4 h-4 text-purple-400" />
+                             </div>
+                             abdul.rehman.tahir7377@gmail.com
+                          </a>
+                          <a href="tel:+917619931243" className="flex items-center gap-3 hover:text-white transition-colors">
+                             <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
+                                <Phone className="w-4 h-4 text-purple-400" />
+                             </div>
+                             +91 76199 31243
+                          </a>
+                          <div className="flex items-center gap-3">
+                             <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
+                                <MapPin className="w-4 h-4 text-purple-400" />
+                             </div>
+                             Lucknow, India
+                          </div>
+                      </div>
+                   </div>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleContactSubmit} className="flex flex-col gap-4 p-6 sm:p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                   <div>
+                     <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Name</label>
+                     <input 
+                       type="text" 
+                       value={formData.name}
+                       onChange={(e) => setFormData({...formData, name: e.target.value})}
+                       className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/20 focus:outline-hidden focus:border-purple-500/50 transition-colors"
+                       placeholder="John Doe"
+                       required
+                     />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Email</label>
+                     <input 
+                       type="email" 
+                       value={formData.email}
+                       onChange={(e) => setFormData({...formData, email: e.target.value})}
+                       className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/20 focus:outline-hidden focus:border-purple-500/50 transition-colors"
+                       placeholder="john@example.com"
+                       required
+                     />
+                   </div>
+                   <div>
+                     <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Message</label>
+                     <textarea 
+                       value={formData.message}
+                       onChange={(e) => setFormData({...formData, message: e.target.value})}
+                       className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/20 focus:outline-hidden focus:border-purple-500/50 transition-colors min-h-30 resize-y"
+                       placeholder="How can we help?"
+                       required
+                     />
+                   </div>
+                   <button 
+                     type="submit" 
+                     disabled={isSubmitting}
+                     className="mt-2 w-full flex items-center justify-center gap-2 py-3.5 rounded-lg font-semibold text-white bg-linear-to-r from-purple-500 to-purple-800 shadow-sm hover:opacity-90 disabled:opacity-50 transition-all"
+                   >
+                     {isSubmitting ? "Sending..." : "Send Message"}
+                     {!isSubmitting && <Send className="w-4 h-4" />}
+                   </button>
+                </form>
+             </div>
           </div>
         </section>
 
@@ -814,21 +934,17 @@ export default function Home() {
         <footer className="relative z-10 px-6 lg:px-16 py-10 border-t border-border-subtle">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-linear-to-br from-purple-500 to-violet-600
-                flex items-center justify-center">
-                <Zap className="w-3 h-3 text-white" strokeWidth={2.5} />
+              <div className="w-6 h-6 rounded-md flex items-center justify-center">
+                <Image src="/logo.svg" alt="Raptim" width={24} height={24} className="w-full h-full object-contain opacity-60" />
               </div>
-              <span className="text-white/60 font-semibold text-sm">ApplyIQ</span>
+              <span className="text-white/60 font-semibold text-sm">Raptim</span>
             </div>
             <div className="flex items-center gap-6">
-              {["Privacy", "Terms", "Contact"].map(l => (
-                <Link key={l} href="#"
-                  className="text-xs text-white/30 hover:text-white/60 transition-colors">
-                  {l}
-                </Link>
-              ))}
+              <Link href="/privacy" className="text-xs text-white/30 hover:text-white/60 transition-colors">Privacy</Link>
+              <Link href="/terms" className="text-xs text-white/30 hover:text-white/60 transition-colors">Terms</Link>
+              <Link href="#contact" className="text-xs text-white/30 hover:text-white/60 transition-colors">Contact</Link>
             </div>
-            <p className="text-xs text-white/20">© 2026 ApplyIQ. All rights reserved.</p>
+            <p className="text-xs text-white/20">© 2026 Raptim. All rights reserved.</p>
           </div>
         </footer>
 

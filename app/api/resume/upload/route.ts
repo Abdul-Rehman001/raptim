@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     // which produces /image/upload/ URLs that browsers refuse to display as PDF.
     const uploadResult = await new Promise<{secure_url: string; public_id: string}>((resolve, reject) => {
       cloudinary.uploader.upload_stream(
-        { resource_type: isPdf ? "raw" : "auto", folder: "applyiq_resumes" },
+        { resource_type: isPdf ? "raw" : "auto", folder: "raptim_resumes" },
         (error, result) => {
            if (error) reject(error);
            else resolve(result as {secure_url: string; public_id: string});

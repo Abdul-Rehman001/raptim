@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -49,7 +50,10 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <span className="text-sm font-bold text-text-primary">ApplyIQ</span>
+        <span className="text-sm font-bold text-text-primary flex items-center gap-2">
+          <Image src="/logo.svg" alt="Raptim" className="w-5 h-5 object-contain" />
+          Raptim
+        </span>
       </div>
 
       {/* Main Content */}

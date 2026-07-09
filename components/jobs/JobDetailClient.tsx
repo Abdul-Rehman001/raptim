@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { 
-  Bot, Sparkles, Building2, MapPin, Banknote, CheckCircle2, AlertTriangle, ShieldAlert, Target, FileText, Copy, RefreshCw, ExternalLink, ChevronDown, ChevronUp, Mail
+  Bot, Sparkles, Building2, MapPin, Banknote, CheckCircle2, AlertTriangle, ShieldAlert, Target, FileText, Copy, RefreshCw, ExternalLink, ChevronDown, ChevronUp, Mail, Globe
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { formatDistanceToNow, isPast } from "date-fns";
 import { IJob } from "@/types";
+import { getPlatformIcon } from "@/lib/utils";
 interface JobDetailProps {
   job: IJob;
   hasResume?: boolean;
@@ -164,6 +165,17 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                   <span className="flex items-center gap-1.5"><Building2 className="w-4 h-4" /> {job.company}</span>
                   {job.location && (
                      <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {job.location}</span>
+                  )}
+                  {job.platform && (
+                     <span className="flex items-center gap-1.5">
+                        {getPlatformIcon(job.platform) ? (
+                           /* eslint-disable-next-line @next/next/no-img-element */
+                           <img src={getPlatformIcon(job.platform)!} alt="" className="w-4 h-4 rounded-sm" />
+                        ) : (
+                           <Globe className="w-4 h-4 text-text-tertiary" />
+                        )}
+                        {job.platform}
+                     </span>
                   )}
                   {(job.salaryMin || job.salaryMax) && (
                      <span className="flex items-center gap-1.5 text-primary">

@@ -1,5 +1,5 @@
 import { FullScreenLoader } from "@/components/ui/LogoLoader";
 
-export default function DashboardLoading() {
+export default function GlobalLoading() {
   return <FullScreenLoader />;
 }

@@ -14,13 +14,24 @@ export async function PUT(req: Request) {
     const body = await req.json();
     await dbConnect();
 
+    // Only allow updating safe fields to prevent privilege escalation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allowedUpdates: Record<string, any> = {};
+    const safeFields = ["name", "phone", "jobTitle", "resumeUrl", "resumeText", "resumeJson", "completedOnboarding"];
+    
+    for (const field of safeFields) {
+      if (body[field] !== undefined) {
+        allowedUpdates[field] = body[field];
+      }
+    }
+
     // If resume text is being updated, invalidate ALL cached AI analyses
     // so the next scan/analysis uses the fresh resume data
-    if (body.resumeText !== undefined) {
+    if (allowedUpdates.resumeText !== undefined) {
       // Clear the user's ATS cache (score, details, timestamp)
-      body.atsScore = null;
-      body.atsLastChecked = null;
-      body.atsDetails = null;
+      allowedUpdates.atsScore = null;
+      allowedUpdates.atsLastChecked = null;
+      allowedUpdates.atsDetails = null;
 
       // Mark ALL job analyses for this user as stale
       // by clearing aiAnalyzedAt — next "Analyze" click will re-run AI
@@ -47,9 +58,9 @@ export async function PUT(req: Request) {
     
     const updatedUser = await User.findByIdAndUpdate(
       session.user.id,
-      { $set: body },
+      { $set: allowedUpdates },
       { new: true }
-    );
+    ).select("-passwordHash -otp -otpExpiresAt"); // Do not leak sensitive data
 
     if (!updatedUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
