@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminLayout({
   children,
 }: {
@@ -8,7 +10,6 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
   
-  // Check if user is logged in and is an admin (with email fallback)
   if (!session?.user || (session.user.role !== "admin" && session.user.email !== "admin@gmail.com")) {
     redirect("/");
   }
