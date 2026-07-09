@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   keywords: ["job tracker", "ai career coach", "resume analyzer", "applicant tracking", "job search organizer"],
   authors: [{ name: "Raptim" }],
   creator: "Raptim",
+    verification: {
+    google: "I6yhprnsFzsG_TpCBDxc9ArGaTmHcCjs3Q7KrKBFjK4",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
