@@ -51,7 +51,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
           <Menu className="h-5 w-5" />
         </button>
         <span className="text-sm font-bold text-text-primary flex items-center gap-2">
-          <Image src="/logo.svg" alt="Raptim" className="w-5 h-5 object-contain" />
+          <Image src="/logo.svg" alt="Raptim" width={20} height={20} className="w-5 h-5 object-contain" />
           Raptim
         </span>
       </div>

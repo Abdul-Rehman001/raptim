@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema({
   atsLastChecked: { type: Date, default: null },
   atsDetails: { type: Object, default: null },
   atsResumeFingerprint: { type: String, default: null }, // Tracks which resume version was last scanned
+  emailReportFrequency: { type: String, enum: ["daily", "weekly", "none"], default: "none" }, // User preference for automated reports
 }, { timestamps: true });
 
 // Prevent overwrite on hot reload

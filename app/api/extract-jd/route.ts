@@ -1,6 +1,30 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { generateContent } from "@/lib/grok";
+import { z } from "zod";
+
+const extractSchema = z.object({
+  title: z.string().nullable().optional(),
+  company: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
+  salaryMin: z.number().nullable().optional(),
+  salaryMax: z.number().nullable().optional()
+});
+
+async function getValidatedExtraction(prompt: string, maxRetries = 1) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const raw = await generateContent(prompt);
+    const cleaned = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
+    try {
+      const json = JSON.parse(cleaned);
+      return extractSchema.parse(json);
+    } catch (err) {
+      if (attempt === maxRetries) throw err;
+      console.warn(`Extraction parse/validation failed, retrying (attempt ${attempt + 1})`);
+    }
+  }
+  throw new Error("Failed to get valid extraction after retries");
+}
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -25,15 +49,10 @@ export async function POST(req: Request) {
       - salaryMax (Maximum Salary as number, null if not found)
       
       Job Description:
-      ${text.substring(0, 5000)} // Limit text length to avoid token limits
+      ${text.substring(0, 10000)} // Limit text length to avoid token limits
     `;
 
-    const textResponse = await generateContent(prompt);
-    
-    // Clean up potential markdown formatting if model ignores instruction
-    const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
-    
-    const data = JSON.parse(cleanJson);
+    const data = await getValidatedExtraction(prompt);
 
     return NextResponse.json(data);
   } catch (error) {

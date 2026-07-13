@@ -39,6 +39,28 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
   const [notes, setNotes] = useState(job.notes || "");
   const [savingNotes, setSavingNotes] = useState(false);
 
+  const [isStatusMenuOpen, setIsStatusMenuOpen] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
+  const handleUpdateStatus = async (newStatus: string) => {
+    setIsUpdatingStatus(true);
+    setIsStatusMenuOpen(false);
+    try {
+      const res = await fetch(`/api/jobs/${job._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error("Update failed");
+      toast.success("Status updated!");
+      router.refresh();
+    } catch {
+      toast.error("Failed to update status");
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
   const handleSaveNotes = async () => {
     setSavingNotes(true);
     try {
@@ -191,9 +213,36 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                    Job Post <ExternalLink className="w-4 h-4" />
                 </a>
              )}
-             <button className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-bg-base font-semibold rounded-md transition-all shadow-sm">
-                 Update Status
-             </button>
+             <div className="relative">
+               <button 
+                 onClick={() => setIsStatusMenuOpen(!isStatusMenuOpen)}
+                 disabled={isUpdatingStatus}
+                 className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold rounded-md transition-all shadow-sm flex items-center gap-2 disabled:opacity-50"
+               >
+                 {isUpdatingStatus ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
+                 {isUpdatingStatus ? "Updating..." : "Update Status"}
+                 <ChevronDown className={`w-4 h-4 transition-transform ${isStatusMenuOpen ? 'rotate-180' : ''}`} />
+               </button>
+               
+               {isStatusMenuOpen && (
+                 <>
+                   <div className="fixed inset-0 z-40" onClick={() => setIsStatusMenuOpen(false)} />
+                   <div className="absolute right-0 mt-2 w-48 bg-bg-surface border border-border-subtle rounded-md shadow-lg z-50 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
+                     {['saved', 'applied', 'interview', 'offer', 'rejected'].map((status) => (
+                       <button
+                         key={status}
+                         onClick={() => handleUpdateStatus(status)}
+                         disabled={job.status === status}
+                         className={`w-full text-left px-4 py-2 text-sm font-semibold capitalize hover:bg-bg-surface-hover transition-colors flex items-center justify-between ${job.status === status ? 'text-primary bg-primary/5 disabled:opacity-100' : 'text-text-secondary'} disabled:cursor-default`}
+                       >
+                         {status}
+                         {job.status === status && <CheckCircle2 className="w-4 h-4" />}
+                       </button>
+                     ))}
+                   </div>
+                 </>
+               )}
+             </div>
           </div>
       </div>
 
@@ -321,7 +370,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                            <button 
                                onClick={handleSaveNotes}
                                disabled={savingNotes}
-                               className="px-6 py-2 bg-primary hover:bg-primary-hover text-bg-base font-semibold rounded-md transition-all shadow-sm disabled:opacity-50"
+                               className="px-6 py-2 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold rounded-md transition-all shadow-sm disabled:opacity-50"
                            >
                               {savingNotes ? "Saving..." : "Save Notes"}
                            </button>
@@ -367,9 +416,9 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
 
                {/* AI Tabs */}
                <div className="flex bg-bg-surface-elevated p-1 rounded-lg mb-6 border border-border-subtle">
-                  <button onClick={() => setActiveAITab("coach")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "coach" ? "bg-primary text-bg-base" : "text-text-secondary hover:text-text-primary")}>Analysis</button>
-                  <button onClick={() => setActiveAITab("cover-letter")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "cover-letter" ? "bg-primary text-bg-base" : "text-text-secondary hover:text-text-primary")}>Letter</button>
-                  <button onClick={() => setActiveAITab("outreach")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "outreach" ? "bg-primary text-bg-base" : "text-text-secondary hover:text-text-primary")}>Outreach</button>
+                  <button onClick={() => setActiveAITab("coach")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "coach" ? "bg-primary text-primary-foreground" : "text-text-secondary hover:text-text-primary")}>Analysis</button>
+                  <button onClick={() => setActiveAITab("cover-letter")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "cover-letter" ? "bg-primary text-primary-foreground" : "text-text-secondary hover:text-text-primary")}>Letter</button>
+                  <button onClick={() => setActiveAITab("outreach")} className={"flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors shadow-sm " + (activeAITab === "outreach" ? "bg-primary text-primary-foreground" : "text-text-secondary hover:text-text-primary")}>Outreach</button>
                </div>
 
                {/* Content based on AI Tab */}
@@ -435,7 +484,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                                   </Link>
                                   <Link 
                                     href={`/ai-coach?tab=analyses&jobId=${job._id}`}
-                                    className="flex items-center justify-center gap-2 py-2 bg-primary text-white rounded-md text-[10px] font-semibold hover:bg-primary-hover transition-all shadow-md shadow-primary/20"
+                                    className="flex items-center justify-center gap-2 py-2 bg-primary text-primary-foreground rounded-md text-[10px] font-semibold hover:bg-primary-hover transition-all shadow-md shadow-primary/20"
                                   >
                                     <FileText className="w-3 h-3" /> Tailor Resume
                                   </Link>
@@ -446,7 +495,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                         <div className="text-center py-6">
                            <p className="text-xs text-text-secondary mb-4">You have not analyzed this job description yet.</p>
                            <button 
-                              className="w-full py-3 bg-primary hover:bg-primary-hover text-bg-base font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                              className="w-full py-3 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
                               onClick={handleAnalyze} disabled={analyzing || !job.jobDescription}
                            >
                               {analyzing ? <><Sparkles className="w-4 h-4 animate-spin" /> Analyzing...</> : <><Sparkles className="w-4 h-4" /> Analyze with AI</>}
@@ -462,7 +511,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                         <div className="text-center py-6">
                            <p className="text-xs text-text-secondary mb-4">Generate a personalized cover letter using AI context.</p>
                            <button 
-                              className="w-full py-3 bg-primary hover:bg-primary-hover text-bg-base font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                              className="w-full py-3 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
                               onClick={() => handleGenerateCoverLetter()} disabled={generatingLetter || !job.jobDescription}
                            >
                               {generatingLetter ? <><Sparkles className="w-4 h-4 animate-spin" /> Generating...</> : <><FileText className="w-4 h-4" /> Generate Letter</>}
@@ -475,9 +524,6 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                               <div className="flex gap-1">
                                  <button onClick={handleCopyLetter} className="px-3 py-1.5 bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary rounded-lg border border-border-default transition-colors flex items-center gap-1.5">
                                     <Copy className="w-3.5 h-3.5" /> Copy
-                                 </button>
-                                 <button onClick={() => handleGenerateCoverLetter(true)} disabled={generatingLetter} className="px-3 py-1.5 bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary rounded-lg border border-border-default transition-colors flex items-center gap-1.5 disabled:opacity-50">
-                                    <RefreshCw className={`w-3.5 h-3.5 ${generatingLetter ? 'animate-spin' : ''}`} /> Retry
                                  </button>
                               </div>
                            </div>
@@ -496,7 +542,7 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                         <div className="text-center py-6">
                            <p className="text-xs text-text-secondary mb-4">Generate a personalized networking outreach message for this role.</p>
                            <button 
-                              className="w-full py-3 bg-primary hover:bg-primary-hover text-bg-base font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                              className="w-full py-3 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-xs tracking-wider uppercase rounded-md transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
                               onClick={() => handleGenerateOutreach()} disabled={generatingOutreach || !job.jobDescription}
                            >
                               {generatingOutreach ? <><Sparkles className="w-4 h-4 animate-spin" /> Generating...</> : <><Mail className="w-4 h-4" /> Generate Message</>}
@@ -509,9 +555,6 @@ export function JobDetailClient({ job, hasResume }: JobDetailProps) {
                               <div className="flex gap-1">
                                  <button onClick={handleCopyOutreach} className="px-3 py-1.5 bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary rounded-lg border border-border-default transition-colors flex items-center gap-1.5">
                                     <Copy className="w-3.5 h-3.5" /> Copy
-                                 </button>
-                                 <button onClick={() => handleGenerateOutreach(true)} disabled={generatingOutreach} className="px-3 py-1.5 bg-bg-surface-elevated hover:bg-bg-surface-hover text-xs font-semibold text-text-primary rounded-lg border border-border-default transition-colors flex items-center gap-1.5 disabled:opacity-50">
-                                    <RefreshCw className={`w-3.5 h-3.5 ${generatingOutreach ? 'animate-spin' : ''}`} /> Retry
                                  </button>
                               </div>
                            </div>
