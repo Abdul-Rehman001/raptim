@@ -51,6 +51,9 @@ export async function POST(
     // Ensure we have a resume
     const user = await User.findById(session.user.id);
     const resumeText = user?.resumeText ?? "";
+    const resumeDataForPrompt = user?.resumeJson 
+      ? JSON.stringify(user.resumeJson) 
+      : resumeText.slice(0, 3000);
 
     if (!resumeText || resumeText.trim().length < 50) {
       return NextResponse.json(
@@ -85,7 +88,7 @@ What's Strong: ${job.whatsStrong || "Not specified."}
 Success Strategy: ${job.successStrategy || "Not specified."}
 
 RESUME:
-${resumeText.slice(0, 3000)}
+${resumeDataForPrompt}
 
 JOB DESCRIPTION:
 ${job.jobDescription.slice(0, 2000)}

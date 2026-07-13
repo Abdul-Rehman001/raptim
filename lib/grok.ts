@@ -1,35 +1,26 @@
 import Groq from "groq-sdk";
 
-
-// Free tier — fast and generous (14,400 req/day)
-// llama-3.3-70b-versatile = best quality on free tier
-// llama-3.1-8b-instant = faster, lighter alternative
 const modelId = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
-
-
-
 const maxRetries = 3;
 
-export async function generateContent(prompt: string): Promise<string> {
+export async function generateContent(prompt: string, temp: number = 0.3): Promise<string> {
   const client = new Groq({
-  apiKey: process.env.GROQ_API_KEY ?? "",
-});
+    apiKey: process.env.GROQ_API_KEY ?? "",
+  });
+  
   let lastError: unknown;
+  let currentModel = modelId;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-     
-
-
       const response = await client.chat.completions.create({
-        model: modelId,
+        model: currentModel,
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.3, // Lower = more consistent JSON output
+        temperature: temp, 
         max_tokens: 1024,
       });
 
       const text = response.choices[0]?.message?.content ?? "";
-      
       return text;
 
     } catch (error: unknown) {
@@ -42,20 +33,19 @@ export async function generateContent(prompt: string): Promise<string> {
         msg.includes("rate_limit") ||
         msg.includes("Too Many Requests");
 
+      if (isRateLimit && attempt < maxRetries) {
+        console.warn(`Rate limited on ${currentModel} — falling back to llama-3.1-8b-instant...`);
+        currentModel = "llama-3.1-8b-instant";
+        await new Promise((r) => setTimeout(r, 1000));
+        continue; // Try again with the fallback model
+      }
+
       const isQuotaDepleted =
         msg.includes("quota") ||
-        msg.includes("billing") ||
         msg.includes("exceeded your");
 
       if (isQuotaDepleted) {
         throw new Error("Groq daily quota exhausted. Try again tomorrow.");
-      }
-
-      if (isRateLimit && attempt < maxRetries) {
-        const delayMs = 2000 * Math.pow(2, attempt); // 2s, 4s, 8s
-        console.warn(`Rate limited — waiting ${delayMs / 1000}s...`);
-        await new Promise((r) => setTimeout(r, delayMs));
-        continue;
       }
 
       throw error;

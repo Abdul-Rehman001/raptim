@@ -72,7 +72,7 @@ export function Sidebar({
       <div className={cn("flex items-center mb-8", collapsed ? "px-4 flex-col gap-4 justify-center" : "px-6 justify-between")}>
         <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-              <Image src="/logo.svg" alt="Raptim" className="w-full h-full object-contain" />
+              <Image src="/logo.svg" alt="Raptim" width={36} height={36} className="w-full h-full object-contain" />
             </div>
             {!collapsed && (
               <span className="text-lg font-extrabold tracking-tight text-text-primary whitespace-nowrap">Raptim</span>

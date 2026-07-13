@@ -136,7 +136,7 @@ function JobAnalysesTab({ jobs, initialExpandedId }: { jobs: IJob[], initialExpa
         <p className="text-sm text-text-secondary max-w-sm mb-8 leading-relaxed">
           Start by adding a job and clicking &quot;Analyze with AI&quot; in the job details page. Your match scores and tips will appear here.
         </p>
-        <Link href="/jobs" className="bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-md transition-all shadow-lg shadow-primary/20">
+        <Link href="/jobs" className="bg-primary hover:bg-primary-hover text-primary-foreground font-semibold px-8 py-3 rounded-md transition-all shadow-lg shadow-primary/20">
           Go analyze a job
         </Link>
       </div>
@@ -230,7 +230,7 @@ function JobAnalysesTab({ jobs, initialExpandedId }: { jobs: IJob[], initialExpa
                         <Link href={`/jobs/${job._id}`} className="flex-1 text-center py-2.5 bg-bg-surface border border-border-default rounded-md text-xs font-semibold text-text-primary hover:bg-bg-surface-hover transition-all">
                           Full Details
                         </Link>
-                        <Link href={`/ai-coach?tab=outreach&jobId=${job._id}`} className="flex-1 text-center py-2.5 bg-primary text-white rounded-md text-xs font-semibold hover:bg-primary-hover transition-all shadow-md shadow-primary/10">
+                        <Link href={`/ai-coach?tab=outreach&jobId=${job._id}`} className="flex-1 text-center py-2.5 bg-primary text-primary-foreground rounded-md text-xs font-semibold hover:bg-primary-hover transition-all shadow-md shadow-primary/10">
                           Generate Outreach
                         </Link>
                       </div>
@@ -407,7 +407,7 @@ function ResumeHealthTab({ user }: { user: any }) {
               </p>
               <button 
                 onClick={checkATS} 
-                className="bg-primary hover:bg-primary-hover text-white font-semibold px-8 py-3 rounded-md transition-all shadow-lg shadow-primary/20"
+                className="bg-primary hover:bg-primary-hover text-primary-foreground font-semibold px-8 py-3 rounded-md transition-all shadow-lg shadow-primary/20"
               >
                 Launch Scanner
               </button>
@@ -513,7 +513,7 @@ function ResumeHealthTab({ user }: { user: any }) {
             <button 
               onClick={improveBullet}
               disabled={improving || !bulletText.trim()}
-              className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {improving ? <><RefreshCw className="w-4 h-4 animate-spin" /> Perfecting...</> : <><Sparkles className="w-4 h-4" /> Improve Bullet Point</>}
             </button>
@@ -634,7 +634,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
                    <button 
                     onClick={analyzeRedFlags} 
                     disabled={loading || !selectedJob.jobDescription}
-                    className="bg-primary hover:bg-primary-hover text-white px-6 py-2.5 w-full rounded-md text-xs font-semibold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                    className="bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-2.5 w-full rounded-md text-xs font-semibold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                    >
                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                      Perform Deep Scan
@@ -653,7 +653,7 @@ function JobIntelligenceTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], sel
                  <button 
                   onClick={analyzeRedFlags} 
                   disabled={loading || !selectedJob.jobDescription}
-                  className="bg-primary hover:bg-primary-hover text-white px-10 py-3.5 rounded-lg text-sm font-semibold shadow-xl shadow-primary/20 transition-all flex items-center gap-2"
+                  className="bg-primary hover:bg-primary-hover text-primary-foreground px-10 py-3.5 rounded-lg text-sm font-semibold shadow-xl shadow-primary/20 transition-all flex items-center gap-2"
                  >
                    {loading ? "Analyzing Description..." : "Generate Intelligence Report"}
                  </button>
@@ -836,7 +836,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
                   <button 
                     onClick={generateEmail}
                     disabled={generating || !selectedJob.jobDescription}
-                    className="bg-primary hover:bg-primary-hover text-white px-12 py-4 rounded-lg text-sm font-black shadow-2xl shadow-primary/30 transition-all flex items-center gap-3"
+                    className="bg-primary hover:bg-primary-hover text-primary-foreground px-12 py-4 rounded-lg text-sm font-black shadow-2xl shadow-primary/30 transition-all flex items-center gap-3"
                   >
                     {generating ? <RefreshCw className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                     Compose Outreach Message
@@ -864,7 +864,7 @@ function OutreachTab({ jobs, selectedJob, setJobId }: { jobs: IJob[], selectedJo
                   </div>
 
                   <div className="flex gap-4">
-                     <button onClick={copyEmail} className="flex-1 py-4 bg-primary text-white font-black rounded-lg shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-2">
+                     <button onClick={copyEmail} className="flex-1 py-4 bg-primary text-primary-foreground font-black rounded-lg shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-2">
                         <Copy className="w-4 h-4" /> Copy Message Body
                      </button>
                   </div>

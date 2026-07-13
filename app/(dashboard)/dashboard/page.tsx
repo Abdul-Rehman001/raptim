@@ -7,12 +7,13 @@ import { Job } from "@/models/Job";
 import { User } from "@/models/User";
 import {
   Send, MessageSquare, CalendarDays, Flame, Plus,
-  Bell, MoreHorizontal, CheckCircle2, Circle, ArrowRight,
+  MoreHorizontal, CheckCircle2, Circle, ArrowRight,
   AlertTriangle, Sparkles, CalendarCheck, Zap, Globe
 } from "lucide-react";
 import mongoose from "mongoose";
 import Link from "next/link";
 import { Greeting } from "@/components/dashboard/Greeting";
+// import { SendReportButton } from "@/components/dashboard/SendReportButton";
 
 // Cache auth() result for the duration of this server request
 // so layout + page don't each make a separate auth call
@@ -183,9 +184,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="h-10 w-10 rounded-md bg-bg-surface-elevated border border-border-subtle flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors">
-            <Bell className="h-4 w-4" />
-          </button>
+          {/* <SendReportButton /> Temporarily hidden until Resend domain is verified */}
           <AddJobModal userResumeText={stats.userResumeText}>
             <button className="h-10 rounded-md bg-primary hover:bg-primary-hover text-primary-foreground font-semibold px-5 text-sm transition-all shadow-sm flex items-center gap-2">
               <Plus className="h-4 w-4" strokeWidth={3} /> Add New Job
